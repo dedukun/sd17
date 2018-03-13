@@ -11,4 +11,18 @@ package afternoonatrace_conc.Entities;
  */
 public class Broker {
     
+    private States state;
+
+    public Broker() {
+        this.state = States.OPENING_THE_EVENT;
+    }
+
+    public void setState(States state) {
+        this.state = state;
+    }
+
+    public States getState() {
+        return state;
+    }
+    
 }
