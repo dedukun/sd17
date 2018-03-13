@@ -7,7 +7,7 @@ package afternoonatrace_conc.Main;
 
 /**
  *
- * @author Filipe
+ * 
  */
 public class SimulPar {
     

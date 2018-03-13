@@ -7,7 +7,7 @@ package afternoonatrace_conc.Entities;
 
 /**
  *
- * @author Filipe
+ * 
  */
 public class States {
     
