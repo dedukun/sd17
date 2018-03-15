@@ -11,26 +11,28 @@ import afternoonatrace_conc.SharedRegions.*;
  *
  * 
  */
-public class Broker {
+//extends Thread para puder iniciazliar threads
+public class Broker extends Thread{
     
-    private States state;
+    private States bstate;
 
     public Broker() {
-        this.state = States.OPENING_THE_EVENT;
+        this.bstate = States.OPENING_THE_EVENT;
     }
 
-    public void setState(States state) {
-        this.state = state;
+    public void setState(States bstate) {
+        this.bstate = bstate;
     }
 
-    public States getState() {
-        return state;
+    public States getBState() {
+        return bstate;
     }
     
+    @Override
     public void run(){
         for(int k=0; k<SimulPar.K; k++){
             ControlCenter.summonHorsesToPaddock(); //Blocked
-            //Queu unblocked by lastCheckHorses() or placeABet()
+            //unblocked by lastCheckHorses() or placeABet()
             while(BettingCenter.acceptAllBets()){
                 BettingCenter.acceptTheBet(); //Blocked
             }
@@ -45,5 +47,4 @@ public class Broker {
             ControlCenter.entertainTheGuests();
         }
     }
-    
 }

@@ -4,12 +4,15 @@
  * and open the template in the editor.
  */
 package afternoonatrace_conc.SharedRegions;
+import afternoonatrace_conc.Entities.*;
+import afternoonatrace_conc.Main.*;
+import java.lang.*;
 
 /**
  *
  * 
  */
-public class ControlCenter {
+public class ControlCenter{
     
     public static boolean unblockProceedToPaddock(){
         return true;
@@ -19,8 +22,17 @@ public class ControlCenter {
         
     }
     
-    public static void summonHorsesToPaddock(){
+    public static synchronized void  summonHorsesToPaddock(){
+        System.out.println("Just testing");
+        try{
+            while(!lastCheckHorses()){
+                MainDatatype.b.wait();
+            }
+        }catch(InterruptedException e){   
+        }   
         
+        MainDatatype.b.setState(States.ANNOUNCING_NEXT_RACE);
+        MainDatatype.b.notifyAll();
     }
     
     public static void startTheRace(){

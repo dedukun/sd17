@@ -10,16 +10,16 @@ import afternoonatrace_conc.SharedRegions.*;
  *
  * 
  */
-public class HorseJockey {
+public class HorseJockey extends Thread{
     private int raceNumber;
-    private int id;
-    private States state;
+    private int hjid;
+    private States hjstate;
     private double speed;
 
-    public HorseJockey(int raceNumber, int id, States state, double speed) {
+    public HorseJockey(int raceNumber, int hjid, States hjstate, double speed) {
         this.raceNumber = raceNumber;
-        this.id = id;
-        this.state = null;
+        this.hjid = hjid;
+        this.hjstate = null;
         this.speed = speed;
     }
  
@@ -27,12 +27,12 @@ public class HorseJockey {
         return raceNumber;
     }
 
-    public int getId() {
-        return id;
+    public int getHJId() {
+        return hjid;
     }
 
-    public States getState() {
-        return state;
+    public States getHJState() {
+        return hjstate;
     }
 
     public double getSpeed() {
@@ -43,18 +43,19 @@ public class HorseJockey {
         this.raceNumber = raceNumber;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int hjid) {
+        this.hjid = hjid;
     }
 
-    public void setState(States state) {
-        this.state = state;
+    public void setState(States hjstate) {
+        this.hjstate = hjstate;
     }
 
     public void setSpeed(double speed) {
         this.speed = speed;
     }
     
+    @Override
     public void run(){
         Stable.proceedToStable();
         //unblocked by sumHorsesToPaddock()

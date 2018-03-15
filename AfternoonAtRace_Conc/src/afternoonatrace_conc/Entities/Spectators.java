@@ -9,31 +9,31 @@ import afternoonatrace_conc.SharedRegions.*;
  *
  * 
  */
-public class Spectators {
-    private States state;
-    private String name;
+public class Spectators extends Thread{
+    private States sstate;
+    private String sname;
     private double money;
 
-    public Spectators(States state, String name, double money) {
-        this.state = null;
-        this.name = name;
+    public Spectators(States sstate, String sname, double money) {
+        this.sstate = null;
+        this.sname = sname;
         this.money = money;
     }
 
-    public States getState() {
-        return state;
+    public States getSState() {
+        return sstate;
     }
 
-    public void setState(States state) {
-        this.state = state;
+    public void setState(States sstate) {
+        this.sstate = sstate;
     }
 
-    public String getName() {
-        return name;
+    public String getSName() {
+        return sname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSName(String name) {
+        this.sname = sname;
     }
 
     public double getMoney() {
@@ -44,6 +44,7 @@ public class Spectators {
         this.money = money;
     }
     
+    @Override
     public void run(){
         //Blocked
         while(ControlCenter.waitForNextRace()){
