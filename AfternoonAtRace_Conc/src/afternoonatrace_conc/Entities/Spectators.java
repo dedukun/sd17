@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package afternoonatrace_conc.Entities;
-
+import afternoonatrace_conc.SharedRegions.*;
 /**
  *
  * 
@@ -15,7 +15,7 @@ public class Spectators {
     private double money;
 
     public Spectators(States state, String name, double money) {
-        this.state = state;
+        this.state = null;
         this.name = name;
         this.money = money;
     }
@@ -42,6 +42,25 @@ public class Spectators {
 
     public void setMoney(double money) {
         this.money = money;
+    }
+    
+    public void run(){
+        //Blocked
+        while(ControlCenter.waitForNextRace()){
+            //Unblocked by proceedToPaddock()
+            if(ControlCenter.lastCheckHorses())
+                Paddock.unblockGoCheckHorses();
+            Paddock.goCheckHorses();
+            //Unblocked by proceedToStartLine()
+            BettingCenter.placeABet();//Blocked
+            //Unblocked by acceptTheBet()
+            ControlCenter.goWatchTheRace();//Blocked
+            //Unblocked by reportResults()
+            if(ControlCenter.haveIWon())
+                BettingCenter.goCollectTheGains();//Blocked
+            //Unblocked by honourTheBets()
+        }
+        ControlCenter.relaxABit();
     }
     
     

@@ -11,4 +11,11 @@ package afternoonatrace_conc.SharedRegions;
  */
 public class Stable {
     
+    public static void proceedToStable(){
+        
+    }
+    
+    public static boolean lastProoceedToPaddock(){
+        return true;
+    }   
 }

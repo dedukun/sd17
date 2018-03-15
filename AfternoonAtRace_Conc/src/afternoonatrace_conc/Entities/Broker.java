@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package afternoonatrace_conc.Entities;
+import afternoonatrace_conc.Main.SimulPar;
+import afternoonatrace_conc.SharedRegions.*;
 
 /**
  *
@@ -23,6 +25,25 @@ public class Broker {
 
     public States getState() {
         return state;
+    }
+    
+    public void run(){
+        for(int k=0; k<SimulPar.K; k++){
+            ControlCenter.summonHorsesToPaddock(); //Blocked
+            //Queu unblocked by lastCheckHorses() or placeABet()
+            while(BettingCenter.acceptAllBets()){
+                BettingCenter.acceptTheBet(); //Blocked
+            }
+            //Unblocked by unblockMakeAMove()
+            ControlCenter.startTheRace();//Blocked
+            ControlCenter.reportResults();
+            if(ControlCenter.areThereAnyWinners()){
+                while(BettingCenter.honourAllTheBets())
+                    //Queue Unblock
+                    BettingCenter.hounourTheBet();//Blocked
+            }
+            ControlCenter.entertainTheGuests();
+        }
     }
     
 }

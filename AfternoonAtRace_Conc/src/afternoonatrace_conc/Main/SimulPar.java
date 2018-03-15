@@ -10,5 +10,12 @@ package afternoonatrace_conc.Main;
  * 
  */
 public class SimulPar {
+    //Races Amount
+    public static final int K = 5;
     
+    //Competitor Amount
+    public static final int C = 4;
+    
+    //Spectator Amount
+    public static final int S = 4;
 }

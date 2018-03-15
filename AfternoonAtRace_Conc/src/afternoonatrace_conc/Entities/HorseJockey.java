@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package afternoonatrace_conc.Entities;
+import afternoonatrace_conc.SharedRegions.*;
 
 /**
  *
@@ -54,5 +55,25 @@ public class HorseJockey {
         this.speed = speed;
     }
     
-    
+    public void run(){
+        Stable.proceedToStable();
+        //unblocked by sumHorsesToPaddock()
+        if(Stable.lastProoceedToPaddock()) //Blocked
+            ControlCenter.unblockProceedToPaddock();
+        //unblocked by lastCheckHorses()
+        Paddock.proceedToPaddock(); //Blocked
+        if(Paddock.lastProoceedToStartLine())
+            Paddock.unblockProoceedToStartLine();
+        RaceTrack.proceedToStartLine(); //Blocked
+        do{
+            //unblocked by startTheRace() or makeAMove()
+            RaceTrack.unblockMakeAMove();
+            if(!RaceTrack.hasFinishLineBeenCrossed()){
+                RaceTrack.makeAMove();
+                if(RaceTrack.lastMakeAMove())
+                    RaceTrack.unblockMakeAMove(); //Blocked
+            }
+        }while(!RaceTrack.hasRaceFinished());
+        Stable.proceedToStable();
+    }
 }
