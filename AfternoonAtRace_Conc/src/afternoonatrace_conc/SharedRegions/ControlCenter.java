@@ -39,13 +39,16 @@ public class ControlCenter{
 
     public static synchronized void  summonHorsesToPaddock(){
 
-        MainDatatype.b.setState(Broker.States.ANNOUNCING_NEXT_RACE);
-        MainDatatype.hj.notifyAll();
+        ((Broker) Thread.currentThread()).setBState(Broker.States.ANNOUNCING_NEXT_RACE);
 
-        try{
-            MainDatatype.b.wait();
-        }catch(InterruptedException e){
+        while(waitForEvalution){
+            waitForEvalution = false;
+            try{
+                    wait();
+            }catch(InterruptedException e){}
         }
+
+        waitForEvalution = true;
     }
 
     public static void startTheRace(){
