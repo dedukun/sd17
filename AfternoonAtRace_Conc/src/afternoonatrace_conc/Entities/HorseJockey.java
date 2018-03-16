@@ -48,7 +48,7 @@ public class HorseJockey extends Thread{
         this.raceNumber = raceNumber;
         this.hjid = hjid;
         this.hjstate = null;
-        this.speed = 1 + 5 * Math.random(); // Random speed
+        this.maxSpeed = 1 + 5 * Math.random(); // Random speed
     }
 
     /**
@@ -84,7 +84,7 @@ public class HorseJockey extends Thread{
      *   @return
      */
     public double getMaxSpeed() {
-        return speed;
+        return maxSpeed;
     }
 
     /**
