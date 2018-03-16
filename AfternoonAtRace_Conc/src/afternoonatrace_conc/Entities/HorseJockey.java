@@ -1,22 +1,45 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package afternoonatrace_conc.Entities;
 import afternoonatrace_conc.SharedRegions.*;
 
 /**
- * Horse/Jockey Thread
+ * Horse/Jockey Thread.
  */
 public class HorseJockey extends Thread{
-    private int raceNumber;
-    private int hjid;
-    private States hjstate;
-    private double speed;
 
     /**
-     * Horse/Jockey initialization
+     * Number of the race the Horse/Jockey pair is participating.
+     */
+    private int raceNumber;
+
+    /**
+     * Identifier of the Horse/Jockey pair.
+     */
+    private int hjid;
+
+    /**
+     * Current state of the Horse/Jockey pair.
+     */
+    private States hjstate;
+
+    /**
+     * Max speed of the Horse/Jockey pair.
+     */
+    private double maxSpeed;
+
+    /**
+     * Enumerate with Horse/Jockey States.
+     */
+    public static enum States
+    {
+        AT_THE_STABLE,
+        AT_THE_PADDOCK,
+        AT_THE_START_LINE,
+        RUNNING,
+        AT_THE_FINNISH_LINE
+    }
+
+    /**
+     * Horse/Jockey initialization.
      *
      * @param raceNumber Number of the race
      * @param hjid Horse/Jockey pair ID
@@ -28,28 +51,53 @@ public class HorseJockey extends Thread{
         this.speed = 1 + 5 * Math.random(); // Random speed
     }
 
+    /**
+     * Get the race number.
+     *
+     *   @return Race Number
+     */
     public int getRaceNumber() {
         return raceNumber;
     }
 
+    /**
+     * Get Horse/Jockey pair identifier.
+     *
+     *   @return
+     */
     public int getHJId() {
         return hjid;
     }
 
+    /**
+     * Get Horse/Jockey pair current state.
+     *
+     *   @return
+     */
     public States getHJState() {
         return hjstate;
     }
 
-    public double getSpeed() {
+    /**
+     * Get Horse/Jockey pair max speed.
+     *
+     *   @return
+     */
+    public double getMaxSpeed() {
         return speed;
     }
 
+    /**
+     * Set Horse/Jockey pair state.
+     *
+     *   @param hjstate
+     */
     public void setState(States hjstate) {
         this.hjstate = hjstate;
     }
 
     /**
-     * Horse/Jockey life cycle
+     * Horse/Jockey life cycle.
      */
     @Override
     public void run(){

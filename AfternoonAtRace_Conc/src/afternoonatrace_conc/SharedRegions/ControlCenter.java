@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package afternoonatrace_conc.SharedRegions;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.*;
@@ -12,28 +7,28 @@ import java.lang.*;
  *
  */
 public class ControlCenter{
-    
+
 
     /**
      * Broker is waiting for spectators to evaluate the horses - synchronization condition
      */
     private boolean waitForEvalution;
-    
+
     /**
      * Reference to General Repository.
      */
     private GeneralRepository genRepos;
-    
+
     /**
      * ControlCenter intilization.
-     * 
+     *
      *    @param genRepos reference to General Repository
      */
     public ControlCenter(GeneralRepository genRepos){
         this.genRepos=genRepos;
         waitForEvalution=true;
     }
-    
+
     public static boolean unblockProceedToPaddock(){
         return true;
     }
@@ -44,7 +39,7 @@ public class ControlCenter{
 
     public static synchronized void  summonHorsesToPaddock(){
 
-        MainDatatype.b.setState(States.ANNOUNCING_NEXT_RACE);
+        MainDatatype.b.setState(Broker.States.ANNOUNCING_NEXT_RACE);
         MainDatatype.hj.notifyAll();
 
         try{

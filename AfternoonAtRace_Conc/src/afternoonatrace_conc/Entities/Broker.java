@@ -1,29 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package afternoonatrace_conc.Entities;
 import afternoonatrace_conc.Main.SimulPar;
 import afternoonatrace_conc.SharedRegions.*;
 
 /**
- * Broker Thread
+ * Broker Thread.
  */
-//extends Thread para puder iniciazliar threads
 public class Broker extends Thread{
 
+    /**
+     * Current state of the Broker.
+     */
     private States bstate;
 
     /**
-     * Broker initialization
+     * Enumerate with Broker States.
+     */
+    public static enum States
+    {
+        OPENING_THE_EVENT,
+        ANNOUNCING_NEXT_RACE,
+        WAITING_FOR_BETS,
+        SUPERVISING_THE_RACE,
+        SETTLING_ACCOUNTS,
+        PLAYING_HOST_AT_THE_BAR
+    }
+
+    /**
+     * Broker initialization.
      */
     public Broker() {
         this.bstate = States.OPENING_THE_EVENT;
     }
 
     /**
-     * Set new state
+     * Set new state.
+     *
      * 	@param bstate
      */
     public void setState(States bstate) {
@@ -31,15 +42,16 @@ public class Broker extends Thread{
     }
 
     /**
+     * Get the current state of the Broker
      *
-     * @return  Returns the current state
+     *  @return  Returns the current state
      */
     public States getBState() {
         return bstate;
     }
 
     /**
-     * Broker life cycle
+     * Broker life cycle.
      */
     @Override
     public void run(){

@@ -1,21 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package afternoonatrace_conc.SharedRegions;
 
 /**
  *
- * 
  */
 public class Stable {
-    
-    public static void proceedToStable(){
-        
+
+    /**
+     * Reference to General Repository
+     */
+    private GeneralRepository genRepos;
+
+    /**
+     * Stable initialization
+     *
+     *  @param genRepos Reference to General Repository
+     */
+    public Stable(GeneralRepository genRepos){
+        this.genRepos = genRepos;
     }
-    
+
+    public static void proceedToStable(){
+
+    }
+
     public static boolean lastProoceedToPaddock(){
         return true;
-    }   
+    }
 }
