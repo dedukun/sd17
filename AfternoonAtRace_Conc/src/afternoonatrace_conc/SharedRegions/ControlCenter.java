@@ -12,7 +12,28 @@ import java.lang.*;
  *
  */
 public class ControlCenter{
+    
 
+    /**
+     * Broker is waiting for spectators to evaluate the horses - synchronization condition
+     */
+    private boolean waitForEvalution;
+    
+    /**
+     * Reference to General Repository.
+     */
+    private GeneralRepository genRepos;
+    
+    /**
+     * ControlCenter intilization.
+     * 
+     *    @param genRepos reference to General Repository
+     */
+    public ControlCenter(GeneralRepository genRepos){
+        this.genRepos=genRepos;
+        waitForEvalution=true;
+    }
+    
     public static boolean unblockProceedToPaddock(){
         return true;
     }
