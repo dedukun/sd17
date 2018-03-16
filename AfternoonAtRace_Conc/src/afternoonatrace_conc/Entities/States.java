@@ -6,8 +6,7 @@
 package afternoonatrace_conc.Entities;
 
 /**
- *
- * 
+ * Enumerate representing all existing states
  */
 public enum States {
     //Broker

@@ -7,7 +7,6 @@ package afternoonatrace_conc.SharedRegions;
 
 /**
  *
- * 
  */
 public class BettingCenter {
     

@@ -6,16 +6,19 @@
 package afternoonatrace_conc.Entities;
 import afternoonatrace_conc.SharedRegions.*;
 /**
- *
- * 
+ * Spectators Thread
  */
 public class Spectators extends Thread{
     private States sstate;
     private String sname;
     private double money;
 
-    public Spectators(States sstate, String sname, double money) {
-        this.sstate = null;
+    /**
+     * Spectators Initialization
+     * 
+     * @param sname Spectator Name
+     */
+    public Spectators(String sname) {
         this.sname = sname;
         this.money = money;
     }
@@ -32,10 +35,6 @@ public class Spectators extends Thread{
         return sname;
     }
 
-    public void setSName(String name) {
-        this.sname = sname;
-    }
-
     public double getMoney() {
         return money;
     }
@@ -44,6 +43,9 @@ public class Spectators extends Thread{
         this.money = money;
     }
     
+    /**
+     * Spectators life cycle
+     */
     @Override
     public void run(){
         //Blocked
@@ -63,6 +65,4 @@ public class Spectators extends Thread{
         }
         ControlCenter.relaxABit();
     }
-    
-    
 }

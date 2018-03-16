@@ -7,8 +7,7 @@ package afternoonatrace_conc.Entities;
 import afternoonatrace_conc.SharedRegions.*;
 
 /**
- *
- * 
+ * Horse/Jockey Thread
  */
 public class HorseJockey extends Thread{
     private int raceNumber;
@@ -16,13 +15,19 @@ public class HorseJockey extends Thread{
     private States hjstate;
     private double speed;
 
-    public HorseJockey(int raceNumber, int hjid, States hjstate, double speed) {
+    /**
+     * Horse/Jockey initialization
+     *
+     * @param raceNumber Number of the race
+     * @param hjid Horse/Jockey pair ID
+     */
+    public HorseJockey(int raceNumber, int hjid) {
         this.raceNumber = raceNumber;
         this.hjid = hjid;
         this.hjstate = null;
-        this.speed = speed;
+        this.speed = 1 + 5 * Math.random(); // Random speed
     }
- 
+
     public int getRaceNumber() {
         return raceNumber;
     }
@@ -39,22 +44,13 @@ public class HorseJockey extends Thread{
         return speed;
     }
 
-    public void setRaceNumber(int raceNumber) {
-        this.raceNumber = raceNumber;
-    }
-
-    public void setId(int hjid) {
-        this.hjid = hjid;
-    }
-
     public void setState(States hjstate) {
         this.hjstate = hjstate;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-    
+    /**
+     * Horse/Jockey life cycle
+     */
     @Override
     public void run(){
         Stable.proceedToStable();
