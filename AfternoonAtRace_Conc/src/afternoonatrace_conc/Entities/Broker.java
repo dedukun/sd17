@@ -8,6 +8,11 @@ import afternoonatrace_conc.SharedRegions.*;
 public class Broker extends Thread{
 
     /**
+     * Broker's name.
+     */
+    private String name;
+
+    /**
      * Current state of the Broker.
      */
     private States bstate;
@@ -26,16 +31,49 @@ public class Broker extends Thread{
     }
 
     /**
-     * Broker initialization.
+     * Reference to Betting Center.
      */
-    public Broker() {
+    private BettingCenter bettingCenter;
+
+    /**
+     * Reference to Control Center.
+     */
+    private ControlCenter controlCenter;
+
+    /**
+     * Reference to Race Track;
+     */
+    private RaceTrack raceTrack;
+
+    /**
+     * Reference to Stable
+     */
+    private Stable stable;
+
+    /**
+     * Broker initialization.
+     *
+     *   @param name Broker's name
+     *   @param bettingCenter Reference to Betting Center
+     *   @param controlCenter Reference to Control Center
+     *   @param raceTrack Reference to Race Track
+     *   @param stable Reference to Stable
+     */
+    public Broker(String name, BettingCenter bettingCenter, ControlCenter controlCenter, RaceTrack raceTrack, Stable stable) {
+        super(name);
+        this.name = name;
         this.bstate = States.OPENING_THE_EVENT;
+
+        this.bettingCenter = bettingCenter;
+        this.controlCenter = controlCenter;
+        this.raceTrack = raceTrack;
+        this.stable = stable;
     }
 
     /**
      * Set new state.
      *
-     * 	@param bstate
+     * 	 @param bstate The state
      */
     public void setState(States bstate) {
         this.bstate = bstate;
@@ -44,7 +82,7 @@ public class Broker extends Thread{
     /**
      * Get the current state of the Broker
      *
-     *  @return  Returns the current state
+     *   @return The current state
      */
     public States getBState() {
         return bstate;
@@ -55,21 +93,25 @@ public class Broker extends Thread{
      */
     @Override
     public void run(){
-        for(int k=0; k<SimulPar.K; k++){
-            ControlCenter.summonHorsesToPaddock(); //Blocked
+        System.out.println(name + " is opening the event");
+        for(int k=0; k < SimulPar.K; k++){
+            stable.summonHorsesToPaddock(k);
+            controlCenter.summonHorsesToPaddock(); //Blocked
             //unblocked by lastCheckHorses() or placeABet()
-            while(BettingCenter.acceptAllBets()){
-                BettingCenter.acceptTheBet(); //Blocked
+            while(!bettingCenter.acceptedAllBets()){
+                bettingCenter.acceptTheBet(); //Blocked
             }
             //Unblocked by unblockMakeAMove()
-            ControlCenter.startTheRace();//Blocked
-            ControlCenter.reportResults();
-            if(ControlCenter.areThereAnyWinners()){
-                while(BettingCenter.honourAllTheBets())
+            raceTrack.startTheRace();
+            controlCenter.startTheRace();//Blocked
+            int[] winnerHorses = raceTrack.getResults();
+            controlCenter.reportResults(winnerHorses);
+            if(controlCenter.areThereAnyWinners()){
+                while(!bettingCenter.honouredAllTheBets())
                     //Queue Unblock
-                    BettingCenter.hounourTheBet();//Blocked
+                    bettingCenter.hounourTheBet();//Blocked
             }
-            ControlCenter.entertainTheGuests();
         }
+        controlCenter.entertainTheGuests();
     }
 }

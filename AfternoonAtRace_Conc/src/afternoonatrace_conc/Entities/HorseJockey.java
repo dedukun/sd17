@@ -7,6 +7,11 @@ import afternoonatrace_conc.SharedRegions.*;
 public class HorseJockey extends Thread{
 
     /**
+     * Horse/Jocker pair name.
+     */
+    private String name;
+
+    /**
      * Number of the race the Horse/Jockey pair is participating.
      */
     private int raceNumber;
@@ -22,9 +27,9 @@ public class HorseJockey extends Thread{
     private States hjstate;
 
     /**
-     * Max speed of the Horse/Jockey pair.
+     * Agility of the Horse/Jockey pair.
      */
-    private double maxSpeed;
+    private double agility;
 
     /**
      * Enumerate with Horse/Jockey States.
@@ -39,22 +44,55 @@ public class HorseJockey extends Thread{
     }
 
     /**
+     * Reference to Control Center.
+     */
+    private ControlCenter controlCenter;
+
+    /**
+     * Reference to Paddock.
+     */
+    private Paddock paddock;
+
+    /**
+     * Reference to Race Track;
+     */
+    private RaceTrack raceTrack;
+
+    /**
+     * Reference to Stable
+     */
+    private Stable stable;
+
+    /**
      * Horse/Jockey initialization.
      *
-     * @param raceNumber Number of the race
-     * @param hjid Horse/Jockey pair ID
+     *   @param name Horse/Jockey's name
+     *   @param raceNumber Number of the race
+     *   @param hjid Horse/Jockey pair ID
+     *   @param controlCenter Reference to Control Center
+     *   @param paddock Reference to Paddock
+     *   @param raceTrack Reference to Race Track
+     *   @param stable Reference to Stable
      */
-    public HorseJockey(int raceNumber, int hjid) {
+    public HorseJockey(String name, int raceNumber, int hjid, ControlCenter controlCenter, Paddock paddock, RaceTrack raceTrack, Stable stable) {
+        super (name);
+        this.name = name;
         this.raceNumber = raceNumber;
+
         this.hjid = hjid;
         this.hjstate = null;
-        this.maxSpeed = 1 + 5 * Math.random(); // Random speed
+        this.agility = 1 + 5 * Math.random(); // Random speed
+
+        this.controlCenter = controlCenter;
+        this.paddock = paddock;
+        this.raceTrack = raceTrack;
+        this.stable = stable;
     }
 
     /**
      * Get the race number.
      *
-     *   @return Race Number
+     *   @return The number
      */
     public int getRaceNumber() {
         return raceNumber;
@@ -63,7 +101,7 @@ public class HorseJockey extends Thread{
     /**
      * Get Horse/Jockey pair identifier.
      *
-     *   @return
+     *   @return The identifier
      */
     public int getHJId() {
         return hjid;
@@ -72,25 +110,25 @@ public class HorseJockey extends Thread{
     /**
      * Get Horse/Jockey pair current state.
      *
-     *   @return
+     *   @return The state
      */
     public States getHJState() {
         return hjstate;
     }
 
     /**
-     * Get Horse/Jockey pair max speed.
+     * Get Horse/Jockey pair agility.
      *
-     *   @return
+     *   @return The agility
      */
-    public double getMaxSpeed() {
-        return maxSpeed;
+    public double getAgility() {
+        return agility;
     }
 
     /**
      * Set Horse/Jockey pair state.
      *
-     *   @param hjstate
+     *   @param hjstate New state
      */
     public void setState(States hjstate) {
         this.hjstate = hjstate;
@@ -101,24 +139,26 @@ public class HorseJockey extends Thread{
      */
     @Override
     public void run(){
-        Stable.proceedToStable();
+        stable.proceedToStable(); //Blocked
         //unblocked by sumHorsesToPaddock()
-        if(Stable.lastProoceedToPaddock()) //Blocked
-            ControlCenter.unblockProceedToPaddock();
+        if(paddock.lastArrivedToPaddock()) //Blocked
+            controlCenter.unblockProceedToPaddock();
         //unblocked by lastCheckHorses()
-        Paddock.proceedToPaddock(); //Blocked
-        if(Paddock.lastProoceedToStartLine())
-            Paddock.unblockProoceedToStartLine();
-        RaceTrack.proceedToStartLine(); //Blocked
+        paddock.proceedToPaddock(); //Blocked
+        paddock.unblockProceedToStartLine();
+        raceTrack.proceedToStartLine(); //Blocked
         do{
             //unblocked by startTheRace() or makeAMove()
-            RaceTrack.unblockMakeAMove();
-            if(!RaceTrack.hasFinishLineBeenCrossed()){
-                RaceTrack.makeAMove();
-                if(RaceTrack.lastMakeAMove())
-                    RaceTrack.unblockMakeAMove(); //Blocked
+            //raceTrack.unblockMakeAMove();
+            //if(!raceTrack.hasFinishLineBeenCrossed()){
+            //    raceTrack.makeAMove();
+            //    if(raceTrack.lastMakeAMove())
+            //        raceTrack.unblockMakeAMove(); //Blocked
+            boolean last = raceTrack.makeAMove();
+            if(last){
+                controlCenter.unblockMakeAMove();
             }
-        }while(!RaceTrack.hasRaceFinished());
-        Stable.proceedToStable();
+        }while(!raceTrack.hasRaceFinished());
+        stable.proceedToStable();
     }
 }

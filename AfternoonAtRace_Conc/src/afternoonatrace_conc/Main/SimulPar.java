@@ -6,17 +6,22 @@ package afternoonatrace_conc.Main;
 public class SimulPar {
 
     /**
-     * Races Amount.
+     * Number of total races.
      */
     public static final int K = 5;
 
     /**
-     * Horse/Jockeys amount.
+     * Number of participating Horse/Jockeys pairs.
      */
     public static final int C = 4;
 
     /**
-     * Spectator Amount.
+     * Number of total Spectators.
      */
     public static final int S = 4;
+
+    /**
+     * Race Track size.
+     */
+    public static final int trackSize = 20;
 }

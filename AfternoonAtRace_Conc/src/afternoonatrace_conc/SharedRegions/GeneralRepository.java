@@ -6,4 +6,7 @@ package afternoonatrace_conc.SharedRegions;
  */
 public class GeneralRepository {
 
+    public GeneralRepository(){
+
+    }
 }

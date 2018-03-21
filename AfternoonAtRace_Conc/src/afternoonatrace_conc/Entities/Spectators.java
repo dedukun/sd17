@@ -12,6 +12,11 @@ public class Spectators extends Thread{
     private String sname;
 
     /**
+     * Spectator's identifier.
+     */
+    private int sid;
+
+    /**
      * Current state of the Spectator.
      */
     private States sstate;
@@ -19,7 +24,7 @@ public class Spectators extends Thread{
     /**
      * Spectator's current funds.
      */
-    private double money;
+    private double wallet;
 
     /**
      * Enumerate with the Spectator States.
@@ -35,28 +40,54 @@ public class Spectators extends Thread{
     }
 
     /**
+     * Reference to Betting Center.
+     */
+    private BettingCenter bettingCenter;
+
+    /**
+     * Reference to Control Center.
+     */
+    private ControlCenter controlCenter;
+
+    /**
+     * Reference to Paddock.
+     */
+    private Paddock paddock;
+
+    /**
      * Spectators Initialization.
      *
-     *   @param sname Spectator Name
+     *   @param name Spectator's Name
+     *   @param sid Spectator's Identifier
+     *   @param bettingCenter Reference to Betting Center
+     *   @param controlCenter Reference to Control Center
+     *   @param paddock Reference to Paddock
      */
-    public Spectators(String sname) {
-        this.sname = sname;
-        this.money = 1 + 100 * Math.random();
+    public Spectators(String name, int sid, BettingCenter bettingCenter, ControlCenter controlCenter, Paddock paddock) {
+        super(name);
+        this.sname = name;
+        this.sid = sid;
+
+        this.wallet = 1 + 100 * Math.random();
+
+        this.paddock = paddock;
+        this.bettingCenter = bettingCenter;
+        this.controlCenter = controlCenter;
     }
 
     /**
      * Get Spectator's current state.
      *
-     *   @return
+     *   @return The current state
      */
     public States getSState() {
         return sstate;
     }
 
     /**
-     * Set Spectator's new state.
+     * Set Spectator's state.
      *
-     *   @param
+     *   @param sstate The new state
      */
     public void setState(States sstate) {
         this.sstate = sstate;
@@ -65,28 +96,37 @@ public class Spectators extends Thread{
     /**
      * Get Spectator's name.
      *
-     *   @return
+     *   @return The name
      */
     public String getSName() {
         return sname;
     }
 
     /**
-     * Get Spectator current funds.
+     * Get Spectator's identifier.
      *
-     *   @return
+     *   @return The id
      */
-    public double getMoney() {
-        return money;
+    public int getSID() {
+        return sid;
     }
 
     /**
-     *  Update Spectator's funds.
+     * Get Spectator current funds.
      *
-     *   @param money Transaction amount
+     *   @return The funds
+     */
+    public double getFunds() {
+        return wallet;
+    }
+
+    /**
+     * Updates the Spectator's funds.
+     *
+     *   @param money The transaction amount
      */
     public void setMoney(double money) {
-        this.money += money;
+        this.wallet += money;
     }
 
     /**
@@ -95,20 +135,23 @@ public class Spectators extends Thread{
     @Override
     public void run(){
         //Blocked
-        while(ControlCenter.waitForNextRace()){
+        while(controlCenter.waitForNextRace()){
             //Unblocked by proceedToPaddock()
-            if(ControlCenter.lastCheckHorses())
-                Paddock.unblockGoCheckHorses();
-            Paddock.goCheckHorses();
+            if(paddock.lastCheckHorses()){
+                paddock.unblockGoCheckHorses();
+                controlCenter.unblockGoCheckHorses();
+            }
+            int horseID = paddock.goCheckHorses();
+            int betAmmount = ThreadLocalRandom.current.nextInt(1,wallet);
             //Unblocked by proceedToStartLine()
-            BettingCenter.placeABet();//Blocked
+            bettingCenter.placeABet(betAmmount,horseID);//Blocked
             //Unblocked by acceptTheBet()
-            ControlCenter.goWatchTheRace();//Blocked
+            controlCenter.goWatchTheRace();//Blocked
             //Unblocked by reportResults()
-            if(ControlCenter.haveIWon())
-                BettingCenter.goCollectTheGains();//Blocked
+            if(controlCenter.haveIWon(horseID))
+                wallet += bettingCenter.goCollectTheGains();//Blocked
             //Unblocked by honourTheBets()
         }
-        ControlCenter.relaxABit();
+        controlCenter.relaxABit();
     }
 }
