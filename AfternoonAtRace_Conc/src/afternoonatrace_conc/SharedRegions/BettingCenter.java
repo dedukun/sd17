@@ -36,19 +36,14 @@ public class BettingCenter {
     private int numberAcceptedBets;
 
     /**
-     * Spectator is waiting for Broker give gains - synchronization point.
+     * List of Spectators waiting for Broker give gains - synchronization point.
      */
-    private boolean waitForGains;
+    private boolean[] waitForGains;
 
     /**
      * Broker is waiting for a Spectator to collect the gains - synchronization point.
      */
     private boolean waitForWinningSpectator;
-
-    /**
-     * List of winning Spectators.
-     */
-    private boolean[] winningSpectator;
 
     /**
      * List of the gains the winning Spectators earned.
@@ -61,9 +56,19 @@ public class BettingCenter {
     private ArrayList<Integer> spectatorWaitingGains;
 
     /**
-     * Current spectator collecting the gains.
+     * Total number of winners.
      */
-    private int currentSpectatorCollecting;
+    private int numberOfWinners;
+
+    /**
+     * Number of Spectators that already collected their gains.
+     */
+    private int numberOfCollectedGains;
+
+    /**
+     * Number of Accepted winning bets.
+     */
+    private int numberAcceptedWinners;
 
     /**
      * Reference to General Repository
@@ -82,15 +87,16 @@ public class BettingCenter {
         numberAcceptedBets = 0;
         acceptedSpectatorsBets = new boolean[SimulPar.S];
 
-        winningSpectator = new boolean[SimulPar.S];
         spectatorsGains = new int[SimulPar.S];
         spectatorWaitingGains = new ArrayList<>();
-        currentSpectatorCollecting = -1;
+        numberOfWinners = 0;
+        numberOfCollectedGains = 0;
+        numberAcceptedWinners = 0;
 
         // sync vars
         waitForBet = true;
-        waitForGains = true;
         waitForWinningSpectator = true;
+        waitForGains = new boolean[SimulPar.S];
     }
 
     /**
@@ -175,14 +181,15 @@ public class BettingCenter {
         boolean isThereAnyWinner = false;
 
         for(int winner : winningHorses){
-            for(Bet bet : raceBets){
-                if(bet.getHorseId() == winner){
-                    System.out.println(Thread.currentThread().getName() + " says that there are winners");
-                    winningSpectator[bet.getSpectatorId()] = true;
+            for(int i = 0; i < raceBets.size(); i++){
+                if(raceBets.get(i).getHorseId() == winner){
+                    raceBets.get(i).betWon();
+                    numberOfWinners++;
                     isThereAnyWinner = true;
                 }
             }
         }
+        System.out.println(Thread.currentThread().getName() + " says that there are winners -> " + numberOfWinners);
         return isThereAnyWinner;
     }
 
@@ -192,12 +199,17 @@ public class BettingCenter {
      *   @return
      */
     public synchronized boolean honouredAllTheBets(){
-        if(true){
+        if(numberAcceptedWinners == numberOfWinners){
+
+            System.out.println("ALL BETS HONOURED");
             // Reset variables for next race
             raceBets.clear();
             numberAcceptedBets = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
-            Arrays.fill(winningSpectator, Boolean.FALSE);
+
+            numberOfWinners = 0;
+            numberOfCollectedGains = 0;
+            Arrays.fill(waitForGains, Boolean.FALSE);
 
             return true;
         }
@@ -217,8 +229,22 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        //int spectatorId = spectatorWaitingGains.
+        int spectatorId = spectatorWaitingGains.get(numberOfCollectedGains);
 
+        for(Bet bet: raceBets){
+            if(bet.getSpectatorId() == spectatorId){
+                // Check if this spectator is a winner
+                if(bet.isWinner()){
+                    numberAcceptedWinners++;
+                    spectatorsGains[bet.getSpectatorId()] = bet.getAmmount() * 2;
+                }
+
+                break;
+            }
+        }
+
+        numberOfCollectedGains++;
+        waitForGains[spectatorId] = true;
         waitForWinningSpectator = true;
 
         notifyAll();
@@ -240,7 +266,7 @@ public class BettingCenter {
 
         spectatorWaitingGains.add(spectatorId);
 
-        while(!winningSpectator[spectatorId]){
+        while(!waitForGains[spectatorId]){
             waitForWinningSpectator = false;
             notifyAll();
             try{
@@ -248,11 +274,11 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " fineshed collecting the gains");
+        int earnings = spectatorsGains[spectatorId];
+        System.out.println(((Spectators) Thread.currentThread()).getName() + " finished collecting the gains -> " + earnings);
 
-        return spectatorsGains[spectatorId];
+        return earnings;
     }
-
 
     /**
      * Class representing a bet by a Spectator.
@@ -275,6 +301,11 @@ public class BettingCenter {
         private int sid;
 
         /**
+         * This is a winning bet.
+         */
+        private boolean isWinner;
+
+        /**
          * Bet initialization.
          *
          *   @param sid Spectator's id
@@ -285,6 +316,7 @@ public class BettingCenter {
             this.sid = sid;
             this.ammount = ammount;
             this.hid = hid;
+            isWinner = false;
         }
 
         /**
@@ -312,6 +344,20 @@ public class BettingCenter {
          */
         private int getAmmount(){
             return ammount;
+        }
+
+        /**
+         * Checks this bet as a winner one.
+         */
+        private void betWon(){
+            isWinner = true;
+        }
+
+        /**
+         * Check if this bet is a winner.
+         */
+        private boolean isWinner(){
+            return isWinner;
         }
 
         @Override

@@ -208,7 +208,7 @@ public class ControlCenter{
 
         eventFinished = true;
 
-        //notifyAll();
+        notifyAll();
     }
 
     public synchronized void relaxABit(){

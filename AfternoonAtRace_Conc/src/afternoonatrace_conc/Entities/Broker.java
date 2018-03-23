@@ -109,7 +109,6 @@ public class Broker extends Thread{
             controlCenter.reportResults(winnerHorses);
             if(bettingCenter.areThereAnyWinners(winnerHorses)){
                 while(!bettingCenter.honouredAllTheBets())
-                    //Queue Unblock
                     bettingCenter.honourTheBet();//Blocked
             }
         }
