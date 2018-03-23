@@ -1,5 +1,6 @@
 package afternoonatrace_conc.Entities;
 import afternoonatrace_conc.SharedRegions.*;
+import java.util.Random;
 
 /**
  * Horse/Jockey Thread.
@@ -29,7 +30,7 @@ public class HorseJockey extends Thread{
     /**
      * Agility of the Horse/Jockey pair.
      */
-    private double agility;
+    private int agility;
 
     /**
      * Enumerate with Horse/Jockey States.
@@ -81,7 +82,7 @@ public class HorseJockey extends Thread{
 
         this.hjid = hjid;
         this.hjstate = null;
-        this.agility = 1 + 5 * Math.random(); // Random speed
+        this.agility = new Random().nextInt(6) + 2;
 
         this.controlCenter = controlCenter;
         this.paddock = paddock;
@@ -121,7 +122,7 @@ public class HorseJockey extends Thread{
      *
      *   @return The agility
      */
-    public double getAgility() {
+    public int getAgility() {
         return agility;
     }
 
@@ -148,17 +149,12 @@ public class HorseJockey extends Thread{
         paddock.unblockProceedToStartLine();
         raceTrack.proceedToStartLine(); //Blocked
         do{
-            //unblocked by startTheRace() or makeAMove()
-            //raceTrack.unblockMakeAMove();
-            //if(!raceTrack.hasFinishLineBeenCrossed()){
-            //    raceTrack.makeAMove();
-            //    if(raceTrack.lastMakeAMove())
-            //        raceTrack.unblockMakeAMove(); //Blocked
             boolean last = raceTrack.makeAMove();
             if(last){
                 controlCenter.unblockMakeAMove();
             }
-        }while(!raceTrack.hasRaceFinished());
+        }while(!raceTrack.hasRaceFinished()); // Blocked
+        //unblocked by startTheRace() or makeAMove()
         stable.proceedToStable();
     }
 }

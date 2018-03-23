@@ -1,5 +1,6 @@
 package afternoonatrace_conc.Entities;
 import afternoonatrace_conc.SharedRegions.*;
+import java.util.Random;
 
 /**
  * Spectators Thread
@@ -24,7 +25,7 @@ public class Spectators extends Thread{
     /**
      * Spectator's current funds.
      */
-    private double wallet;
+    private int wallet;
 
     /**
      * Enumerate with the Spectator States.
@@ -68,7 +69,7 @@ public class Spectators extends Thread{
         this.sname = name;
         this.sid = sid;
 
-        this.wallet = 1 + 100 * Math.random();
+        this.wallet = new Random().nextInt(101) + 27;
 
         this.paddock = paddock;
         this.bettingCenter = bettingCenter;
@@ -116,7 +117,7 @@ public class Spectators extends Thread{
      *
      *   @return The funds
      */
-    public double getFunds() {
+    public int getFunds() {
         return wallet;
     }
 
@@ -125,7 +126,7 @@ public class Spectators extends Thread{
      *
      *   @param money The transaction amount
      */
-    public void setMoney(double money) {
+    public void setTransaction(double money) {
         this.wallet += money;
     }
 
@@ -142,9 +143,8 @@ public class Spectators extends Thread{
                 controlCenter.unblockGoCheckHorses();
             }
             int horseID = paddock.goCheckHorses();
-            int betAmmount = ThreadLocalRandom.current.nextInt(1,wallet);
             //Unblocked by proceedToStartLine()
-            bettingCenter.placeABet(betAmmount,horseID);//Blocked
+            bettingCenter.placeABet(horseID);//Blocked
             //Unblocked by acceptTheBet()
             controlCenter.goWatchTheRace();//Blocked
             //Unblocked by reportResults()

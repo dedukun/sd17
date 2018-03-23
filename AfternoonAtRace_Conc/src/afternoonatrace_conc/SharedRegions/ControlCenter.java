@@ -52,92 +52,12 @@ public class ControlCenter{
     public ControlCenter(GeneralRepository genRepos){
         this.genRepos=genRepos;
 
+        // sync conditions
         eventFinished = false;
         waitForEvaluation = true;
         waitForNextRace = true;
         waitForEndOfRace = true;
         waitForEndOfRace2 = true;
-    }
-
-    /**
-     * Last Spectator that finished watching the horses wakes up Broker
-     */
-    public synchronized void unblockGoCheckHorses(){
-
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is waking up the Broker");
-
-        waitForEvaluation = false;
-
-        notifyAll();
-    }
-
-    /**
-     * Broker is waiting for the spectators finishing seeing the horses.
-     */
-    public synchronized void  summonHorsesToPaddock(){
-
-        ((Broker) Thread.currentThread()).setState(Broker.States.ANNOUNCING_NEXT_RACE);
-
-        while(waitForEvaluation){
-            try{
-                wait();
-            }catch(InterruptedException e){}
-        }
-
-        waitForEvaluation = true;
-    }
-
-    /**
-     * Horses wake up Spectators to go see the parade.
-     */
-    public synchronized void unblockProceedToPaddock(){
-
-        System.out.println(((HorseJockey) Thread.currentThread()).getName() + " is waking up Spectators to parade");
-
-        waitForNextRace = false;
-
-        notifyAll(); // Wake up Spectators
-    }
-
-    public synchronized void startTheRace(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.SUPERVISING_THE_RACE);
-
-        System.out.println(((Broker) Thread.currentThread()).getName() + " is supervising the race");
-
-        while(waitForEndOfRace2){
-            try{
-                wait();
-            }catch(InterruptedException e){}
-        }
-
-        System.out.println(((Broker) Thread.currentThread()).getName() + " finished supervising the race");
-
-    }
-
-    /**
-     * Last Horse/Jockey pair to make a move wakes up the Broker.
-     */
-    public synchronized void unblockMakeAMove(){
-        waitForEndOfRace2 = false;
-
-        notifyAll();
-    }
-
-    public synchronized void reportResults(ArrayList<Integer> winners){
-
-    }
-
-    /**
-     * Check if any Spectator betted in the winners.
-     *
-     *   @return
-     */
-    public synchronized boolean areThereAnyWinners(){
-        return true;
-    }
-
-    public synchronized void entertainTheGuests(){
-        eventFinished = true;
     }
 
     /**
@@ -163,12 +83,86 @@ public class ControlCenter{
     }
 
     /**
+     * Broker is waiting for the spectators finishing seeing the horses.
+     */
+    public synchronized void  summonHorsesToPaddock(){
+
+        ((Broker) Thread.currentThread()).setState(Broker.States.ANNOUNCING_NEXT_RACE);
+
+        while(waitForEvaluation){
+            try{
+                wait();
+            }catch(InterruptedException e){}
+        }
+
+        // Reset var for next race
+        waitForEvaluation = true;
+    }
+
+    /**
+     * Last Spectator that finished watching the horses wakes up Broker
+     */
+    public synchronized void unblockGoCheckHorses(){
+
+        System.out.println(((Spectators) Thread.currentThread()).getName() + " is waking up the Broker");
+
+        // reset var for next race
+        waitForNextRace = true;
+
+        //
+        waitForEvaluation = false;
+
+        notifyAll();
+    }
+
+
+    /**
+     * Horses wake up Spectators to go see the parade.
+     */
+    public synchronized void unblockProceedToPaddock(){
+
+        System.out.println(((HorseJockey) Thread.currentThread()).getName() + " is waking up Spectators to parade");
+
+        waitForNextRace = false;
+
+        notifyAll(); // Wake up Spectators
+    }
+
+
+    /**
+     * Broker is starting the race.
+     */
+    public synchronized void startTheRace(){
+        ((Broker) Thread.currentThread()).setState(Broker.States.SUPERVISING_THE_RACE);
+
+        System.out.println(((Broker) Thread.currentThread()).getName() + " is supervising the race");
+
+        while(waitForEndOfRace2){
+            try{
+                wait();
+            }catch(InterruptedException e){}
+        }
+
+        System.out.println(((Broker) Thread.currentThread()).getName() + " finished supervising the race");
+
+    }
+
+    /**
+     * Last Horse/Jockey pair to make a move wakes up the Broker.
+     */
+    public synchronized void unblockMakeAMove(){
+        waitForEndOfRace2 = false;
+
+        notifyAll();
+    }
+
+    /**
      * Spectator is watching the race.
      */
-    public synchronized void goWatchTheRace(int hjid){
+    public synchronized void goWatchTheRace(){
         ((Spectators) Thread.currentThread()).setState(Spectators.States.WATCHING_A_RACE);
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is watching the race");
+        System.out.println(Thread.currentThread().getName() + " is watching the race");
 
         while(waitForEndOfRace){
             try{
@@ -176,7 +170,19 @@ public class ControlCenter{
             }catch(InterruptedException e){}
         }
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " finished watching the race");
+        System.out.println(Thread.currentThread().getName() + " finished watching the race");
+    }
+
+    /**
+     * Broker is reporting the results to the Spectators.
+     *
+     *   @param winners Array with the identifier of the winning Horse/Jockey pair(s)
+     */
+    public synchronized void reportResults(int[] winners){
+        raceWinners = winners;
+        waitForEndOfRace = false;
+
+        notifyAll();
     }
 
     /**
@@ -185,10 +191,29 @@ public class ControlCenter{
      *   @param hjid Horse/Jocker pair identifier
      */
     public synchronized boolean haveIWon(int hjid){
-        return true;
+        for(int winner : raceWinners){
+            if(winner == hjid){
+                System.out.println(Thread.currentThread().getName() + " WON THE BET");
+                return true;
+            }
+        }
+        System.out.println(Thread.currentThread().getName() + " DIDNT WIN");
+        return false;
+    }
+
+    public synchronized void entertainTheGuests(){
+        System.out.println(Thread.currentThread().getName() + " is enternaining the guests");
+
+        ((Broker) Thread.currentThread()).setState(Broker.States.PLAYING_HOST_AT_THE_BAR);
+
+        eventFinished = true;
+
+        //notifyAll();
     }
 
     public synchronized void relaxABit(){
+        System.out.println(Thread.currentThread().getName() + " is relaxing");
 
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.CELEBRATING);
     }
 }

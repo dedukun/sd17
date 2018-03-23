@@ -8,7 +8,7 @@ public class SimulPar {
     /**
      * Number of total races.
      */
-    public static final int K = 5;
+    public static final int K = 1;
 
     /**
      * Number of participating Horse/Jockeys pairs.
@@ -19,9 +19,4 @@ public class SimulPar {
      * Number of total Spectators.
      */
     public static final int S = 4;
-
-    /**
-     * Race Track size.
-     */
-    public static final int trackSize = 20;
 }

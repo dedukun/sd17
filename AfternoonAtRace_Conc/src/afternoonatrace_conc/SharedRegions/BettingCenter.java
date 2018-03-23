@@ -1,7 +1,9 @@
 package afternoonatrace_conc.SharedRegions;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -9,29 +11,59 @@ import java.util.ArrayList;
 public class BettingCenter {
 
     /**
-     * Broker is waiting for a bet - synchronization point
+     * Winning chances of the horses in the current race.
+     */
+    private int[] currentHorsesWinningChances;
+
+    /**
+     * Broker is waiting for a bet - synchronization point.
      */
     private boolean waitForBet;
 
     /**
-     * Spectator is waiting for Broker to accept the bet - synchronization point
+     * Array with boolean of accepted Spectator's bets - synchronization point.
      */
-    private boolean waitForFinishedBet;
+    private boolean[] acceptedSpectatorsBets;
 
     /**
      * List of all bets of the current race.
      */
-    private ArrayList<Bet> bets;
-
-    /**
-     * Name of the Spectator's that had is bet accepted.
-     */
-    private int lastSpectatorAccepted;
+    private ArrayList<Bet> raceBets;
 
     /**
      * Number of accepted bets.
      */
     private int numberAcceptedBets;
+
+    /**
+     * Spectator is waiting for Broker give gains - synchronization point.
+     */
+    private boolean waitForGains;
+
+    /**
+     * Broker is waiting for a Spectator to collect the gains - synchronization point.
+     */
+    private boolean waitForWinningSpectator;
+
+    /**
+     * List of winning Spectators.
+     */
+    private boolean[] winningSpectator;
+
+    /**
+     * List of the gains the winning Spectators earned.
+     */
+    private int[] spectatorsGains;
+
+    /**
+     * List of spectators waiting for collecting gains
+     */
+    private ArrayList<Integer> spectatorWaitingGains;
+
+    /**
+     * Current spectator collecting the gains.
+     */
+    private int currentSpectatorCollecting;
 
     /**
      * Reference to General Repository
@@ -46,12 +78,28 @@ public class BettingCenter {
     public BettingCenter(GeneralRepository genRepos){
         this.genRepos = genRepos;
 
-        bets = new ArrayList<>();
-        lastSpectatorAccepted = -1;
+        raceBets = new ArrayList<>();
         numberAcceptedBets = 0;
+        acceptedSpectatorsBets = new boolean[SimulPar.S];
 
+        winningSpectator = new boolean[SimulPar.S];
+        spectatorsGains = new int[SimulPar.S];
+        spectatorWaitingGains = new ArrayList<>();
+        currentSpectatorCollecting = -1;
+
+        // sync vars
         waitForBet = true;
-        waitForFinishedBet = true;
+        waitForGains = true;
+        waitForWinningSpectator = true;
+    }
+
+    /**
+     * Broker is announcing the winning chances of the horses in the current race.
+     *
+     *   @param horseChances List of Horses/Jockey pairs winning chances
+     */
+    public synchronized void setHorsesWinningChances(int[] horseChances){
+        currentHorsesWinningChances = horseChances;
     }
 
     /**
@@ -77,35 +125,34 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        lastSpectatorAccepted = bets.get(numberAcceptedBets).getSpectatorID();
+        int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
+        System.out.println(((Broker) Thread.currentThread()).getName() + " accepted a bet");
+        System.out.println(raceBets.get(numberAcceptedBets).toString());
 
-        System.out.println(bets.get(numberAcceptedBets).toString());
-
+        acceptedSpectatorsBets[lastSpectatorAccepted] = true;
         numberAcceptedBets++;
-        waitForFinishedBet = false;
         waitForBet = true;
 
         notifyAll();
-
-        System.out.println(((Broker) Thread.currentThread()).getName() + " accepted a bet");
     }
 
     /**
      * Spectator places a bet and is waiting for the broker to accept it.
      *
-     *   @param money Ammount of the bet being made
-     *   @param horseID Identifier of the Horse/Jockey pair that the Spectator is betting
+     *   @param horseId Identifier of the Horse/Jockey pair that the Spectator is betting
      */
-    public synchronized void placeABet(int money, int horseID){
+    public synchronized void placeABet(int horseId){
         ((Spectators) Thread.currentThread()).setState(Spectators.States.PLACING_A_BET);
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is placing a bet in Horse " + horseID + " with ammount " + money);
+        int spectatorId = ((Spectators) Thread.currentThread()).getSID();
+        int spectatorWallet = ((Spectators) Thread.currentThread()).getFunds();
+        int money = ThreadLocalRandom.current().nextInt(1,spectatorWallet);
 
-        int spectatorID = ((Spectators) Thread.currentThread()).getSID();
+        System.out.println(Thread.currentThread().getName() + " is placing a bet in Horse " + horseId + " with ammount " + money + " (Wallet:" + spectatorWallet + ")");
 
-        bets.add(new Bet(spectatorID, money, horseID));
+        raceBets.add(new Bet(spectatorId, money, horseId));
 
-        while(waitForFinishedBet || spectatorID != lastSpectatorAccepted){
+        while(!acceptedSpectatorsBets[spectatorId]){
             waitForBet = false;
             notifyAll();
             try{
@@ -113,9 +160,30 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        waitForFinishedBet = true;
-
         System.out.println(((Spectators) Thread.currentThread()).getName() + " finished placing a bet");
+    }
+
+    /**
+     * Broker is checking if any Spectator betted in the winning horses.
+     *
+     *   @param winningHorses List of winning horses
+     *   @return
+     */
+    public synchronized boolean areThereAnyWinners(int[] winningHorses){
+        ((Broker) Thread.currentThread()).setState(Broker.States.SETTLING_ACCOUNTS);
+
+        boolean isThereAnyWinner = false;
+
+        for(int winner : winningHorses){
+            for(Bet bet : raceBets){
+                if(bet.getHorseId() == winner){
+                    System.out.println(Thread.currentThread().getName() + " says that there are winners");
+                    winningSpectator[bet.getSpectatorId()] = true;
+                    isThereAnyWinner = true;
+                }
+            }
+        }
+        return isThereAnyWinner;
     }
 
     /**
@@ -126,17 +194,36 @@ public class BettingCenter {
     public synchronized boolean honouredAllTheBets(){
         if(true){
             // Reset variables for next race
-            bets.clear();
-            lastSpectatorAccepted = -1;
+            raceBets.clear();
             numberAcceptedBets = 0;
+            Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
+            Arrays.fill(winningSpectator, Boolean.FALSE);
 
             return true;
         }
         return false;
     }
 
-    public synchronized void hounourTheBet(){
+    /**
+     * Broker is honouring the bets.
+     */
+    public synchronized void honourTheBet(){
 
+        System.out.println(Thread.currentThread().getName() + "  waiting to pay a Spectator");
+
+        while(waitForWinningSpectator){
+            try{
+                wait();
+            }catch(InterruptedException e){}
+        }
+
+        //int spectatorId = spectatorWaitingGains.
+
+        waitForWinningSpectator = true;
+
+        notifyAll();
+
+        System.out.println(Thread.currentThread().getName() + " payed a Spectator");
     }
 
     /**
@@ -149,21 +236,21 @@ public class BettingCenter {
 
         System.out.println(((Spectators) Thread.currentThread()).getName() + " is collecting the gains");
 
-        int spectatorID = ((Spectators) Thread.currentThread()).getSID();
+        int spectatorId = ((Spectators) Thread.currentThread()).getSID();
 
-        while(waitForFinishedBet || spectatorID != lastSpectatorAccepted){
-            waitForBet = false;
+        spectatorWaitingGains.add(spectatorId);
+
+        while(!winningSpectator[spectatorId]){
+            waitForWinningSpectator = false;
             notifyAll();
             try{
                 wait();
             }catch(InterruptedException e){}
         }
 
-        waitForFinishedBet = true;
-
         System.out.println(((Spectators) Thread.currentThread()).getName() + " fineshed collecting the gains");
 
-        return 1;
+        return spectatorsGains[spectatorId];
     }
 
 
@@ -205,7 +292,7 @@ public class BettingCenter {
          *
          *   @return The id
          */
-        private int getSpectatorID(){
+        private int getSpectatorId(){
             return sid;
         }
 
@@ -214,7 +301,7 @@ public class BettingCenter {
          *
          *   @return The id
          */
-        private int getHorseID(){
+        private int getHorseId(){
             return hid;
         }
 

@@ -80,7 +80,7 @@ public class Broker extends Thread{
     }
 
     /**
-     * Get the current state of the Broker
+     * Get the current state of the Broker.
      *
      *   @return The current state
      */
@@ -95,7 +95,8 @@ public class Broker extends Thread{
     public void run(){
         System.out.println(name + " is opening the event");
         for(int k=0; k < SimulPar.K; k++){
-            stable.summonHorsesToPaddock(k);
+            int [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k);
+            bettingCenter.setHorsesWinningChances(horsesWinningProbabilities);
             controlCenter.summonHorsesToPaddock(); //Blocked
             //unblocked by lastCheckHorses() or placeABet()
             while(!bettingCenter.acceptedAllBets()){
@@ -106,10 +107,10 @@ public class Broker extends Thread{
             controlCenter.startTheRace();//Blocked
             int[] winnerHorses = raceTrack.getResults();
             controlCenter.reportResults(winnerHorses);
-            if(controlCenter.areThereAnyWinners()){
+            if(bettingCenter.areThereAnyWinners(winnerHorses)){
                 while(!bettingCenter.honouredAllTheBets())
                     //Queue Unblock
-                    bettingCenter.hounourTheBet();//Blocked
+                    bettingCenter.honourTheBet();//Blocked
             }
         }
         controlCenter.entertainTheGuests();

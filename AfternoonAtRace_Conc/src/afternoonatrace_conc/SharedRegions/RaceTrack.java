@@ -1,6 +1,7 @@
 package afternoonatrace_conc.SharedRegions;
 import afternoonatrace_conc.Main.SimulPar;
 import afternoonatrace_conc.Entities.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +30,21 @@ public class RaceTrack {
     private ArrayList<Integer> winningHorses;
 
     /**
+     * Some Horse/Jockey pair(s) won the race.
+     */
+    private boolean winnersMet;
+
+    /**
+     * Number of horses that finished the race.
+     */
+    private int finishedHorses;
+
+    /**
+     * Track size.
+     */
+    private int trackSize;
+
+    /**
      * Reference to General Repository
      */
     private GeneralRepository genRepos;
@@ -44,6 +60,9 @@ public class RaceTrack {
         horsesTravelledDistance = new int[SimulPar.C];
         horseMoving = -1;
         winningHorses = new ArrayList<>();
+        winnersMet = false;
+        finishedHorses = 0;
+        trackSize = 0;
 
         // Sync conditions
         waitToMove = true;
@@ -53,6 +72,10 @@ public class RaceTrack {
      * Broker wakes up one horse.
      */
     public synchronized void startTheRace(){
+        trackSize = ThreadLocalRandom.current().nextInt(20, 50);
+
+        System.out.println(Thread.currentThread().getName() + " started the race with size " + trackSize);
+
         waitToMove = false;
         horseMoving = 0;
 
@@ -67,7 +90,7 @@ public class RaceTrack {
 
         System.out.println(Thread.currentThread().getName() + " is at the starting line");
 
-        int horseID = ((HorseJockey) Thread.currentThread()).getHJID();
+        int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
         while(waitToMove || horseID != horseMoving){
             try{
@@ -78,6 +101,7 @@ public class RaceTrack {
         waitToMove = true;
 
         System.out.println(Thread.currentThread().getName() + " left the start line");
+
     }
 
     /**
@@ -87,25 +111,48 @@ public class RaceTrack {
      */
     public synchronized boolean makeAMove(){
 
-        System.out.println(Thread.currentThread().getName() + "is making a move");
+        int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
         // Check if horse already finished the race
-        if(horsesTravelledDistance[horseID] < SimulPar.trackSize){
-            int horseID = ((HorseJockey) Thread.currentThread()).getHJID();
+        if(horsesTravelledDistance[horseID] < trackSize){
+            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.RUNNING);
             int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
-            int move = ThreadLocalRandom.current().nextInt(1, horseAgilities[horseID]);
+            int move = ThreadLocalRandom.current().nextInt(1, horseAgility);
 
             horsesTravelledDistance[horseID] += move;
+            System.out.println(Thread.currentThread().getName() + " move -> " + move + " (Total:" + horsesTravelledDistance[horseID] + ")");
+
+            if(horsesTravelledDistance[horseID] >= trackSize){
+                System.out.println(Thread.currentThread().getName() + " finished the race");
+                finishedHorses++;
+
+                // If there are no winners in this group of moves, then this Horse is one of them
+                if(!winnersMet){
+                    System.out.println(Thread.currentThread().getName() + " won!!");
+                    winningHorses.add(horseID);
+                }
+            }
+        }
+        else{
+            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_FINNISH_LINE);
         }
 
         //Wake up next horse
         waitToMove = false;
         horseMoving++;
 
+        // Check if all horses move the round
+        if(horseMoving == SimulPar.C){
+            horseMoving = 0;
+
+            if(!winningHorses.isEmpty()){
+                winnersMet = true;
+            }
+        }
+
         notifyAll();
 
-        return ;
-
+        return finishedHorses == SimulPar.C;
     }
 
     /**
@@ -114,9 +161,8 @@ public class RaceTrack {
      *   @return Race finished
      */
     public synchronized boolean hasRaceFinished(){
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.RUNNING);
 
-        int horseID = ((HorseJockey) Thread.currentThread()).getHJID();
+        int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
         while(waitToMove || horseID != horseMoving){
             try{
@@ -126,7 +172,7 @@ public class RaceTrack {
 
         waitToMove = true;
 
-        return false;
+        return finishedHorses == SimulPar.C;
     }
 
     /**
@@ -135,6 +181,7 @@ public class RaceTrack {
      *   @return Array of identifier of the horse(s) that have won the race
      */
     public synchronized int[] getResults(){
-        return winningHorses.toArray();
+        System.out.println(Thread.currentThread().getName() + " got the results");
+        return winningHorses.stream().mapToInt(i->i).toArray();
     }
 }
