@@ -155,6 +155,6 @@ public class HorseJockey extends Thread{
             }
         }while(!raceTrack.hasRaceFinished()); // Blocked
         //unblocked by startTheRace() or makeAMove()
-        stable.proceedToStable();
+        stable.proceedToStableToDie();
     }
 }

@@ -13,14 +13,9 @@ public class Stable {
     private int currentRace;
 
     /**
-     * Current horses at the stable for the nextrace number.
-     */
-    private int currentHorses;
-
-    /**
      * List of Horses winning chances.
      */
-    private int[] horsesWinningChances;
+    private int[] horsesAgilities;
 
     /**
      * Reference to General Repository
@@ -40,10 +35,9 @@ public class Stable {
     public Stable(GeneralRepository genRepos){
         this.genRepos = genRepos;
 
-        currentRace = 0;
-        currentHorses = 0;
+        currentRace = -1;
         int totalHorses = SimulPar.C * SimulPar.K;
-        horsesWinningChances = new int[totalHorses];
+        horsesAgilities = new int[totalHorses];
 
         // Sync conditions
         waitAtStable = true;
@@ -63,22 +57,12 @@ public class Stable {
         int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
 
         int index = horseId + (SimulPar.C * horseRaceNumber);
+        horsesAgilities[index] = horseAgility;
 
-        horsesWinningChances[index] = horseAgility;
-
-        currentHorses++;
-
-        while(waitAtStable || horseRaceNumber != currentRace){
+        while(horseRaceNumber != currentRace){
             try{
                 wait();
             }catch(InterruptedException e){}
-        }
-
-        currentHorses--;
-
-        // Last horse leaving the stable resets it for the next race
-        if(currentHorses == 0){
-            waitAtStable = true;
         }
 
         System.out.println(Thread.currentThread().getName() + " left the stable");
@@ -90,26 +74,37 @@ public class Stable {
      *   @param raceNumber Number of the race that is going to occur
      *   @return List of the winning chances of the horses in the current race
      */
-    public synchronized int[] summonHorsesToPaddock(int raceNumber){
+    public synchronized double[] summonHorsesToPaddock(int raceNumber){
 
+        System.out.println("\n" + Thread.currentThread().getName() + " -> Race " + raceNumber + " is starting");
         // Wake up horses
         currentRace = raceNumber;
         waitAtStable = false;
 
         notifyAll(); // Wakes up Horses
 
-        int [] horsesChances = new int[SimulPar.C];
+        double [] horsesChances = new double[SimulPar.C];
         int sumAgilities = 0;
         for(int i = 0; i < SimulPar.C; i++){
             int idx = i + (SimulPar.C * raceNumber);
-            sumAgilities += horsesWinningChances[ idx ];
+            sumAgilities += horsesAgilities[ idx ];
         }
 
         for(int i = 0; i < SimulPar.C; i++){
             int idx = i + (SimulPar.C * raceNumber);
-            horsesChances[i] = horsesWinningChances[ idx ] / sumAgilities;
+            double horseAgility = horsesAgilities[ idx ];
+            horsesChances[i] =  horseAgility / sumAgilities;
         }
 
         return horsesChances;
+    }
+
+    /**
+     * Horses procced to stable and then die.
+     */
+    public synchronized void proceedToStableToDie(){
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_STABLE);
+
+        System.out.println(Thread.currentThread().getName() + " is in the stable and died");
     }
 }

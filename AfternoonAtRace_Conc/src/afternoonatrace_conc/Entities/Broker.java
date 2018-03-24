@@ -95,7 +95,7 @@ public class Broker extends Thread{
     public void run(){
         System.out.println(name + " is opening the event");
         for(int k=0; k < SimulPar.K; k++){
-            int [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k);
+            double [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k);
             bettingCenter.setHorsesWinningChances(horsesWinningProbabilities);
             controlCenter.summonHorsesToPaddock(); //Blocked
             //unblocked by lastCheckHorses() or placeABet()

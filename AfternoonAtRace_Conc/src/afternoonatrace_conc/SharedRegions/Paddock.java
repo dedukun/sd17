@@ -12,7 +12,7 @@ public class Paddock {
     /**
      * Identifier of last horse leaving paddock.
      */
-    private int lastHorse;
+    private int lastHorseLeaving;
 
     /**
      * Number of horses at the paddock
@@ -55,9 +55,10 @@ public class Paddock {
 
         horsesAtPaddock = 0;
         spectatorsAtParade = 0;
-        lastHorse = -1;
+        lastHorseLeaving = -1;
         horsesAgilities = new int[SimulPar.C];
 
+        // sync conditions
         paradingHorses = true;
         evaluatingHorses = true;
     }
@@ -86,7 +87,7 @@ public class Paddock {
 
         horsesAtPaddock--;
         if(horsesAtPaddock == 0)
-            lastHorse = horseId;
+            lastHorseLeaving = horseId;
 
         System.out.println(Thread.currentThread().getName() + " leaving the paddock");
     }
@@ -97,6 +98,7 @@ public class Paddock {
      *   @return
      */
     public synchronized boolean lastArrivedToPaddock() {
+        System.out.println("Last Arrived -> " + horsesAtPaddock);
         return horsesAtPaddock == SimulPar.C - 1;
     }
 
@@ -118,11 +120,13 @@ public class Paddock {
                 wait();
             }catch(InterruptedException e){}
         }
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " finished checking the horses");
 
-        // Logic choice of horse TODO
+        int spectatorId = ((Spectators) Thread.currentThread()).getSID();
+        int horseToBet = chooseHorse(spectatorId);
 
-        return ThreadLocalRandom.current().nextInt(1,SimulPar.C);
+        System.out.println(((Spectators) Thread.currentThread()).getName() + " choose horse -> " + horseToBet);
+
+        return horseToBet;
     }
 
     /**
@@ -131,6 +135,7 @@ public class Paddock {
      *   @return
      */
     public synchronized boolean lastCheckHorses(){
+        System.out.println(Thread.currentThread().getName() + " is last? -> " + spectatorsAtParade);
         if(spectatorsAtParade == SimulPar.S - 1){
             // reset vars for next race
             evaluatingHorses = true;
@@ -145,7 +150,6 @@ public class Paddock {
      * Last Spectator to check the horses wakes them up.
      */
     public synchronized void unblockGoCheckHorses(){
-
         System.out.println(((Spectators) Thread.currentThread()).getName() + " is waking up the Horses");
 
         paradingHorses = false;
@@ -158,16 +162,53 @@ public class Paddock {
      */
     public synchronized void unblockProceedToStartLine(){
         int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
-        if( horseId == lastHorse ){
+        if( horseId == lastHorseLeaving ){
             System.out.println(((HorseJockey) Thread.currentThread()).getName() + " is waking up the Spectators");
 
             //reset values for next race
             paradingHorses = true;
-            lastHorse = -1;
+            lastHorseLeaving = -1;
 
             evaluatingHorses = false;
 
             notifyAll();
         }
+    }
+
+    /**
+     * The Spectator chooses the horse depending of who he is.
+     *
+     *   @param spectatorId Identifier of the Spectator
+     *   @return Identifier of the chosen Horse/Jockey pair
+     */
+    private int chooseHorse(int spectatorId){
+
+        int horse = 0;
+        switch(spectatorId){
+            // Best horse
+            case 0:
+            case 1:
+                int maxAgility = 0;
+                for(int i = 0; i < horsesAgilities.length; i++){
+                    if( horsesAgilities[i] > maxAgility){
+                        maxAgility = horsesAgilities[i];
+                        horse = i;
+                    }
+                }
+                break;
+            // Worst horse
+            case 2:
+                int minAgility = 10;
+                for(int i = 0; i < horsesAgilities.length; i++){
+                    if( horsesAgilities[i] < minAgility){
+                        minAgility = horsesAgilities[i];
+                        horse = i;
+                    }
+                }
+                break;
+            default:
+                horse = ThreadLocalRandom.current().nextInt(1,SimulPar.C);
+        }
+        return horse;
     }
 }

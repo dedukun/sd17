@@ -25,7 +25,7 @@ public class Spectators extends Thread{
     /**
      * Spectator's current funds.
      */
-    private int wallet;
+    private double wallet;
 
     /**
      * Enumerate with the Spectator States.
@@ -69,7 +69,7 @@ public class Spectators extends Thread{
         this.sname = name;
         this.sid = sid;
 
-        this.wallet = new Random().nextInt(101) + 27;
+        this.wallet = (double) new Random().nextInt(101) + 27;
 
         this.paddock = paddock;
         this.bettingCenter = bettingCenter;
@@ -117,7 +117,7 @@ public class Spectators extends Thread{
      *
      *   @return The funds
      */
-    public int getFunds() {
+    public double getFunds() {
         return wallet;
     }
 
@@ -149,7 +149,7 @@ public class Spectators extends Thread{
             controlCenter.goWatchTheRace();//Blocked
             //Unblocked by reportResults()
             if(controlCenter.haveIWon(horseID))
-                wallet += bettingCenter.goCollectTheGains();//Blocked
+                bettingCenter.goCollectTheGains();//Blocked
             //Unblocked by honourTheBets()
         }
         controlCenter.relaxABit();

@@ -3,6 +3,7 @@ import afternoonatrace_conc.Main.SimulPar;
 import afternoonatrace_conc.Entities.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -58,7 +59,7 @@ public class RaceTrack {
         this.genRepos = genRepos;
 
         horsesTravelledDistance = new int[SimulPar.C];
-        horseMoving = -1;
+        horseMoving = 0;
         winningHorses = new ArrayList<>();
         winnersMet = false;
         finishedHorses = 0;
@@ -76,8 +77,14 @@ public class RaceTrack {
 
         System.out.println(Thread.currentThread().getName() + " started the race with size " + trackSize);
 
-        waitToMove = false;
+        // Prepare variables for new race
+        Arrays.fill(horsesTravelledDistance, 0);
         horseMoving = 0;
+        winningHorses.clear();
+        winnersMet = false;
+        finishedHorses = 0;
+
+        waitToMove = false;
 
         notifyAll();
     }
@@ -120,16 +127,26 @@ public class RaceTrack {
             int move = ThreadLocalRandom.current().nextInt(1, horseAgility);
 
             horsesTravelledDistance[horseID] += move;
-            System.out.println(Thread.currentThread().getName() + " move -> " + move + " (Total:" + horsesTravelledDistance[horseID] + ")");
 
             if(horsesTravelledDistance[horseID] >= trackSize){
-                System.out.println(Thread.currentThread().getName() + " finished the race");
+                System.out.println(Thread.currentThread().getName() + " finished the race -> " + horsesTravelledDistance[horseID]);
                 finishedHorses++;
 
                 // If there are no winners in this group of moves, then this Horse is one of them
                 if(!winnersMet){
                     System.out.println(Thread.currentThread().getName() + " won!!");
-                    winningHorses.add(horseID);
+                    if(!winningHorses.isEmpty()){
+                        if(horsesTravelledDistance[horseID] > horsesTravelledDistance[winningHorses.get(0)]){
+                            winningHorses.clear();
+                            winningHorses.add(horseID);
+                        }
+                        else if(horsesTravelledDistance[horseID] == horsesTravelledDistance[winningHorses.get(0)]){
+                            winningHorses.add(horseID);
+                        }
+                    }
+                    else{
+                        winningHorses.add(horseID);
+                    }
                 }
             }
         }
@@ -182,6 +199,7 @@ public class RaceTrack {
      */
     public synchronized int[] getResults(){
         System.out.println(Thread.currentThread().getName() + " got the results");
+
         return winningHorses.stream().mapToInt(i->i).toArray();
     }
 }

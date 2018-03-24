@@ -11,9 +11,19 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BettingCenter {
 
     /**
+     * List of Spectators bet size.
+     */
+    private final double[] spectatorsBetSizes = { 0.5, 0.25, 0.25};
+
+    /**
      * Winning chances of the horses in the current race.
      */
-    private int[] currentHorsesWinningChances;
+    private double[] currentHorsesWinningChances;
+
+    /**
+     * Number of winning horses;
+     */
+    private int numberOfWinningHorses;
 
     /**
      * Broker is waiting for a bet - synchronization point.
@@ -48,7 +58,7 @@ public class BettingCenter {
     /**
      * List of the gains the winning Spectators earned.
      */
-    private int[] spectatorsGains;
+    private double[] spectatorsGains;
 
     /**
      * List of spectators waiting for collecting gains
@@ -58,12 +68,7 @@ public class BettingCenter {
     /**
      * Total number of winners.
      */
-    private int numberOfWinners;
-
-    /**
-     * Number of Spectators that already collected their gains.
-     */
-    private int numberOfCollectedGains;
+    private int numberOfWinningBets;
 
     /**
      * Number of Accepted winning bets.
@@ -87,10 +92,9 @@ public class BettingCenter {
         numberAcceptedBets = 0;
         acceptedSpectatorsBets = new boolean[SimulPar.S];
 
-        spectatorsGains = new int[SimulPar.S];
+        spectatorsGains = new double[SimulPar.S];
         spectatorWaitingGains = new ArrayList<>();
-        numberOfWinners = 0;
-        numberOfCollectedGains = 0;
+        numberOfWinningBets = 0;
         numberAcceptedWinners = 0;
 
         // sync vars
@@ -104,7 +108,7 @@ public class BettingCenter {
      *
      *   @param horseChances List of Horses/Jockey pairs winning chances
      */
-    public synchronized void setHorsesWinningChances(int[] horseChances){
+    public synchronized void setHorsesWinningChances(double[] horseChances){
         currentHorsesWinningChances = horseChances;
     }
 
@@ -114,7 +118,17 @@ public class BettingCenter {
      *   @return
      */
     public synchronized boolean acceptedAllBets(){
-        return numberAcceptedBets == SimulPar.S;
+        if(numberAcceptedBets == SimulPar.S){
+            // reset vars for race
+            numberOfWinningBets = 0;
+            numberAcceptedWinners = 0;
+            spectatorWaitingGains.clear();
+            Arrays.fill(waitForGains, Boolean.FALSE);
+            Arrays.fill(spectatorsGains, 0);
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -132,8 +146,7 @@ public class BettingCenter {
         }
 
         int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
-        System.out.println(((Broker) Thread.currentThread()).getName() + " accepted a bet");
-        System.out.println(raceBets.get(numberAcceptedBets).toString());
+        System.out.println("Broker accepted -> " + raceBets.get(numberAcceptedBets).toString());
 
         acceptedSpectatorsBets[lastSpectatorAccepted] = true;
         numberAcceptedBets++;
@@ -151,12 +164,22 @@ public class BettingCenter {
         ((Spectators) Thread.currentThread()).setState(Spectators.States.PLACING_A_BET);
 
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
-        int spectatorWallet = ((Spectators) Thread.currentThread()).getFunds();
-        int money = ThreadLocalRandom.current().nextInt(1,spectatorWallet);
+        double spectatorWallet = ((Spectators) Thread.currentThread()).getFunds();
+        double betSize;
 
-        System.out.println(Thread.currentThread().getName() + " is placing a bet in Horse " + horseId + " with ammount " + money + " (Wallet:" + spectatorWallet + ")");
+        // Chose bet size
+        if(spectatorId < 3){
+            betSize = spectatorWallet * spectatorsBetSizes[spectatorId];
+        }
+        else{ // Default bet size is 30% of the wallet
+            betSize = spectatorWallet * 0.3;
+        }
 
-        raceBets.add(new Bet(spectatorId, money, horseId));
+        ((Spectators) Thread.currentThread()).setTransaction(-betSize);
+
+        System.out.println(Thread.currentThread().getName() + " is placing a bet in Horse " + horseId + " with ammount " + betSize + " (Wallet:" + spectatorWallet + ")");
+
+        raceBets.add(new Bet(spectatorId, betSize, horseId));
 
         while(!acceptedSpectatorsBets[spectatorId]){
             waitForBet = false;
@@ -178,19 +201,19 @@ public class BettingCenter {
     public synchronized boolean areThereAnyWinners(int[] winningHorses){
         ((Broker) Thread.currentThread()).setState(Broker.States.SETTLING_ACCOUNTS);
 
-        boolean isThereAnyWinner = false;
+
+        numberOfWinningHorses = winningHorses.length;
 
         for(int winner : winningHorses){
             for(int i = 0; i < raceBets.size(); i++){
                 if(raceBets.get(i).getHorseId() == winner){
                     raceBets.get(i).betWon();
-                    numberOfWinners++;
-                    isThereAnyWinner = true;
+                    numberOfWinningBets++;
                 }
             }
         }
-        System.out.println(Thread.currentThread().getName() + " says that there are winners -> " + numberOfWinners);
-        return isThereAnyWinner;
+        System.out.println(Thread.currentThread().getName() + " says that there are winners -> " + numberOfWinningBets);
+        return numberOfWinningBets != 0;
     }
 
     /**
@@ -199,17 +222,13 @@ public class BettingCenter {
      *   @return
      */
     public synchronized boolean honouredAllTheBets(){
-        if(numberAcceptedWinners == numberOfWinners){
-
+        if(numberAcceptedWinners == numberOfWinningBets){
             System.out.println("ALL BETS HONOURED");
+
             // Reset variables for next race
             raceBets.clear();
             numberAcceptedBets = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
-
-            numberOfWinners = 0;
-            numberOfCollectedGains = 0;
-            Arrays.fill(waitForGains, Boolean.FALSE);
 
             return true;
         }
@@ -229,21 +248,22 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        int spectatorId = spectatorWaitingGains.get(numberOfCollectedGains);
+        // Get Spectator in queue
+        int spectatorId = spectatorWaitingGains.remove(0);
 
         for(Bet bet: raceBets){
             if(bet.getSpectatorId() == spectatorId){
                 // Check if this spectator is a winner
                 if(bet.isWinner()){
                     numberAcceptedWinners++;
-                    spectatorsGains[bet.getSpectatorId()] = bet.getAmmount() * 2;
+                    spectatorsGains[bet.getSpectatorId()] = bet.getAmmount() / (currentHorsesWinningChances[bet.getHorseId()] * numberOfWinningHorses) ;
+                    System.out.println("Payed Spectator -> " + spectatorId + " (" +  spectatorsGains[bet.getSpectatorId()] + ")");
                 }
 
                 break;
             }
         }
 
-        numberOfCollectedGains++;
         waitForGains[spectatorId] = true;
         waitForWinningSpectator = true;
 
@@ -254,10 +274,8 @@ public class BettingCenter {
 
     /**
      * Spectator collects the money that he has won.
-     *
-     *   @return Winnings ammount
      */
-    public synchronized int goCollectTheGains(){
+    public synchronized void goCollectTheGains(){
         ((Spectators) Thread.currentThread()).setState(Spectators.States.COLLECTING_THE_GAINS);
 
         System.out.println(((Spectators) Thread.currentThread()).getName() + " is collecting the gains");
@@ -274,10 +292,11 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        int earnings = spectatorsGains[spectatorId];
+        double earnings = spectatorsGains[spectatorId];
+
         System.out.println(((Spectators) Thread.currentThread()).getName() + " finished collecting the gains -> " + earnings);
 
-        return earnings;
+        ((Spectators) Thread.currentThread()).setTransaction(earnings);
     }
 
     /**
@@ -288,7 +307,7 @@ public class BettingCenter {
         /**
          * Bet Ammount.
          */
-        private int ammount;
+        private double ammount;
 
         /**
          * Horse/Jockey pair identifier.
@@ -312,7 +331,7 @@ public class BettingCenter {
          *   @param ammount Bet's ammount
          *   @param hid Horse/Jockey pair id
          */
-        private Bet(int sid, int ammount, int hid){
+        private Bet(int sid, double ammount, int hid){
             this.sid = sid;
             this.ammount = ammount;
             this.hid = hid;
@@ -342,7 +361,7 @@ public class BettingCenter {
          *
          *   @return The ammount
          */
-        private int getAmmount(){
+        private double getAmmount(){
             return ammount;
         }
 

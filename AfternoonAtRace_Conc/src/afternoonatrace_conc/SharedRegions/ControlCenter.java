@@ -32,7 +32,12 @@ public class ControlCenter{
     /**
      * Broker is waiting for the race to finish - synchronization condition.
      */
-    private boolean waitForEndOfRace2;
+    private boolean waitForEndRaceBroker;
+
+    /**
+     * Number of spectators that left the watching stands.
+     */
+    private int spectatosLeavingStands;
 
     /**
      * List with race winners.
@@ -52,12 +57,14 @@ public class ControlCenter{
     public ControlCenter(GeneralRepository genRepos){
         this.genRepos=genRepos;
 
+        spectatosLeavingStands = 0;
+
         // sync conditions
         eventFinished = false;
         waitForEvaluation = true;
         waitForNextRace = true;
         waitForEndOfRace = true;
-        waitForEndOfRace2 = true;
+        waitForEndRaceBroker = true;
     }
 
     /**
@@ -69,15 +76,13 @@ public class ControlCenter{
 
         ((Spectators) Thread.currentThread()).setState(Spectators.States.WAITING_FOR_A_RACE_TO_START);
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is waitng for next race");
+        System.out.println(((Spectators) Thread.currentThread()).getName() + " is waiting for next race");
 
         while(waitForNextRace){
             try{
                 wait();
             }catch(InterruptedException e){}
         }
-
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is going to parade");
 
         return !eventFinished;
     }
@@ -86,7 +91,6 @@ public class ControlCenter{
      * Broker is waiting for the spectators finishing seeing the horses.
      */
     public synchronized void  summonHorsesToPaddock(){
-
         ((Broker) Thread.currentThread()).setState(Broker.States.ANNOUNCING_NEXT_RACE);
 
         while(waitForEvaluation){
@@ -100,7 +104,7 @@ public class ControlCenter{
     }
 
     /**
-     * Last Spectator that finished watching the horses wakes up Broker
+     * Last Spectator that finished watching the horses wakes up Broker.
      */
     public synchronized void unblockGoCheckHorses(){
 
@@ -137,11 +141,14 @@ public class ControlCenter{
 
         System.out.println(((Broker) Thread.currentThread()).getName() + " is supervising the race");
 
-        while(waitForEndOfRace2){
+        while(waitForEndRaceBroker){
             try{
                 wait();
             }catch(InterruptedException e){}
         }
+
+        // Reset for next
+        waitForEndRaceBroker = true;
 
         System.out.println(((Broker) Thread.currentThread()).getName() + " finished supervising the race");
 
@@ -151,7 +158,7 @@ public class ControlCenter{
      * Last Horse/Jockey pair to make a move wakes up the Broker.
      */
     public synchronized void unblockMakeAMove(){
-        waitForEndOfRace2 = false;
+        waitForEndRaceBroker = false;
 
         notifyAll();
     }
@@ -168,6 +175,13 @@ public class ControlCenter{
             try{
                 wait();
             }catch(InterruptedException e){}
+        }
+
+        spectatosLeavingStands++;
+        if(spectatosLeavingStands == 0){
+            // Reset Vars
+            spectatosLeavingStands = 0;
+            waitForEndOfRace = true;
         }
 
         System.out.println(Thread.currentThread().getName() + " finished watching the race");
