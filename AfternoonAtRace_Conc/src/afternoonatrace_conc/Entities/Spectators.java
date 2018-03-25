@@ -150,7 +150,7 @@ public class Spectators extends Thread{
             //Unblocked by reportResults()
             if(controlCenter.haveIWon(horseID))
                 bettingCenter.goCollectTheGains();//Blocked
-            //Unblocked by honourTheBets()
+                //Unblocked by honourTheBets()
         }
         controlCenter.relaxABit();
     }

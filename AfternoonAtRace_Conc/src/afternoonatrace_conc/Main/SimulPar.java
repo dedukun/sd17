@@ -8,7 +8,7 @@ public class SimulPar {
     /**
      * Number of total races.
      */
-    public static final int K = 1;
+    public static final int K = 5;
 
     /**
      * Number of participating Horse/Jockeys pairs.

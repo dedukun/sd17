@@ -112,6 +112,7 @@ public class Broker extends Thread{
                     bettingCenter.honourTheBet();//Blocked
             }
         }
+        stable.entertainTheGuests(); // Unblock Horses
         controlCenter.entertainTheGuests();
     }
 }

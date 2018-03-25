@@ -18,9 +18,19 @@ public class Stable {
     private int[] horsesAgilities;
 
     /**
+     * End of event.
+     */
+    private boolean endEvent;
+
+    /**
      * Reference to General Repository
      */
     private GeneralRepository genRepos;
+
+    /**
+     * Number of horses that left the stable.
+     */
+    private int horsesThatLeftStable;
 
     /**
      * Horse/Jockey waiting at the stable for the start of the parade - synchronization condition.
@@ -38,9 +48,11 @@ public class Stable {
         currentRace = -1;
         int totalHorses = SimulPar.C * SimulPar.K;
         horsesAgilities = new int[totalHorses];
+        horsesThatLeftStable = 0;
 
         // Sync conditions
         waitAtStable = true;
+        endEvent = false;
     }
 
     /**
@@ -59,10 +71,17 @@ public class Stable {
         int index = horseId + (SimulPar.C * horseRaceNumber);
         horsesAgilities[index] = horseAgility;
 
-        while(horseRaceNumber != currentRace){
+        while( !endEvent && horseRaceNumber != currentRace){
             try{
                 wait();
             }catch(InterruptedException e){}
+        }
+
+        horsesThatLeftStable++;
+        if(horsesThatLeftStable == SimulPar.C){
+            //Reset vars
+            horsesThatLeftStable = 0;
+            currentRace = -1;
         }
 
         System.out.println(Thread.currentThread().getName() + " left the stable");
@@ -100,11 +119,13 @@ public class Stable {
     }
 
     /**
-     * Horses procced to stable and then die.
+     * Broker is closing the event and is waking up horses from stable.
      */
-    public synchronized void proceedToStableToDie(){
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_STABLE);
+    public synchronized void entertainTheGuests(){
+        System.out.println("Killing Horses");
 
-        System.out.println(Thread.currentThread().getName() + " is in the stable and died");
+        endEvent = true;
+
+        notifyAll();
     }
 }

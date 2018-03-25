@@ -10,14 +10,14 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Paddock {
 
     /**
-     * Identifier of last horse leaving paddock.
-     */
-    private int lastHorseLeaving;
-
-    /**
      * Number of horses at the paddock
      */
     private int horsesAtPaddock;
+
+    /**
+     * Number of horses that left the Paddock.
+     */
+    private int horsesLeftPaddock;
 
     /**
      * Number of Spectators evaluating Horses.
@@ -54,8 +54,8 @@ public class Paddock {
         this.genRepos = genRepos;
 
         horsesAtPaddock = 0;
+        horsesLeftPaddock = 0;
         spectatorsAtParade = 0;
-        lastHorseLeaving = -1;
         horsesAgilities = new int[SimulPar.C];
 
         // sync conditions
@@ -77,17 +77,27 @@ public class Paddock {
 
         horsesAgilities[horseId] = horseAgility;
 
-        horsesAtPaddock++;
-
         while(paradingHorses){
             try{
                 wait();
             }catch(InterruptedException e){}
         }
 
-        horsesAtPaddock--;
-        if(horsesAtPaddock == 0)
-            lastHorseLeaving = horseId;
+        horsesLeftPaddock++;
+
+        // Last Horse/Jockey pair wakes up the Spectators
+        if(horsesLeftPaddock == SimulPar.C){
+            System.out.println(((HorseJockey) Thread.currentThread()).getName() + " is waking up the Spectators");
+
+            // reset for next race
+            horsesAtPaddock = 0;
+            horsesLeftPaddock = 0;
+            paradingHorses = true;
+
+            evaluatingHorses = false;
+
+            notifyAll();
+        }
 
         System.out.println(Thread.currentThread().getName() + " leaving the paddock");
     }
@@ -98,8 +108,18 @@ public class Paddock {
      *   @return
      */
     public synchronized boolean lastArrivedToPaddock() {
-        System.out.println("Last Arrived -> " + horsesAtPaddock);
-        return horsesAtPaddock == SimulPar.C - 1;
+        horsesAtPaddock++;
+
+        if(horsesAtPaddock == SimulPar.C){
+            System.out.println(Thread.currentThread().getName() + " is the last to arrive to paddock");
+
+            // reset vars for next race
+            evaluatingHorses = true;
+            spectatorsAtParade = 0;
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -111,9 +131,7 @@ public class Paddock {
 
         ((Spectators) Thread.currentThread()).setState(Spectators.States.APPRAISING_THE_HORSES);
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is checking the horses");
-
-        spectatorsAtParade++;
+        System.out.println(((Spectators) Thread.currentThread()).getName() + " is checking the horses -> " + evaluatingHorses);
 
         while(evaluatingHorses){
             try{
@@ -135,11 +153,11 @@ public class Paddock {
      *   @return
      */
     public synchronized boolean lastCheckHorses(){
-        System.out.println(Thread.currentThread().getName() + " is last? -> " + spectatorsAtParade);
-        if(spectatorsAtParade == SimulPar.S - 1){
-            // reset vars for next race
-            evaluatingHorses = true;
-            spectatorsAtParade = 0;
+
+        spectatorsAtParade++;
+
+        if(spectatorsAtParade == SimulPar.S){
+            System.out.println(Thread.currentThread().getName() + " is last CheckHorses");
 
             return true;
         }
@@ -155,24 +173,6 @@ public class Paddock {
         paradingHorses = false;
 
         notifyAll();
-    }
-
-    /**
-     * Last Horse/Jockey pair leaving the paddock wakes up the Spectators.
-     */
-    public synchronized void unblockProceedToStartLine(){
-        int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
-        if( horseId == lastHorseLeaving ){
-            System.out.println(((HorseJockey) Thread.currentThread()).getName() + " is waking up the Spectators");
-
-            //reset values for next race
-            paradingHorses = true;
-            lastHorseLeaving = -1;
-
-            evaluatingHorses = false;
-
-            notifyAll();
-        }
     }
 
     /**

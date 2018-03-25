@@ -119,6 +119,7 @@ public class BettingCenter {
      */
     public synchronized boolean acceptedAllBets(){
         if(numberAcceptedBets == SimulPar.S){
+            System.out.println("ACCEPTED ALL BETS");
             // reset vars for race
             numberOfWinningBets = 0;
             numberAcceptedWinners = 0;
@@ -201,7 +202,6 @@ public class BettingCenter {
     public synchronized boolean areThereAnyWinners(int[] winningHorses){
         ((Broker) Thread.currentThread()).setState(Broker.States.SETTLING_ACCOUNTS);
 
-
         numberOfWinningHorses = winningHorses.length;
 
         for(int winner : winningHorses){
@@ -213,7 +213,16 @@ public class BettingCenter {
             }
         }
         System.out.println(Thread.currentThread().getName() + " says that there are winners -> " + numberOfWinningBets);
-        return numberOfWinningBets != 0;
+
+        if( numberOfWinningBets == 0){
+            // Reset variables for next race
+            raceBets.clear();
+            numberAcceptedBets = 0;
+            Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
+
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -257,9 +266,9 @@ public class BettingCenter {
                 if(bet.isWinner()){
                     numberAcceptedWinners++;
                     spectatorsGains[bet.getSpectatorId()] = bet.getAmmount() / (currentHorsesWinningChances[bet.getHorseId()] * numberOfWinningHorses) ;
-                    System.out.println("Payed Spectator -> " + spectatorId + " (" +  spectatorsGains[bet.getSpectatorId()] + ")");
                 }
 
+                System.out.println("Broker payed Spectator" + spectatorId + " -> " +  spectatorsGains[bet.getSpectatorId()]);
                 break;
             }
         }
@@ -268,8 +277,6 @@ public class BettingCenter {
         waitForWinningSpectator = true;
 
         notifyAll();
-
-        System.out.println(Thread.currentThread().getName() + " payed a Spectator");
     }
 
     /**

@@ -73,6 +73,7 @@ public class RaceTrack {
      * Broker wakes up one horse.
      */
     public synchronized void startTheRace(){
+
         trackSize = ThreadLocalRandom.current().nextInt(20, 50);
 
         System.out.println(Thread.currentThread().getName() + " started the race with size " + trackSize);
@@ -181,7 +182,7 @@ public class RaceTrack {
 
         int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
-        while(waitToMove || horseID != horseMoving){
+        while( (finishedHorses != SimulPar.C) && (waitToMove || horseID != horseMoving)){
             try{
                 wait();
             }catch(InterruptedException e){}

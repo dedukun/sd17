@@ -12,7 +12,7 @@ public class ControlCenter{
     /**
      * Boolean that represents all the races were already runned. //TODO change this
      */
-    private boolean eventFinished;
+    private boolean theresANewRace;
 
     /**
      * Broker is waiting for spectators to evaluate the horses - synchronization condition.
@@ -60,7 +60,7 @@ public class ControlCenter{
         spectatosLeavingStands = 0;
 
         // sync conditions
-        eventFinished = false;
+        theresANewRace = true;
         waitForEvaluation = true;
         waitForNextRace = true;
         waitForEndOfRace = true;
@@ -84,7 +84,7 @@ public class ControlCenter{
             }catch(InterruptedException e){}
         }
 
-        return !eventFinished;
+        return theresANewRace;
     }
 
     /**
@@ -147,7 +147,7 @@ public class ControlCenter{
             }catch(InterruptedException e){}
         }
 
-        // Reset for next
+        // Reset for next race
         waitForEndRaceBroker = true;
 
         System.out.println(((Broker) Thread.currentThread()).getName() + " finished supervising the race");
@@ -178,7 +178,7 @@ public class ControlCenter{
         }
 
         spectatosLeavingStands++;
-        if(spectatosLeavingStands == 0){
+        if(spectatosLeavingStands == SimulPar.S){
             // Reset Vars
             spectatosLeavingStands = 0;
             waitForEndOfRace = true;
@@ -193,6 +193,7 @@ public class ControlCenter{
      *   @param winners Array with the identifier of the winning Horse/Jockey pair(s)
      */
     public synchronized void reportResults(int[] winners){
+        System.out.println("Broker is resporting the results");
         raceWinners = winners;
         waitForEndOfRace = false;
 
@@ -220,7 +221,8 @@ public class ControlCenter{
 
         ((Broker) Thread.currentThread()).setState(Broker.States.PLAYING_HOST_AT_THE_BAR);
 
-        eventFinished = true;
+        waitForNextRace = false;
+        theresANewRace = false;
 
         notifyAll();
     }

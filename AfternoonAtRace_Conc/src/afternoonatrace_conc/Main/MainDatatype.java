@@ -14,38 +14,63 @@ public class MainDatatype {
     public static void main(String[] args) {
 
         // Shared Regions Initialization
-        GeneralRepository gr = new GeneralRepository();
-        Stable s = new Stable(gr);
-        Paddock p = new Paddock(gr);
-        RaceTrack rt = new RaceTrack(gr);
-        BettingCenter bc = new BettingCenter(gr);
-        ControlCenter cc = new ControlCenter(gr);
+        GeneralRepository generalRepository = new GeneralRepository();
+        Stable stable= new Stable(generalRepository);
+        Paddock paddock= new Paddock(generalRepository);
+        RaceTrack raceTrack= new RaceTrack(generalRepository);
+        BettingCenter bettingCenter= new BettingCenter(generalRepository);
+        ControlCenter controlCenter= new ControlCenter(generalRepository);
 
 
         //Entities Initialization
-        //Races
-        HorseJockey [] hj = new HorseJockey[SimulPar.C];
-        for(int r=0;r<SimulPar.K;r++){
-            //HorseJockey
-            for(int c=0;c<SimulPar.C;c++){
-                String name = "HorseJockey"+Integer.toString(r)+"_"+Integer.toString(c);
-                hj[c]=new HorseJockey(name,r,c, cc, p, rt, s);
-                //launching thread
-                hj[c].start();
+        //HorseJockey
+        HorseJockey [] horseJockey = new HorseJockey[SimulPar.C * SimulPar.K];
+        for(int race=0;race<SimulPar.K;race++){
+            for(int id=0;id<SimulPar.C;id++){
+                String name = "HorseJockey"+Integer.toString(race)+"_"+Integer.toString(id);
+                int idx = id + (SimulPar.C * race);
+                horseJockey[idx]=new HorseJockey(name, race, id, controlCenter, paddock, raceTrack, stable);
+
+                horseJockey[idx].start();
             }
         }
 
         //Spectators
-        Spectators [] specs = new Spectators[SimulPar.S];
-        for(int ns=0;ns<SimulPar.S;ns++){
-            String name = "Spectactor"+Integer.toString(ns);
-            specs[ns]=new Spectators(name, ns, bc, cc, p);
-            //launching thread
-            specs[ns].start();
+        Spectators [] spectator = new Spectators[SimulPar.S];
+        for(int id=0;id<SimulPar.S;id++){
+            String name = "Spectactor"+Integer.toString(id);
+            spectator[id]=new Spectators(name, id, bettingCenter, controlCenter, paddock);
+
+            spectator[id].start();
         }
 
         //Broker
-        Broker b = new Broker("Broker", bc, cc, rt, s);
-        b.start();
+        Broker broker = new Broker("Broker", bettingCenter, controlCenter, raceTrack, stable);
+        broker.start();
+
+
+        // End Threads
+
+        //HorseJockey
+        for(int race=0;race<SimulPar.K;race++){
+            for(int id=0;id<SimulPar.C;id++){
+                int idx = id + (SimulPar.C * race);
+                try{
+                    horseJockey[idx].join();
+                }catch(InterruptedException e){}
+            }
+        }
+
+        //Spectators
+        for(int id=0;id<SimulPar.S;id++){
+            try{
+                spectator[id].join();
+            }catch(InterruptedException e){}
+        }
+
+        //Broker
+        try{
+            broker.join();
+        }catch(InterruptedException e){}
     }
 }

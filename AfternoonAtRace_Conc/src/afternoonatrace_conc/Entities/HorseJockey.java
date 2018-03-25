@@ -146,7 +146,6 @@ public class HorseJockey extends Thread{
             controlCenter.unblockProceedToPaddock();
         //unblocked by lastCheckHorses()
         paddock.proceedToPaddock(); //Blocked
-        paddock.unblockProceedToStartLine();
         raceTrack.proceedToStartLine(); //Blocked
         do{
             boolean last = raceTrack.makeAMove();
@@ -155,6 +154,6 @@ public class HorseJockey extends Thread{
             }
         }while(!raceTrack.hasRaceFinished()); // Blocked
         //unblocked by startTheRace() or makeAMove()
-        stable.proceedToStableToDie();
+        stable.proceedToStable();
     }
 }
