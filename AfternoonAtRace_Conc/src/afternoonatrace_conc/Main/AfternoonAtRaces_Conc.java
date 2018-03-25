@@ -5,7 +5,7 @@ import afternoonatrace_conc.SharedRegions.*;
 /**
  *
  */
-public class MainDatatype {
+public class AfternoonAtRaces_Conc {
     /**
      * Main program.
      *
