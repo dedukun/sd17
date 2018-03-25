@@ -22,12 +22,12 @@ public class Broker extends Thread{
      */
     public static enum States
     {
-        OPENING_THE_EVENT,
-        ANNOUNCING_NEXT_RACE,
-        WAITING_FOR_BETS,
-        SUPERVISING_THE_RACE,
-        SETTLING_ACCOUNTS,
-        PLAYING_HOST_AT_THE_BAR
+        OTE,
+        ANR,
+        WFB,
+        STR,
+        SA,
+        PHAB
     }
 
     /**
@@ -62,12 +62,13 @@ public class Broker extends Thread{
     public Broker(String name, BettingCenter bettingCenter, ControlCenter controlCenter, RaceTrack raceTrack, Stable stable) {
         super(name);
         this.name = name;
-        this.bstate = States.OPENING_THE_EVENT;
+        this.bstate = States.OTE;
 
         this.bettingCenter = bettingCenter;
         this.controlCenter = controlCenter;
         this.raceTrack = raceTrack;
         this.stable = stable;
+        
     }
 
     /**

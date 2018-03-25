@@ -32,12 +32,12 @@ public class Spectators extends Thread{
      */
     public static enum States
     {
-        WAITING_FOR_A_RACE_TO_START,
-        APPRAISING_THE_HORSES,
-        PLACING_A_BET,
-        WATCHING_A_RACE,
-        COLLECTING_THE_GAINS,
-        CELEBRATING
+        WRS,
+        ATH,
+        PAB,
+        WAR,
+        CTG,
+        CB
     }
 
     /**
@@ -111,6 +111,7 @@ public class Spectators extends Thread{
     public int getSID() {
         return sid;
     }
+    
 
     /**
      * Get Spectator current funds.
@@ -120,7 +121,7 @@ public class Spectators extends Thread{
     public double getFunds() {
         return wallet;
     }
-
+    
     /**
      * Updates the Spectator's funds.
      *

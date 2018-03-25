@@ -21,7 +21,6 @@ public class MainDatatype {
         BettingCenter bettingCenter= new BettingCenter(generalRepository);
         ControlCenter controlCenter= new ControlCenter(generalRepository);
 
-
         //Entities Initialization
         //HorseJockey
         HorseJockey [] horseJockey = new HorseJockey[SimulPar.C * SimulPar.K];
@@ -48,6 +47,9 @@ public class MainDatatype {
         Broker broker = new Broker("Broker", bettingCenter, controlCenter, raceTrack, stable);
         broker.start();
 
+        //Iniciar Log
+        generalRepository.initLog();
+        generalRepository.setBrokerState(Broker.States.OTE);
 
         // End Threads
 

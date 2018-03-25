@@ -136,8 +136,7 @@ public class BettingCenter {
      * Broker is accepting a bet from a Spectator.
      */
     public synchronized void acceptTheBet(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.WAITING_FOR_BETS);
-
+        ((Broker) Thread.currentThread()).setState(Broker.States.WFB);
         System.out.println(((Broker) Thread.currentThread()).getName() + " is waiting for a bet");
 
         while(waitForBet){
@@ -153,6 +152,8 @@ public class BettingCenter {
         numberAcceptedBets++;
         waitForBet = true;
 
+        genRepos.setBrokerState(Broker.States.WFB);
+
         notifyAll();
     }
 
@@ -162,7 +163,7 @@ public class BettingCenter {
      *   @param horseId Identifier of the Horse/Jockey pair that the Spectator is betting
      */
     public synchronized void placeABet(int horseId){
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.PLACING_A_BET);
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.PAB);
 
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
         double spectatorWallet = ((Spectators) Thread.currentThread()).getFunds();
@@ -190,6 +191,11 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
+        genRepos.setSpectatorState(spectatorId, Spectators.States.PAB);
+        genRepos.setBetS(spectatorId, horseId);
+        genRepos.setBetA(spectatorId, (int)betSize);
+        genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
+
         System.out.println(((Spectators) Thread.currentThread()).getName() + " finished placing a bet");
     }
 
@@ -200,7 +206,7 @@ public class BettingCenter {
      *   @return
      */
     public synchronized boolean areThereAnyWinners(int[] winningHorses){
-        ((Broker) Thread.currentThread()).setState(Broker.States.SETTLING_ACCOUNTS);
+        ((Broker) Thread.currentThread()).setState(Broker.States.SA);
 
         numberOfWinningHorses = winningHorses.length;
 
@@ -214,6 +220,7 @@ public class BettingCenter {
         }
         System.out.println(Thread.currentThread().getName() + " says that there are winners -> " + numberOfWinningBets);
 
+        genRepos.setBrokerState(Broker.States.SA);
         if( numberOfWinningBets == 0){
             // Reset variables for next race
             raceBets.clear();
@@ -283,7 +290,7 @@ public class BettingCenter {
      * Spectator collects the money that he has won.
      */
     public synchronized void goCollectTheGains(){
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.COLLECTING_THE_GAINS);
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.CTG);
 
         System.out.println(((Spectators) Thread.currentThread()).getName() + " is collecting the gains");
 
@@ -304,6 +311,9 @@ public class BettingCenter {
         System.out.println(((Spectators) Thread.currentThread()).getName() + " finished collecting the gains -> " + earnings);
 
         ((Spectators) Thread.currentThread()).setTransaction(earnings);
+
+        genRepos.setSpectatorState(spectatorId, Spectators.States.CTG);
+        genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
     }
 
     /**
