@@ -122,20 +122,11 @@ public class Stable {
     /**
      * Broker is closing the event and is waking up horses from stable.
      */
-<<<<<<< HEAD
     public synchronized void entertainTheGuests(){
         System.out.println("Killing Horses");
 
         endEvent = true;
 
         notifyAll();
-=======
-    public synchronized void proceedToStableToDie(){
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATS);
-        
-        genRepos.setHorseState(((HorseJockey) Thread.currentThread()).getHJId(), HorseJockey.States.ATS);
-        
-        System.out.println(Thread.currentThread().getName() + " is in the stable and died");
->>>>>>> 5a82d1e751aa6b03a621804a0b787f3b4f312b38
     }
 }
