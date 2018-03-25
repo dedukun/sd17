@@ -70,8 +70,6 @@ public class Paddock {
 
         ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATP);
 
-        System.out.println(Thread.currentThread().getName() + " at the paddock");
-
         int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
         int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
 
@@ -87,7 +85,6 @@ public class Paddock {
 
         // Last Horse/Jockey pair wakes up the Spectators
         if(horsesLeftPaddock == SimulPar.C){
-            System.out.println(((HorseJockey) Thread.currentThread()).getName() + " is waking up the Spectators");
 
             // reset for next race
             horsesAtPaddock = 0;
@@ -99,8 +96,6 @@ public class Paddock {
             notifyAll();
         }
 
-        System.out.println(Thread.currentThread().getName() + " leaving the paddock");
-        
         genRepos.setHorseState(horseId, HorseJockey.States.ATP);
         genRepos.setHorseAgility(horseId, horseAgility);
         genRepos.setOdds();
@@ -115,7 +110,6 @@ public class Paddock {
         horsesAtPaddock++;
 
         if(horsesAtPaddock == SimulPar.C){
-            System.out.println(Thread.currentThread().getName() + " is the last to arrive to paddock");
 
             // reset vars for next race
             evaluatingHorses = true;
@@ -135,8 +129,6 @@ public class Paddock {
 
         ((Spectators) Thread.currentThread()).setState(Spectators.States.ATH);
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is checking the horses -> " + evaluatingHorses);
-
         while(evaluatingHorses){
             try{
                 wait();
@@ -146,11 +138,9 @@ public class Paddock {
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
         int horseToBet = chooseHorse(spectatorId);
 
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " choose horse -> " + horseToBet);
-
         genRepos.setSpectatorState(spectatorId, Spectators.States.ATH);
         genRepos.setBetS(spectatorId, horseToBet);
-        
+
         return horseToBet;
     }
 
@@ -163,19 +153,13 @@ public class Paddock {
 
         spectatorsAtParade++;
 
-        if(spectatorsAtParade == SimulPar.S){
-            System.out.println(Thread.currentThread().getName() + " is last CheckHorses");
-
-            return true;
-        }
-        return false;
+        return spectatorsAtParade == SimulPar.S;
     }
 
     /**
      * Last Spectator to check the horses wakes them up.
      */
     public synchronized void unblockGoCheckHorses(){
-        System.out.println(((Spectators) Thread.currentThread()).getName() + " is waking up the Horses");
 
         paradingHorses = false;
 

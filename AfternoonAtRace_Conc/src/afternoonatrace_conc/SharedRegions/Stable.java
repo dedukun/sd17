@@ -62,8 +62,6 @@ public class Stable {
 
         ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATS);
 
-        System.out.println(Thread.currentThread().getName() + " is in the stable");
-
         int horseRaceNumber = ((HorseJockey) Thread.currentThread()).getRaceNumber();
         int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
         int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
@@ -85,7 +83,6 @@ public class Stable {
         }
 
         genRepos.setHorseState(horseId, HorseJockey.States.ATS);
-        System.out.println(Thread.currentThread().getName() + " left the stable");
     }
 
     /**
@@ -96,7 +93,6 @@ public class Stable {
      */
     public synchronized double[] summonHorsesToPaddock(int raceNumber){
 
-        System.out.println("\n" + Thread.currentThread().getName() + " -> Race " + raceNumber + " is starting");
         // Wake up horses
         currentRace = raceNumber;
         waitAtStable = false;
@@ -123,7 +119,6 @@ public class Stable {
      * Broker is closing the event and is waking up horses from stable.
      */
     public synchronized void entertainTheGuests(){
-        System.out.println("Killing Horses");
 
         endEvent = true;
 

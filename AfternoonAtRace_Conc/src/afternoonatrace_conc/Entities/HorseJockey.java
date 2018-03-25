@@ -125,7 +125,7 @@ public class HorseJockey extends Thread{
     public int getAgility() {
         return agility;
     }
-    
+
     /**
      * Set Horse/Jockey pair state.
      *

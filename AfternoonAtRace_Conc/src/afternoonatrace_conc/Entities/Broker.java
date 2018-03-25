@@ -68,7 +68,7 @@ public class Broker extends Thread{
         this.controlCenter = controlCenter;
         this.raceTrack = raceTrack;
         this.stable = stable;
-        
+
     }
 
     /**
@@ -94,7 +94,6 @@ public class Broker extends Thread{
      */
     @Override
     public void run(){
-        System.out.println(name + " is opening the event");
         for(int k=0; k < SimulPar.K; k++){
             double [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k);
             bettingCenter.setHorsesWinningChances(horsesWinningProbabilities);

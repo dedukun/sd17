@@ -76,7 +76,6 @@ public class RaceTrack {
 
         trackSize = ThreadLocalRandom.current().nextInt(20, 50);
         genRepos.setTrackSize(trackSize);
-        System.out.println(Thread.currentThread().getName() + " started the race with size " + trackSize);
 
         // Prepare variables for new race
         Arrays.fill(horsesTravelledDistance, 0);
@@ -96,8 +95,6 @@ public class RaceTrack {
     public synchronized void proceedToStartLine(){
         ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ASL);
 
-        System.out.println(Thread.currentThread().getName() + " is at the starting line");
-
         int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
         while(waitToMove || horseID != horseMoving){
@@ -108,8 +105,6 @@ public class RaceTrack {
 
         waitToMove = true;
 
-        System.out.println(Thread.currentThread().getName() + " left the start line");
-        
         genRepos.setHorseState(horseID, HorseJockey.States.ASL);
     }
 
@@ -134,12 +129,10 @@ public class RaceTrack {
             genRepos.setHorseIteration(horseID);
 
             if(horsesTravelledDistance[horseID] >= trackSize){
-                System.out.println(Thread.currentThread().getName() + " finished the race -> " + horsesTravelledDistance[horseID]);
                 finishedHorses++;
                 genRepos.setHorseEnd(horseID);
                 // If there are no winners in this group of moves, then this Horse is one of them
                 if(!winnersMet){
-                    System.out.println(Thread.currentThread().getName() + " won!!");
                     if(!winningHorses.isEmpty()){
                         if(horsesTravelledDistance[horseID] > horsesTravelledDistance[winningHorses.get(0)]){
                             winningHorses.clear();
@@ -205,8 +198,6 @@ public class RaceTrack {
      *   @return Array of identifier of the horse(s) that have won the race
      */
     public synchronized int[] getResults(){
-        System.out.println(Thread.currentThread().getName() + " got the results");
-
         return winningHorses.stream().mapToInt(i->i).toArray();
     }
 }

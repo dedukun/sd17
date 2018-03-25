@@ -111,7 +111,7 @@ public class Spectators extends Thread{
     public int getSID() {
         return sid;
     }
-    
+
 
     /**
      * Get Spectator current funds.
@@ -121,7 +121,7 @@ public class Spectators extends Thread{
     public double getFunds() {
         return wallet;
     }
-    
+
     /**
      * Updates the Spectator's funds.
      *
