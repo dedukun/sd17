@@ -3,7 +3,8 @@ import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
 
 /**
- *
+ * Stable.<br>
+ * Where horses stay before a race.
  */
 public class Stable {
 

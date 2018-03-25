@@ -3,7 +3,8 @@ import afternoonatrace_conc.SharedRegions.*;
 import java.util.Random;
 
 /**
- * Horse/Jockey Thread.
+ * Horse/Jockey Entity.<br>
+ * Definition of a horse/jockey pair.
  */
 public class HorseJockey extends Thread{
 
@@ -34,6 +35,11 @@ public class HorseJockey extends Thread{
 
     /**
      * Enumerate with Horse/Jockey States.
+     * ATS - AT_THE_STABLE
+     * ATP - AT_THE_PADDOCK
+     * ASL - AT_THE_START_LINE
+     * RU  - RUNNING
+     * AFL - AT_THE_FINISH_LINE
      */
     public static enum States
     {

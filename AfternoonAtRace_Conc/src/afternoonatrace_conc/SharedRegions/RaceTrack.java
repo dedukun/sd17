@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- *
+ * Race track.<br>
+ * Where the race happens.
  */
 public class RaceTrack {
 

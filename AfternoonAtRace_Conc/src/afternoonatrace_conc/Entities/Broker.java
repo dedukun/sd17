@@ -3,7 +3,8 @@ import afternoonatrace_conc.Main.SimulPar;
 import afternoonatrace_conc.SharedRegions.*;
 
 /**
- * Broker Thread.
+ * Broker Entity.<br>
+ * Definition of a broker.
  */
 public class Broker extends Thread{
 
@@ -19,6 +20,12 @@ public class Broker extends Thread{
 
     /**
      * Enumerate with Broker States.
+     * OTE  - OPENING_THE_EVENT
+     * ANR  - ANNOUNCING_NEXT_RACE
+     * WFB  - WAITING_FOR_BETS
+     * STR  - SUPERVISING_THE_RACE
+     * SA   - SETTLING_ACCOUNTS
+     * PHAB - PLAYING_HOST_AT_THE_BAR
      */
     public static enum States
     {

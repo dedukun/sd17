@@ -4,8 +4,8 @@ import afternoonatrace_conc.Entities.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- *
- *
+ * Paddock.<br>
+ * Where horses can be first saw by spectators.
  */
 public class Paddock {
 
@@ -104,7 +104,7 @@ public class Paddock {
     /**
      * Checks if current Horse/Jockey pair is the last to arrive at the paddock.
      *
-     *   @return
+     *   @return true if the pair is the last one to arrive, false if not.
      */
     public synchronized boolean lastArrivedToPaddock() {
         horsesAtPaddock++;
@@ -121,7 +121,7 @@ public class Paddock {
     }
 
     /**
-     * Spectator is checking the horses nad chooses the horse to bet.
+     * Spectator is checking the horses and chooses the horse to bet.
      *
      *   @return The identifier of the Horse/Jockey pair to bet on
      */
@@ -147,7 +147,7 @@ public class Paddock {
     /**
      * Spectator checks if he is the last one to check the horses.
      *
-     *   @return
+     *   @return true if it is the last horse to be checked, false if not.
      */
     public synchronized boolean lastCheckHorses(){
 

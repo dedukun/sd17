@@ -3,10 +3,10 @@ import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
- *
+ * Betting Center.<br>
+ * Where all the operations related with bets are done.
  */
 public class BettingCenter {
 
@@ -115,7 +115,7 @@ public class BettingCenter {
     /**
      * Verifying if all bets were accepted in the current race.
      *
-     *   @return
+     *   @return true if all the bets were accepted or false if not.
      */
     public synchronized boolean acceptedAllBets(){
         if(numberAcceptedBets == SimulPar.S){
@@ -196,7 +196,7 @@ public class BettingCenter {
      * Broker is checking if any Spectator betted in the winning horses.
      *
      *   @param winningHorses List of winning horses
-     *   @return
+     *   @return true if there is a winner, false if there's not.
      */
     public synchronized boolean areThereAnyWinners(int[] winningHorses){
         ((Broker) Thread.currentThread()).setState(Broker.States.SA);
@@ -227,7 +227,7 @@ public class BettingCenter {
     /**
      * Verifying if all winners already collected their money.
      *
-     *   @return
+     *   @return true if all the bets were honoured, false if not.
      */
     public synchronized boolean honouredAllTheBets(){
         if(numberAcceptedWinners == numberOfWinningBets){

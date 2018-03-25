@@ -1,7 +1,8 @@
 package afternoonatrace_conc.Main;
 
 /**
- * Simulation Parameters
+ * Simulation Parameters.<br>
+ * Definition of all the simulation parameters.
  */
 public class SimulPar {
 

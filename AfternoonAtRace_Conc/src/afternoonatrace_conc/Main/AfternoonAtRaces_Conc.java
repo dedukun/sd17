@@ -3,7 +3,8 @@ import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.SharedRegions.*;
 
 /**
- *
+ * Main file.<br>
+ * Where all begins.
  */
 public class AfternoonAtRaces_Conc {
     /**

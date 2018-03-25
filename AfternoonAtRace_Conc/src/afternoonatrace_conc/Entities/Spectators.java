@@ -3,7 +3,9 @@ import afternoonatrace_conc.SharedRegions.*;
 import java.util.Random;
 
 /**
- * Spectators Thread
+ * Spectators Thread.<br>
+ * Definition of a spectator.
+ * 
  */
 public class Spectators extends Thread{
 
@@ -29,6 +31,12 @@ public class Spectators extends Thread{
 
     /**
      * Enumerate with the Spectator States.
+     * WRS - WAITING_FOR_A_RACE_TO_START
+     * ATH - APPRAISING_THE_HORSES
+     * PAB - PLACING_A_BET
+     * WAR - WATCHING_A_RACE
+     * CTG - COLLECTING_THE_GAINS
+     * CB  - CELEBRATING
      */
     public static enum States
     {

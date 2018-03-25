@@ -1,11 +1,10 @@
 package afternoonatrace_conc.SharedRegions;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
-import java.util.ArrayList;
-import java.lang.*;
 
 /**
- *
+ * Control Center.<br>
+ * Where all general operations happens.
  */
 public class ControlCenter{
 
@@ -195,6 +194,7 @@ public class ControlCenter{
      * Spectator if checking if that horse that he betted has won.
      *
      *   @param hjid Horse/Jocker pair identifier
+     *   @return true if the pair has won, false if not.
      */
     public synchronized boolean haveIWon(int hjid){
         for(int winner : raceWinners){
@@ -205,6 +205,9 @@ public class ControlCenter{
         return false;
     }
 
+    /*
+    * Broker entertains the guests.
+    */
     public synchronized void entertainTheGuests(){
         ((Broker) Thread.currentThread()).setState(Broker.States.PHAB);
 
@@ -214,7 +217,10 @@ public class ControlCenter{
 
         notifyAll();
     }
-
+    
+    /*
+    * Spectator relaxes.
+    */
     public synchronized void relaxABit(){
 
         ((Spectators) Thread.currentThread()).setState(Spectators.States.CB);

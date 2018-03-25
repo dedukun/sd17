@@ -5,28 +5,99 @@ import genclass.TextFile;
 import genclass.GenericIO;
 
 /**
- *General repository
+ * General repository.<br>
+ * Where the log file is made.
  */
 public class GeneralRepository {
     
+    /*
+    * Broker state.
+    */
     private Broker.States brkState;
+    
+    /*
+    * Spectators state.
+    */
     private Spectators.States[] specState = new Spectators.States[SimulPar.S];
+    
+    /*
+    * Spectators wallet.
+    */
     private double[] specMoney = new double[SimulPar.S];
+    
+    /*
+    * Horses state.
+    */
     private HorseJockey.States[] horseState = new HorseJockey.States[SimulPar.C];
+    
+    /*
+    * Horses agility.
+    */
     private double[] horseAgility = new double[SimulPar.C];
+    
+    /*
+    * Name of the log file.
+    */
     private String filename;
+    
+    /*
+    * File declaration.
+    */
     private TextFile log = new TextFile();
+    
+    /*
+    * Race number happening.
+    */
     private int raceNumber;
+    
+    /*
+    * Track size of the race in moment.
+    */
     private int trackSize;
+    
+    /*
+    * Horse betted by spectators.
+    */
     private int[] betS = new int[SimulPar.S];
+    
+    /*
+    * Ammount betted by spectators.
+    */
     private int[] betA = new int [SimulPar.S];
+    
+    /*
+    * Horse's probability of winning.
+    */
     private double[] odds = new double[SimulPar.C];
+    
+    /*
+    * Current horse iteration.
+    */
     private int[] horseIteration = new int [SimulPar.C];
+    
+    /*
+    * Current horse position relative to the track.
+    */
     private int[] horsePosition = new int [SimulPar.C];
+    
+    /*
+    * Horses that have finished.
+    */
     private int[] horseEnd = new int[SimulPar.C];
+    
+    /*
+    * First line to print.
+    */
     private String line1="";
+    
+    /*
+    * Second line to print.
+    */
     private String line2="";
     
+    /*
+    * General Repository initialization.
+    */
     public GeneralRepository(){
         this.filename="Log.txt"; 
     }
