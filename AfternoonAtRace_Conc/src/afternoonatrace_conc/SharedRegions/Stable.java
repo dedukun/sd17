@@ -48,7 +48,7 @@ public class Stable {
      */
     public synchronized void proceedToStable(){
 
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_STABLE);
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATS);
 
         System.out.println(Thread.currentThread().getName() + " is in the stable");
 
@@ -64,7 +64,8 @@ public class Stable {
                 wait();
             }catch(InterruptedException e){}
         }
-
+        
+        genRepos.setHorseState(horseId, HorseJockey.States.ATS);
         System.out.println(Thread.currentThread().getName() + " left the stable");
     }
 
@@ -103,8 +104,10 @@ public class Stable {
      * Horses procced to stable and then die.
      */
     public synchronized void proceedToStableToDie(){
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_STABLE);
-
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATS);
+        
+        genRepos.setHorseState(((HorseJockey) Thread.currentThread()).getHJId(), HorseJockey.States.ATS);
+        
         System.out.println(Thread.currentThread().getName() + " is in the stable and died");
     }
 }

@@ -37,11 +37,11 @@ public class HorseJockey extends Thread{
      */
     public static enum States
     {
-        AT_THE_STABLE,
-        AT_THE_PADDOCK,
-        AT_THE_START_LINE,
-        RUNNING,
-        AT_THE_FINNISH_LINE
+        ATS,
+        ATP,
+        ASL,
+        RU,
+        AFL
     }
 
     /**
@@ -125,7 +125,7 @@ public class HorseJockey extends Thread{
     public int getAgility() {
         return agility;
     }
-
+    
     /**
      * Set Horse/Jockey pair state.
      *

@@ -20,8 +20,7 @@ public class MainDatatype {
         RaceTrack rt = new RaceTrack(gr);
         BettingCenter bc = new BettingCenter(gr);
         ControlCenter cc = new ControlCenter(gr);
-
-
+        
         //Entities Initialization
         //Races
         HorseJockey [] hj = new HorseJockey[SimulPar.C];
@@ -47,5 +46,10 @@ public class MainDatatype {
         //Broker
         Broker b = new Broker("Broker", bc, cc, rt, s);
         b.start();
+        
+        //Iniciar Log
+        gr.initLog();
+        gr.setBrokerState(Broker.States.OTE);
+        
     }
 }

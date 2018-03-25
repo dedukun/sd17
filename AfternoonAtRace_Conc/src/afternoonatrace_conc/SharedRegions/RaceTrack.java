@@ -74,7 +74,7 @@ public class RaceTrack {
      */
     public synchronized void startTheRace(){
         trackSize = ThreadLocalRandom.current().nextInt(20, 50);
-
+        genRepos.setTrackSize(trackSize);
         System.out.println(Thread.currentThread().getName() + " started the race with size " + trackSize);
 
         // Prepare variables for new race
@@ -93,7 +93,7 @@ public class RaceTrack {
      * Horse/Jockey pair is waiting at the start line of the race track.
      */
     public synchronized void proceedToStartLine(){
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_START_LINE);
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ASL);
 
         System.out.println(Thread.currentThread().getName() + " is at the starting line");
 
@@ -108,7 +108,8 @@ public class RaceTrack {
         waitToMove = true;
 
         System.out.println(Thread.currentThread().getName() + " left the start line");
-
+        
+        genRepos.setHorseState(horseID, HorseJockey.States.ASL);
     }
 
     /**
@@ -122,16 +123,19 @@ public class RaceTrack {
 
         // Check if horse already finished the race
         if(horsesTravelledDistance[horseID] < trackSize){
-            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.RUNNING);
+            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.RU);
+            genRepos.setHorseState(horseID, HorseJockey.States.RU);
             int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
             int move = ThreadLocalRandom.current().nextInt(1, horseAgility);
 
             horsesTravelledDistance[horseID] += move;
+            genRepos.setHorsePosition(horseID, horsesTravelledDistance[horseID]);
+            genRepos.setHorseIteration(horseID);
 
             if(horsesTravelledDistance[horseID] >= trackSize){
                 System.out.println(Thread.currentThread().getName() + " finished the race -> " + horsesTravelledDistance[horseID]);
                 finishedHorses++;
-
+                genRepos.setHorseEnd(horseID);
                 // If there are no winners in this group of moves, then this Horse is one of them
                 if(!winnersMet){
                     System.out.println(Thread.currentThread().getName() + " won!!");
@@ -151,7 +155,9 @@ public class RaceTrack {
             }
         }
         else{
-            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_FINNISH_LINE);
+            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AFL);
+            genRepos.setHorseEnd(horseID);
+            genRepos.setHorseState(horseID, HorseJockey.States.AFL);
         }
 
         //Wake up next horse

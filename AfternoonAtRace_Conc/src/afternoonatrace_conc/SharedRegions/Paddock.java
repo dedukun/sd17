@@ -68,7 +68,7 @@ public class Paddock {
      */
     public synchronized void proceedToPaddock(){
 
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AT_THE_PADDOCK);
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATP);
 
         System.out.println(Thread.currentThread().getName() + " at the paddock");
 
@@ -90,6 +90,10 @@ public class Paddock {
             lastHorseLeaving = horseId;
 
         System.out.println(Thread.currentThread().getName() + " leaving the paddock");
+        
+        genRepos.setHorseState(horseId, HorseJockey.States.ATP);
+        genRepos.setHorseAgility(horseId, horseAgility);
+        genRepos.setOdds();
     }
 
     /**
@@ -109,7 +113,7 @@ public class Paddock {
      */
     public synchronized int goCheckHorses(){
 
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.APPRAISING_THE_HORSES);
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.ATH);
 
         System.out.println(((Spectators) Thread.currentThread()).getName() + " is checking the horses");
 
@@ -126,6 +130,9 @@ public class Paddock {
 
         System.out.println(((Spectators) Thread.currentThread()).getName() + " choose horse -> " + horseToBet);
 
+        genRepos.setSpectatorState(spectatorId, Spectators.States.ATH);
+        genRepos.setBetS(spectatorId, horseToBet);
+        
         return horseToBet;
     }
 

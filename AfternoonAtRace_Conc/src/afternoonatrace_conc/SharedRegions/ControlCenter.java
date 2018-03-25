@@ -74,7 +74,7 @@ public class ControlCenter{
      */
     public synchronized boolean waitForNextRace(){
 
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.WAITING_FOR_A_RACE_TO_START);
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.WRS);
 
         System.out.println(((Spectators) Thread.currentThread()).getName() + " is waiting for next race");
 
@@ -84,6 +84,7 @@ public class ControlCenter{
             }catch(InterruptedException e){}
         }
 
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), Spectators.States.WRS);
         return !eventFinished;
     }
 
@@ -91,7 +92,7 @@ public class ControlCenter{
      * Broker is waiting for the spectators finishing seeing the horses.
      */
     public synchronized void  summonHorsesToPaddock(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.ANNOUNCING_NEXT_RACE);
+        ((Broker) Thread.currentThread()).setState(Broker.States.ANR);
 
         while(waitForEvaluation){
             try{
@@ -101,6 +102,8 @@ public class ControlCenter{
 
         // Reset var for next race
         waitForEvaluation = true;
+        
+        genRepos.setBrokerState(Broker.States.ANR);
     }
 
     /**
@@ -137,7 +140,7 @@ public class ControlCenter{
      * Broker is starting the race.
      */
     public synchronized void startTheRace(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.SUPERVISING_THE_RACE);
+        ((Broker) Thread.currentThread()).setState(Broker.States.STR);
 
         System.out.println(((Broker) Thread.currentThread()).getName() + " is supervising the race");
 
@@ -150,6 +153,7 @@ public class ControlCenter{
         // Reset for next
         waitForEndRaceBroker = true;
 
+        genRepos.setBrokerState(Broker.States.STR);
         System.out.println(((Broker) Thread.currentThread()).getName() + " finished supervising the race");
 
     }
@@ -167,7 +171,7 @@ public class ControlCenter{
      * Spectator is watching the race.
      */
     public synchronized void goWatchTheRace(){
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.WATCHING_A_RACE);
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.WAR);
 
         System.out.println(Thread.currentThread().getName() + " is watching the race");
 
@@ -185,6 +189,7 @@ public class ControlCenter{
         }
 
         System.out.println(Thread.currentThread().getName() + " finished watching the race");
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()) , Spectators.States.WAR);
     }
 
     /**
@@ -218,9 +223,11 @@ public class ControlCenter{
     public synchronized void entertainTheGuests(){
         System.out.println(Thread.currentThread().getName() + " is enternaining the guests");
 
-        ((Broker) Thread.currentThread()).setState(Broker.States.PLAYING_HOST_AT_THE_BAR);
+        ((Broker) Thread.currentThread()).setState(Broker.States.PHAB);
 
         eventFinished = true;
+        
+        genRepos.setBrokerState(Broker.States.PHAB);
 
         notifyAll();
     }
@@ -228,6 +235,9 @@ public class ControlCenter{
     public synchronized void relaxABit(){
         System.out.println(Thread.currentThread().getName() + " is relaxing");
 
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.CELEBRATING);
+        ((Spectators) Thread.currentThread()).setState(Spectators.States.CB);
+ 
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), Spectators.States.CB);
+        
     }
 }
