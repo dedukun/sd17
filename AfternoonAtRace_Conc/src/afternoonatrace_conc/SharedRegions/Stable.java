@@ -94,6 +94,8 @@ public class Stable {
      */
     public synchronized double[] summonHorsesToPaddock(int raceNumber){
 
+        genRepos.setRaceNumber(raceNumber);
+
         // Wake up horses
         currentRace = raceNumber;
         waitAtStable = false;
