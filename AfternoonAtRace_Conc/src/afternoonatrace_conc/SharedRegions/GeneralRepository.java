@@ -228,8 +228,8 @@ public class GeneralRepository {
      * Race number
      * @param num number of the track
      */
-    public synchronized void setRaceNumber(int num){
-        this.raceNumber=num;
+    public synchronized void setRaceNumber(){
+        this.raceNumber++;
         //updateLog();
     }
     

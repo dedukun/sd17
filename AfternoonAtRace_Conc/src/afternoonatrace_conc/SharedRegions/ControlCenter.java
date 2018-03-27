@@ -99,7 +99,7 @@ public class ControlCenter{
 
         // Reset var for next race
         waitForEvaluation = true;
-
+        genRepos.setRaceNumber();
         genRepos.setBrokerState(Broker.States.ANR);
     }
 
