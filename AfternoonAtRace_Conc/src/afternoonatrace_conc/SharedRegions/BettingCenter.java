@@ -76,12 +76,12 @@ public class BettingCenter {
     private int numberAcceptedWinners;
 
     /**
-     * Reference to General Repository
+     * Reference to General Repository.
      */
     private final GeneralRepository genRepos;
 
     /**
-     * Betting Center initialization
+     * Betting Center initialization.
      *
      *  @param genRepos Reference to General Repository
      */
@@ -132,10 +132,12 @@ public class BettingCenter {
     }
 
     /**
-     * Broker is accepting a bet from a Spectator.
+     * Broker is waiting for a bet placed by a Spectator and accepts it.
      */
     public synchronized void acceptTheBet(){
         ((Broker) Thread.currentThread()).setState(Broker.States.WFB);
+
+        genRepos.setBrokerState(Broker.States.WFB);
 
         while(waitForBet){
             try{
@@ -148,8 +150,6 @@ public class BettingCenter {
         acceptedSpectatorsBets[lastSpectatorAccepted] = true;
         numberAcceptedBets++;
         waitForBet = true;
-
-        genRepos.setBrokerState(Broker.States.WFB);
 
         notifyAll();
     }
@@ -178,6 +178,10 @@ public class BettingCenter {
 
         raceBets.add(new Bet(spectatorId, betSize, horseId));
 
+        genRepos.setSpectatorState(spectatorId, Spectators.States.PAB);
+        genRepos.setBetA(spectatorId, (int)betSize);
+        genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
+
         while(!acceptedSpectatorsBets[spectatorId]){
             waitForBet = false;
             notifyAll();
@@ -186,20 +190,17 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        genRepos.setSpectatorState(spectatorId, Spectators.States.PAB);
-        genRepos.setBetS(spectatorId, horseId);
-        genRepos.setBetA(spectatorId, (int)betSize);
-        genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
     }
 
     /**
-     * Broker is checking if any Spectator betted in the winning horses.
+     * Broker is checking if any Spectator betted on any of the winning horses.
      *
      *   @param winningHorses List of winning horses
      *   @return true if there is a winner, false if there's not.
      */
     public synchronized boolean areThereAnyWinners(int[] winningHorses){
         ((Broker) Thread.currentThread()).setState(Broker.States.SA);
+        genRepos.setBrokerState(Broker.States.SA);
 
         numberOfWinningHorses = winningHorses.length;
 
@@ -212,7 +213,6 @@ public class BettingCenter {
             }
         }
 
-        genRepos.setBrokerState(Broker.States.SA);
         if( numberOfWinningBets == 0){
             // Reset variables for next race
             raceBets.clear();
@@ -243,7 +243,7 @@ public class BettingCenter {
     }
 
     /**
-     * Broker is honouring the bets.
+     * Broker is waiting for a Spectator to come collect their gains and is paying back the Spectator
      */
     public synchronized void honourTheBet(){
 
@@ -275,7 +275,7 @@ public class BettingCenter {
     }
 
     /**
-     * Spectator collects the money that he has won.
+     * Spectator is waiting for the Broker to pay him back and collects the money that he has won.
      */
     public synchronized void goCollectTheGains(){
         ((Spectators) Thread.currentThread()).setState(Spectators.States.CTG);
@@ -283,6 +283,8 @@ public class BettingCenter {
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
 
         spectatorWaitingGains.add(spectatorId);
+
+        genRepos.setSpectatorState(spectatorId, Spectators.States.CTG);
 
         while(!waitForGains[spectatorId]){
             waitForWinningSpectator = false;
@@ -296,7 +298,6 @@ public class BettingCenter {
 
         ((Spectators) Thread.currentThread()).setTransaction(earnings);
 
-        genRepos.setSpectatorState(spectatorId, Spectators.States.CTG);
         genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
     }
 
@@ -306,9 +307,9 @@ public class BettingCenter {
     private class Bet{
 
         /**
-         * Bet Ammount.
+         * Bet Amount.
          */
-        private double ammount;
+        private double amount;
 
         /**
          * Horse/Jockey pair identifier.
@@ -329,12 +330,12 @@ public class BettingCenter {
          * Bet initialization.
          *
          *   @param sid Spectator's id
-         *   @param ammount Bet's ammount
+         *   @param amount Bet's amount
          *   @param hid Horse/Jockey pair id
          */
-        private Bet(int sid, double ammount, int hid){
+        private Bet(int sid, double amount, int hid){
             this.sid = sid;
-            this.ammount = ammount;
+            this.amount = amount;
             this.hid = hid;
             isWinner = false;
         }
@@ -358,12 +359,12 @@ public class BettingCenter {
         }
 
         /**
-         * Returns bet ammount.
+         * Returns bet amount.
          *
-         *   @return The ammount
+         *   @return The amount
          */
         private double getAmmount(){
-            return ammount;
+            return amount;
         }
 
         /**
@@ -382,7 +383,7 @@ public class BettingCenter {
 
         @Override
         public String toString() {
-            return "Spectator" + this.sid + " betted " + this.ammount + " in horse" + this.hid;
+            return "Spectator" + this.sid + " betted " + this.amount + " in horse" + this.hid;
         }
     }
 }

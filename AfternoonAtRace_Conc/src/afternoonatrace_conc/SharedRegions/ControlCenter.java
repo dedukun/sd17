@@ -67,13 +67,14 @@ public class ControlCenter{
     }
 
     /**
-     * The Spectator is awaiting in the Control Center for the next race to start.
+     * The Spectator is waiting in the Control Center for the next race to start.
      *
      *   @return There's at least a race left
      */
     public synchronized boolean waitForNextRace(){
 
         ((Spectators) Thread.currentThread()).setState(Spectators.States.WRS);
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), Spectators.States.WRS);
 
         while(waitForNextRace){
             try{
@@ -81,7 +82,6 @@ public class ControlCenter{
             }catch(InterruptedException e){}
         }
 
-        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), Spectators.States.WRS);
         return theresANewRace;
     }
 
@@ -90,6 +90,7 @@ public class ControlCenter{
      */
     public synchronized void  summonHorsesToPaddock(){
         ((Broker) Thread.currentThread()).setState(Broker.States.ANR);
+        genRepos.setBrokerState(Broker.States.ANR);
 
         while(waitForEvaluation){
             try{
@@ -99,7 +100,6 @@ public class ControlCenter{
 
         // Reset var for next race
         waitForEvaluation = true;
-        genRepos.setBrokerState(Broker.States.ANR);
     }
 
     /**
@@ -118,7 +118,7 @@ public class ControlCenter{
 
 
     /**
-     * Horses wake up Spectators to go see the parade.
+     * The last Horse/Jockey pair to arrive at the Paddock wakes up Spectators to go see the parade.
      */
     public synchronized void unblockProceedToPaddock(){
 
@@ -133,6 +133,7 @@ public class ControlCenter{
      */
     public synchronized void startTheRace(){
         ((Broker) Thread.currentThread()).setState(Broker.States.STR);
+        genRepos.setBrokerState(Broker.States.STR);
 
         while(waitForEndRaceBroker){
             try{
@@ -142,8 +143,6 @@ public class ControlCenter{
 
         // Reset for next race
         waitForEndRaceBroker = true;
-
-        genRepos.setBrokerState(Broker.States.STR);
     }
 
     /**
@@ -160,6 +159,7 @@ public class ControlCenter{
      */
     public synchronized void goWatchTheRace(){
         ((Spectators) Thread.currentThread()).setState(Spectators.States.WAR);
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()) , Spectators.States.WAR);
 
         while(waitForEndOfRace){
             try{
@@ -173,8 +173,6 @@ public class ControlCenter{
             spectatosLeavingStands = 0;
             waitForEndOfRace = true;
         }
-
-        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()) , Spectators.States.WAR);
     }
 
     /**
@@ -192,7 +190,7 @@ public class ControlCenter{
     /**
      * Spectator if checking if that horse that he betted has won.
      *
-     *   @param hjid Horse/Jocker pair identifier
+     *   @param hjid Horse/Jockey pair identifier
      *   @return true if the pair has won, false if not.
      */
     public synchronized boolean haveIWon(int hjid){
@@ -205,20 +203,20 @@ public class ControlCenter{
     }
 
     /*
-    * Broker entertains the guests.
+    * Broker is entertaining the guests.
     */
     public synchronized void entertainTheGuests(){
         ((Broker) Thread.currentThread()).setState(Broker.States.PHAB);
+        genRepos.setBrokerState(Broker.States.PHAB);
 
         waitForNextRace = false;
         theresANewRace = false;
-        genRepos.setBrokerState(Broker.States.PHAB);
 
         notifyAll();
     }
 
     /*
-    * Spectator relaxes.
+    * Spectator is relaxing.
     */
     public synchronized void relaxABit(){
 

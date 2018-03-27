@@ -10,100 +10,100 @@ import genclass.GenericIO;
  */
 public class GeneralRepository {
 
-    /*
+    /**
     * Broker state.
     */
     private Broker.States brkState;
 
-    /*
+    /**
     * Spectators state.
     */
     private Spectators.States[] specState = new Spectators.States[SimulPar.S];
 
-    /*
+    /**
     * Spectators wallet.
     */
     private double[] specMoney = new double[SimulPar.S];
 
-    /*
+    /**
     * Horses state.
     */
     private HorseJockey.States[] horseState = new HorseJockey.States[SimulPar.C];
 
-    /*
+    /**
     * Horses agility.
     */
     private double[] horseAgility = new double[SimulPar.C];
 
-    /*
+    /**
     * Name of the log file.
     */
     private String filename;
 
-    /*
+    /**
     * File declaration.
     */
     private TextFile log = new TextFile();
 
-    /*
+    /**
     * Race number happening.
     */
     private int raceNumber;
 
-    /*
+    /**
     * Track size of the race in moment.
     */
     private int trackSize;
 
-    /*
+    /**
     * Horse betted by spectators.
     */
     private int[] betS = new int[SimulPar.S];
 
-    /*
+    /**
     * Ammount betted by spectators.
     */
     private int[] betA = new int [SimulPar.S];
 
-    /*
+    /**
     * Horse's probability of winning.
     */
     private double[] odds = new double[SimulPar.C];
 
-    /*
+    /**
     * Current horse iteration.
     */
     private int[] horseIteration = new int [SimulPar.C];
 
-    /*
+    /**
     * Current horse position relative to the track.
     */
     private int[] horsePosition = new int [SimulPar.C];
 
-    /*
+    /**
     * Horses that have finished.
     */
     private int[] horseEnd = new int[SimulPar.C];
 
-    /*
+    /**
     * First line to print.
     */
     private String line1="";
 
-    /*
+    /**
     * Second line to print.
     */
     private String line2="";
 
-    /*
+    /**
     * General Repository initialization.
     */
     public GeneralRepository(){
         this.filename="Log.txt";
     }
 
-    /*
-    * Prints everything into logger file.
+    /**
+    * Prints header and the first line of the logger file.
     */
     public synchronized void initLog(){
         if (!log.openForWriting(".", filename)) {
@@ -127,7 +127,7 @@ public class GeneralRepository {
         }
     }
 
-    /*
+    /**
     * Updates the log when a change happens.
     */
     public synchronized void updateLog(){
@@ -147,77 +147,73 @@ public class GeneralRepository {
     }
 
     /**
-     * Bet Selections
-     * @param specid id of spectator
-     * @param horseid id of the horse that was the pick of the spectator
+     * Set the Horse/Jockey pair selected by the Spectator to bet on.
+     *
+     *   @param specId Identifier of the Spectator
+     *   @param horseId Identifier of the Horse/Jockey pair
      */
-    public synchronized void setBetS(int specid, int horseid){
-        this.betS[specid]=horseid;
+    public synchronized void setBetS(int specId, int horseId){
+        this.betS[specId]=horseId;
         //updateLog();
     }
 
     /**
-     * Bet Amount
-     * @param specid id of spectator
-     * @param betamount amount betted by the spectator
+     * Set the ammount betted by a specified Spectator in the current race.
+     *
+     *   @param specId Identifier of the Spectator
+     *   @param betamount Amount betted
      */
-    public synchronized void setBetA(int specid, int betamount){
-        this.betA[specid]=+(int)betamount;
+    public synchronized void setBetA(int specId, int betamount){
+        this.betA[specId]=+(int)betamount;
         //updateLog();
     }
 
     /**
-     * Odd
+     * Set the probability of winning for the given horse.
+     *
+     *   @param horseId Identifier of the Horse/Jockey pair
+     *   @param odd Chance of winning in percentage
      */
-    public synchronized void setOdds(){
-        boolean calc=true;
-        double divider=0;
-        for (double i : horseAgility)
-            if(i==0) calc = false;
-
-
-        if(calc){
-            for( double j : horseAgility)
-                divider+=j;
-
-            for(int i=0; i<SimulPar.C;i++){
-                this.odds[i]=horseAgility[i]/divider;
-            }
-        }
+    public synchronized void setOdds(int horseId, int odd){
+        this.odds[horseId] = odd;
         //updateLog();
     }
 
     /**
-     * Horse Iteration
-     * @param horseid id of spectator
+     * Increment interation number of the Horse/Jockey pair.
+     *
+     *   @param horseId Identifier of the Horse/Jockey pair
      */
-    public synchronized void setHorseIteration(int horseid){
-        this.horseIteration[horseid]++;
+    public synchronized void setHorseIteration(int horseId){
+        this.horseIteration[horseId]++;
         //updateLog();
     }
 
     /**
-     * Horse Position
-     * @param horseid id of spectator
-     * @param pos amount betted by the spectator
+     * Set the specified Horse/Jockey pair current position in the ocurring race.
+     *
+     *   @param horseId Identifier of the Horse/Jockey pair
+     *   @param pos Current position
      */
-    public synchronized void setHorsePosition(int horseid, int pos){
-        this.horsePosition[horseid]=pos;
+    public synchronized void setHorsePosition(int horseId, int pos){
+        this.horsePosition[horseId]=pos;
         //updateLog();
     }
 
     /**
-     * Horse have finished
-     * @param horseid id of spectator
+     * Set the Horse/Jockey pairs that have already finished the race.
+     *
+     *   @param horseId Identifier of the Horse/Jockey pair
      */
-    public synchronized void setHorseEnd(int horseid){
-        this.horseEnd[horseid]=horseid;
+    public synchronized void setHorseEnd(int horseId){
+        this.horseEnd[horseId]=horseId;
         //updateLog();
     }
 
     /**
-     * Track Size
-     * @param size size of the track
+     * Set the current race track size.
+     *
+     *   @param size size of the track
      */
     public synchronized void setTrackSize(int size){
         this.trackSize=size;
@@ -225,8 +221,9 @@ public class GeneralRepository {
     }
 
     /**
-     * Race number
-     * @param num number of the track
+     * Set the current race number.
+     *
+     *   @param num number race being run
      */
     public synchronized void setRaceNumber(int num){
         this.raceNumber = num;
@@ -234,8 +231,9 @@ public class GeneralRepository {
     }
 
     /**
-     * Broker State
-     * @param state state of the Broker
+     * Set the current state of the Broker.
+     *
+     *   @param state state of the Broker
      */
     public synchronized void setBrokerState(Broker.States state){
         this.brkState=state;
@@ -251,9 +249,10 @@ public class GeneralRepository {
     }
 
     /**
-     * Spectator state
-     * @param specId ID of the Spectator
-     * @param state state of the Spectator
+     * Set the current state of the specified Spectator.
+     *
+     *   @param specId ID of the Spectator
+     *   @param state state of the Spectator
      */
     public synchronized void setSpectatorState(int specId,Spectators.States state){
         this.specState[specId]=state;
@@ -269,9 +268,10 @@ public class GeneralRepository {
     }
 
     /**
-     * Spectator state
-     * @param specId ID of the Spectator
-     * @param funds funds of the Spectator
+     * Set the current funds of the specified Spectator.
+     *
+     *   @param specId ID of the Spectator
+     *   @param funds funds of the Spectator
      */
     public synchronized void setSpectatorMoney(int specId,double funds){
         this.specMoney[specId]=(int)funds;
@@ -279,9 +279,10 @@ public class GeneralRepository {
     }
 
     /**
-     * Horse Jockey state
-     * @param horseId ID of the Horse
-     * @param state state of the Horse/Jockey pair.
+     * Set the current state of the specified Horse/Jockey pair.
+     *
+     *   @param horseId ID of the Horse
+     *   @param state state of the Horse/Jockey pair.
      */
     public synchronized void setHorseState(int horseId,HorseJockey.States state){
         this.horseState[horseId]=state;
@@ -298,16 +299,13 @@ public class GeneralRepository {
     }
 
     /**
-     * Horse Jockey Agility
-     * @param horseId ID of the Horse
-     * @param agi agility of the Horse/Jockey pair.
+     * Set the agility of the specified Horse/Jockey pair.
+     *
+     *   @param horseId ID of the Horse
+     *   @param horseAgl agility of the Horse/Jockey pair.
      */
-    public synchronized void setHorseAgility(int horseId,int agi){
-        this.horseAgility[horseId]=agi;
+    public synchronized void setHorseAgility(int horseId,int horseAgl){
+        this.horseAgility[horseId]=horseAgl;
         //updateLog();
     }
-
-
-
-
 }

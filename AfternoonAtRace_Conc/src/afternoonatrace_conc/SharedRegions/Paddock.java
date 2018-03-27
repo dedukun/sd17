@@ -46,7 +46,7 @@ public class Paddock {
 
 
     /**
-     * Paddock initialization
+     * Paddock initialization.
      *
      *  @param genRepos Reference to General Repository
      */
@@ -70,10 +70,13 @@ public class Paddock {
 
         ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATP);
 
+
         int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
         int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
 
         horsesAgilities[horseId] = horseAgility;
+
+        genRepos.setHorseState(horseId, HorseJockey.States.ATP);
 
         while(paradingHorses){
             try{
@@ -95,10 +98,6 @@ public class Paddock {
 
             notifyAll();
         }
-
-        genRepos.setHorseState(horseId, HorseJockey.States.ATP);
-        genRepos.setHorseAgility(horseId, horseAgility);
-        genRepos.setOdds();
     }
 
     /**
@@ -121,7 +120,7 @@ public class Paddock {
     }
 
     /**
-     * Spectator is checking the horses and chooses the horse to bet.
+     * Spectator is checking the Horse/Jockey pairs parading at the paddock and chooses the one he is betting on.
      *
      *   @return The identifier of the Horse/Jockey pair to bet on
      */
@@ -129,16 +128,18 @@ public class Paddock {
 
         ((Spectators) Thread.currentThread()).setState(Spectators.States.ATH);
 
+        int spectatorId = ((Spectators) Thread.currentThread()).getSID();
+
+        genRepos.setSpectatorState(spectatorId, Spectators.States.ATH);
+
         while(evaluatingHorses){
             try{
                 wait();
             }catch(InterruptedException e){}
         }
 
-        int spectatorId = ((Spectators) Thread.currentThread()).getSID();
         int horseToBet = chooseHorse(spectatorId);
 
-        genRepos.setSpectatorState(spectatorId, Spectators.States.ATH);
         genRepos.setBetS(spectatorId, horseToBet);
 
         return horseToBet;

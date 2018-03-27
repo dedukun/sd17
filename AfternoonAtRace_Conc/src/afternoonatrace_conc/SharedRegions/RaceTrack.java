@@ -98,6 +98,8 @@ public class RaceTrack {
 
         int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
+        genRepos.setHorseState(horseID, HorseJockey.States.ASL);
+
         while(waitToMove || horseID != horseMoving){
             try{
                 wait();
@@ -106,7 +108,6 @@ public class RaceTrack {
 
         waitToMove = true;
 
-        genRepos.setHorseState(horseID, HorseJockey.States.ASL);
     }
 
     /**
@@ -151,7 +152,6 @@ public class RaceTrack {
         }
         else{
             ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AFL);
-            genRepos.setHorseEnd(horseID);
             genRepos.setHorseState(horseID, HorseJockey.States.AFL);
         }
 
