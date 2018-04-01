@@ -328,14 +328,12 @@ public class BettingCenter {
 
         genRepos.setSpectatorMoney(spectatorId, (int) ((Spectators) Thread.currentThread()).getFunds());
 
-        if(earnings > 0){
-            numberFinishedWinners++;
+        numberFinishedWinners++;
 
-            if(numberFinishedWinners == numberOfWinningBets){
-                waitForWinningSpectator = false;
+        if(numberFinishedWinners == numberOfWinningBets){
+            waitForWinningSpectator = false;
 
-                notifyAll();
-            }
+            notifyAll();
         }
     }
 
