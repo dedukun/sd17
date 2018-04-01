@@ -46,6 +46,11 @@ public class BettingCenter {
     private int numberAcceptedBets;
 
     /**
+     * Number of finished accepted bets.
+     */
+    private int numberFinishedBets;
+
+    /**
      * List of Spectators waiting for Broker give gains - synchronization point.
      */
     private boolean[] waitForGains;
@@ -76,6 +81,11 @@ public class BettingCenter {
     private int numberAcceptedWinners;
 
     /**
+     * Number of finished accepted winner.
+     */
+    private int numberFinishedWinners;
+
+    /**
      * Reference to General Repository.
      */
     private final GeneralRepository genRepos;
@@ -90,12 +100,14 @@ public class BettingCenter {
 
         raceBets = new ArrayList<>();
         numberAcceptedBets = 0;
+        numberFinishedBets = 0;
         acceptedSpectatorsBets = new boolean[SimulPar.S];
 
         spectatorsGains = new double[SimulPar.S];
         spectatorWaitingGains = new ArrayList<>();
         numberOfWinningBets = 0;
         numberAcceptedWinners = 0;
+        numberFinishedWinners = 0;
 
         // sync vars
         waitForBet = true;
@@ -118,10 +130,11 @@ public class BettingCenter {
      *   @return true if all the bets were accepted or false if not.
      */
     public synchronized boolean acceptedAllBets(){
-        if(numberAcceptedBets == SimulPar.S){
+        if(numberFinishedBets == SimulPar.S){
 
             // reset vars for race
             numberOfWinningBets = 0;
+            numberFinishedBets = 0;
             numberAcceptedWinners = 0;
             spectatorWaitingGains.clear();
             Arrays.fill(waitForGains, Boolean.FALSE);
@@ -146,13 +159,16 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
-
         waitForBet = true;
-        acceptedSpectatorsBets[lastSpectatorAccepted] = true;
-        numberAcceptedBets++;
 
-        notifyAll();
+        if(raceBets.size() > 0 && numberAcceptedBets != SimulPar.S){
+            int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
+
+            acceptedSpectatorsBets[lastSpectatorAccepted] = true;
+            numberAcceptedBets++;
+
+            notifyAll();
+        }
     }
 
     /**
@@ -189,6 +205,13 @@ public class BettingCenter {
             try{
                 wait();
             }catch(InterruptedException e){}
+        }
+
+        numberFinishedBets++;
+        if(numberFinishedBets == SimulPar.S){
+            waitForBet = false;
+
+            notifyAll();
         }
     }
 
@@ -230,11 +253,12 @@ public class BettingCenter {
      *   @return true if all the bets were honoured, false if not.
      */
     public synchronized boolean honouredAllTheBets(){
-        if(numberAcceptedWinners == numberOfWinningBets){
+        if(numberFinishedWinners == numberOfWinningBets){
 
             // Reset variables for next race
             raceBets.clear();
             numberAcceptedBets = 0;
+            numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
             return true;
@@ -253,25 +277,28 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        // Get Spectator in queue
-        int spectatorId = spectatorWaitingGains.remove(0);
-
-        for(Bet bet: raceBets){
-            if(bet.getSpectatorId() == spectatorId){
-                // Check if this spectator is a winner
-                if(bet.isWinner()){
-                    numberAcceptedWinners++;
-                    spectatorsGains[bet.getSpectatorId()] = bet.getAmmount() / (currentHorsesWinningChances[bet.getHorseId()] * numberOfWinningHorses) ;
-                }
-
-                break;
-            }
-        }
-
-        waitForGains[spectatorId] = true;
         waitForWinningSpectator = true;
 
-        notifyAll();
+        if(spectatorWaitingGains.size() > 0){
+            // Get Spectator in queue
+            int spectatorId = spectatorWaitingGains.remove(0);
+
+            for(Bet bet: raceBets){
+                if(bet.getSpectatorId() == spectatorId){
+                    // Check if this spectator is a winner
+                    if(bet.isWinner()){
+                        numberAcceptedWinners++;
+                        spectatorsGains[bet.getSpectatorId()] = bet.getAmmount() / (currentHorsesWinningChances[bet.getHorseId()] * numberOfWinningHorses) ;
+                    }
+
+                    break;
+                }
+            }
+
+            waitForGains[spectatorId] = true;
+
+            notifyAll();
+        }
     }
 
     /**
@@ -299,6 +326,16 @@ public class BettingCenter {
         ((Spectators) Thread.currentThread()).setTransaction(earnings);
 
         genRepos.setSpectatorMoney(spectatorId, (int) ((Spectators) Thread.currentThread()).getFunds());
+
+        if(earnings > 0){
+            numberFinishedWinners++;
+
+            if(numberFinishedWinners == numberOfWinningBets){
+                waitForWinningSpectator = false;
+
+                notifyAll();
+            }
+        }
     }
 
     /**
