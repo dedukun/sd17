@@ -131,6 +131,10 @@ public class RaceTrack {
             genRepos.setHorseIteration(horseID);
 
             if(horsesTravelledDistance[horseID] >= trackSize){
+
+                ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AFL);
+                genRepos.setHorseState(horseID, HorseJockey.States.AFL);
+
                 finishedHorses++;
                 genRepos.setHorseEnd(horseID);
                 // If there are no winners in this group of moves, then this Horse is one of them
@@ -149,10 +153,6 @@ public class RaceTrack {
                     }
                 }
             }
-        }
-        else{
-            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AFL);
-            genRepos.setHorseState(horseID, HorseJockey.States.AFL);
         }
 
         //Wake up next horse

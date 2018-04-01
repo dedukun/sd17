@@ -5,7 +5,6 @@ import java.util.Random;
 /**
  * Spectators Thread.<br>
  * Definition of a spectator.
- * 
  */
 public class Spectators extends Thread{
 
