@@ -1,6 +1,8 @@
 package afternoonatrace_conc.SharedRegions;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
+import java.util.Arrays;
+import java.text.DecimalFormat;
 import genclass.TextFile;
 import genclass.GenericIO;
 
@@ -23,7 +25,7 @@ public class GeneralRepository {
     /**
     * Spectators wallet.
     */
-    private double[] specMoney = new double[SimulPar.S];
+    private int[] specMoney = new int[SimulPar.S];
 
     /**
     * Horses state.
@@ -33,12 +35,17 @@ public class GeneralRepository {
     /**
     * Horses agility.
     */
-    private double[] horseAgility = new double[SimulPar.C];
+    private int[] horseAgility = new int[SimulPar.C];
 
     /**
     * Name of the log file.
     */
     private String filename;
+
+    /**
+     * Number of horses that finished the race.
+     */
+    private int finishedHorses;
 
     /**
     * File declaration.
@@ -100,10 +107,14 @@ public class GeneralRepository {
     */
     public GeneralRepository(){
         this.filename="Log.txt";
+
+        // Set some initial values
+        Arrays.fill(betS, -1);
+        Arrays.fill(horseEnd, -1);
     }
 
     /**
-    * Prints header and the first line of the logger file.
+    * Prints header of the logger file.
     */
     public synchronized void initLog(){
         if (!log.openForWriting(".", filename)) {
@@ -114,11 +125,12 @@ public class GeneralRepository {
         log.writelnString("    AFTERNOON AT THE RACE TRACK - Description of the internal state of the problem");
         log.writelnString("");
         log.writelnString("MAN/BRK      SPECTATOR/BETTER             HORSE/JOCKEY PAIR at Race RN");
-        log.writelnString("  Stat  St0  Am0 St1  Am1 St2  Am2 St3  Am3 RN St0 Len0 St1 Len1 St2 Len2 St3 Len3");
+        log.writelnString(" Stat  St0  Am0 St1  Am1 St2  Am2 St3  Am3 RN St0 Len0 St1 Len1 St2 Len2 St3 Len3");
         log.writelnString("                                   Race RN Status");
         log.writelnString("RN Dist BS0  BA0 BS1  BA1 BS2  BA2 BS3  BA3  Od0 N0 Ps0 SD0 Od1 N1 Ps1 Sd1 Od2 N2 Ps2 Sd2 Od3 N3 Ps3 Sd3");
         log.writelnString(" ####  ### #### ### #### ### #### ### ####  # ###  ##  ###  ##  ###  ##  ###  ##");
-        log.writelnString(" #  ##   #  ####  #  ####  #  ####  #  #### #### ##  #   # #### ##  #   # #### ##  #   # #### ##  #   #");
+        log.writelnString(" #  ##   #  ####  #  ####  #  ####  #  #### #### ##  ##  # #### ##  ##  # #### ##  ##  # #### ##  ##  #");
+
         log.writelnString("");
 
         if (!log.close()) {
@@ -137,8 +149,97 @@ public class GeneralRepository {
             System.exit(1);
         }
 
-        log.writelnString(" "+String.format("%4s",brkState)+"  "+String.format("%3s",specState[0])+" "+String.format("%4s",String.format("%.1f",specMoney[0]))+" "+String.format("%3s",specState[1])+" "+String.format("%4s",String.format("%.1f",specMoney[1]))+" "+String.format("%3s",specState[2])+" "+String.format("%4s",String.format("%.1f", specMoney[2]))+" "+String.format("%3s",specState[3])+" "+String.format("%4s",String.format("%.1f",specMoney[3]))+"  "+raceNumber+" "+String.format("%3s",horseState[0])+"  "+String.format("%2s",horseAgility[0])+"  "+String.format("%3s",horseState[1])+"  "+String.format("%2s",horseAgility[1])+"  "+String.format("%3s",horseState[2])+"  "+String.format("%2s",horseAgility[2])+"  "+String.format("%3s",horseState[3])+"  "+String.format("%2s",horseAgility[3]));
-        log.writelnString(" "+raceNumber+"  "+String.format("%2s",trackSize)+"   "+betS[0]+"  "+String.format("%4s",betA[0])+"  "+betS[1]+"  "+String.format("%4s",betA[1])+"  "+betS[2]+"  "+String.format("%4s",betA[2])+"  "+betS[3]+"  "+String.format("%4s",betA[3])+" "+String.format("%4s",String.format("%.1f",odds[0]))+" "+String.format("%2s",horseIteration[0])+"  "+String.format("%2s",horsePosition[0])+"   "+horseEnd[0]+" "+String.format("%4s",String.format("%.1f",odds[1]))+" "+String.format("%2s",horseIteration[1])+"  "+String.format("%2s",horsePosition[1])+"   "+horseEnd[1]+" "+String.format("%4s",String.format("%.1f",odds[2]))+" "+String.format("%2s",horseIteration[2])+"  "+String.format("%2s",horsePosition[2])+"   "+horseEnd[2]+" "+String.format("%4s",String.format("%.1f",odds[3]))+" "+String.format("%2s",horseIteration[3])+"  "+String.format("%2s",horsePosition[3])+"   "+horseEnd[3]);
+        // Doubles formatter
+        DecimalFormat formatter = new DecimalFormat("#0.0");
+
+        // Some print logic
+        String[] tmpHorseState = new String[SimulPar.C];
+        for(int i = 0; i < SimulPar.C; i++){
+            if(horseState[i] != null)
+                tmpHorseState[i] = horseState[i].toString();
+            else
+                tmpHorseState[i] = "---";
+        }
+
+        String[] tmpHorseAgility = new String[SimulPar.C];
+        for(int i = 0; i < SimulPar.C; i++){
+            if(horseAgility[i] != 0)
+                tmpHorseAgility[i] = "" + horseAgility[i];
+            else
+                tmpHorseAgility[i] = "--";
+        }
+
+        String tmpTrackSize = "";
+        if(trackSize == 0)
+            tmpTrackSize = "--";
+        else
+            tmpTrackSize = "" + trackSize;
+
+        String[] tmpBetS = new String[SimulPar.S];
+        for(int i = 0; i < SimulPar.S; i++){
+            if(betS[i] != -1)
+                tmpBetS[i] = Integer.toString(betS[i]);
+            else
+                tmpBetS[i] = "-";
+        }
+
+        String[] tmpBetA = new String[SimulPar.S];
+        for(int i = 0; i < SimulPar.S; i++){
+            if(betA[i] != 0)
+                tmpBetA[i] = Integer.toString(betA[i]);
+            else
+                tmpBetA[i] = "----";
+        }
+
+        String[] tmpOdds = new String[SimulPar.C];
+        for(int i = 0; i < SimulPar.C; i++){
+            if(odds[i] != 0){
+                tmpOdds[i] = formatter.format(odds[i]);
+            }
+            else
+                tmpOdds[i] = "----";
+        }
+
+        String[] tmpHorseIteration = new String[SimulPar.C];
+        for(int i = 0; i < SimulPar.C; i++){
+            if(horseIteration[i] != 0)
+                tmpHorseIteration[i] = Integer.toString(horseIteration[i]);
+            else
+                tmpHorseIteration[i] = "--";
+        }
+
+        String[] tmpHorsePosition = new String[SimulPar.C];
+        for(int i = 0; i < SimulPar.C; i++){
+            if(horsePosition[i] != 0)
+                tmpHorsePosition[i] = Integer.toString(horsePosition[i]);
+            else
+                tmpHorsePosition[i] = "--";
+        }
+
+        String[] tmpHorseEnd = new String[SimulPar.C];
+        for(int i = 0; i < SimulPar.C; i++){
+            if(horseEnd[i] != -1)
+                tmpHorseEnd[i] = Integer.toString(horseEnd[i]);
+            else
+                tmpHorseEnd[i] = "-";
+        }
+
+        String[] tmpSpecState = new String[SimulPar.S];
+        for(int i = 0; i < SimulPar.S; i++){
+            if(specState[i] != null)
+                tmpSpecState[i] = specState[i].toString();
+            else
+                tmpSpecState[i] = "---";
+        }
+
+        String tmpBrkState = "";
+        if(brkState == null)
+            tmpBrkState = "----";
+        else
+            tmpBrkState = brkState.toString();
+
+        log.writelnString(" "+String.format("%4s",brkState)+"  "+String.format("%3s",tmpSpecState[0])+" "+String.format("%4s",specMoney[0])+" "+String.format("%3s",tmpSpecState[1])+" "+String.format("%4s",specMoney[1])+" "+String.format("%3s",tmpSpecState[2])+" "+String.format("%4s",specMoney[2])+" "+String.format("%3s",tmpSpecState[3])+" "+String.format("%4s",specMoney[3])+"  "+raceNumber+" "+String.format("%3s",tmpHorseState[0])+"  "+String.format("%2s",tmpHorseAgility[0])+"  "+String.format("%3s",tmpHorseState[1])+"  "+String.format("%2s",tmpHorseAgility[1])+"  "+String.format("%3s",tmpHorseState[2])+"  "+String.format("%2s",tmpHorseAgility[2])+"  "+String.format("%3s",tmpHorseState[3])+"  "+String.format("%2s",tmpHorseAgility[3]));
+        log.writelnString(" "+raceNumber+"  "+String.format("%2s",tmpTrackSize)+"   "+tmpBetS[0]+"  "+String.format("%4s",tmpBetA[0])+"  "+tmpBetS[1]+"  "+String.format("%4s",tmpBetA[1])+"  "+tmpBetS[2]+"  "+String.format("%4s",tmpBetA[2])+"  "+tmpBetS[3]+"  "+String.format("%4s",tmpBetA[3])+" "+String.format("%4s",String.format("%4s",tmpOdds[0]))+" "+String.format("%2s",tmpHorseIteration[0])+"  "+String.format("%2s",tmpHorsePosition[0])+"  "+tmpHorseEnd[0]+" "+String.format("%4s",String.format("%4s",tmpOdds[1]))+" "+String.format("%2s",tmpHorseIteration[1])+"  "+String.format("%2s",tmpHorsePosition[1])+"  "+tmpHorseEnd[1]+" "+String.format("%4s",String.format("%4s",tmpOdds[2]))+" "+String.format("%2s",tmpHorseIteration[2])+"  "+String.format("%2s",tmpHorsePosition[2])+"  "+tmpHorseEnd[2]+" "+String.format("%4s",String.format("%4s",tmpOdds[3]))+" "+String.format("%2s",tmpHorseIteration[3])+"  "+String.format("%2s",tmpHorsePosition[3])+"  "+tmpHorseEnd[3]);
 
         if (!log.close()) {
             GenericIO.writelnString("Operation  " + filename + " failed!");
@@ -164,7 +265,7 @@ public class GeneralRepository {
      *   @param betamount Amount betted
      */
     public synchronized void setBetA(int specId, int betamount){
-        this.betA[specId]=+(int)betamount;
+        this.betA[specId] = betamount;
         //updateLog();
     }
 
@@ -174,7 +275,7 @@ public class GeneralRepository {
      *   @param horseId Identifier of the Horse/Jockey pair
      *   @param odd Chance of winning in percentage
      */
-    public synchronized void setOdds(int horseId, int odd){
+    public synchronized void setOdds(int horseId, double odd){
         this.odds[horseId] = odd;
         //updateLog();
     }
@@ -196,7 +297,7 @@ public class GeneralRepository {
      *   @param pos Current position
      */
     public synchronized void setHorsePosition(int horseId, int pos){
-        this.horsePosition[horseId]=pos;
+        horsePosition[horseId] = pos;
         //updateLog();
     }
 
@@ -206,7 +307,7 @@ public class GeneralRepository {
      *   @param horseId Identifier of the Horse/Jockey pair
      */
     public synchronized void setHorseEnd(int horseId){
-        this.horseEnd[horseId]=horseId;
+        this.horseEnd[horseId]=++finishedHorses;
         //updateLog();
     }
 
@@ -226,6 +327,19 @@ public class GeneralRepository {
      *   @param num number race being run
      */
     public synchronized void setRaceNumber(int num){
+
+        // Reset variables for the new race.
+        horseState = new HorseJockey.States[SimulPar.C];
+        Arrays.fill(horseAgility, 0);
+        trackSize = 0;
+        Arrays.fill(betS, -1);
+        Arrays.fill(betA, 0);
+        Arrays.fill(odds, 0);
+        Arrays.fill(horseIteration, 0);
+        Arrays.fill(horsePosition, 0);
+        Arrays.fill(horseEnd, -1);
+        finishedHorses = 0;
+
         this.raceNumber = num;
         //updateLog();
     }
@@ -238,14 +352,7 @@ public class GeneralRepository {
     public synchronized void setBrokerState(Broker.States state){
         this.brkState=state;
 
-        boolean print =true;
-        for (HorseJockey.States i : horseState)
-            if(i==null) print = false;
-
-        for (Spectators.States i : specState)
-            if(i==null) print = false;
-
-        if(print) updateLog();
+        updateLog();
     }
 
     /**
@@ -256,15 +363,9 @@ public class GeneralRepository {
      */
     public synchronized void setSpectatorState(int specId,Spectators.States state){
         this.specState[specId]=state;
-        boolean print = true;
 
-        for (HorseJockey.States i : horseState)
-            if(i==null) print = false;
-
-        for (Spectators.States i : specState)
-            if(i==null) print = false;
-
-        if(print) updateLog();
+        if(brkState != null)
+            updateLog();
     }
 
     /**
@@ -273,8 +374,8 @@ public class GeneralRepository {
      *   @param specId ID of the Spectator
      *   @param funds funds of the Spectator
      */
-    public synchronized void setSpectatorMoney(int specId,double funds){
-        this.specMoney[specId]=(int)funds;
+    public synchronized void setSpectatorMoney(int specId, int funds){
+        this.specMoney[specId]=funds;
         //updateLog();
     }
 
@@ -287,15 +388,8 @@ public class GeneralRepository {
     public synchronized void setHorseState(int horseId,HorseJockey.States state){
         this.horseState[horseId]=state;
 
-        boolean print = true;
-
-        for (HorseJockey.States i : horseState)
-            if(i==null) print = false;
-
-        for (Spectators.States i : specState)
-            if(i==null) print = false;
-
-        if(print) updateLog();
+        if(brkState != null)
+            updateLog();
     }
 
     /**

@@ -46,6 +46,11 @@ public class BettingCenter {
     private int numberAcceptedBets;
 
     /**
+     * Number of finished bets.
+     */
+    private int numberFinishedBets;
+
+    /**
      * List of Spectators waiting for Broker give gains - synchronization point.
      */
     private boolean[] waitForGains;
@@ -90,6 +95,7 @@ public class BettingCenter {
 
         raceBets = new ArrayList<>();
         numberAcceptedBets = 0;
+        numberFinishedBets = 0;
         acceptedSpectatorsBets = new boolean[SimulPar.S];
 
         spectatorsGains = new double[SimulPar.S];
@@ -145,13 +151,16 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
+        if(numberAcceptedBets < SimulPar.S){
+            int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
 
-        acceptedSpectatorsBets[lastSpectatorAccepted] = true;
-        numberAcceptedBets++;
+            acceptedSpectatorsBets[lastSpectatorAccepted] = true;
+            numberAcceptedBets++;
+
+            notifyAll();
+        }
+
         waitForBet = true;
-
-        notifyAll();
     }
 
     /**
@@ -180,7 +189,7 @@ public class BettingCenter {
 
         genRepos.setSpectatorState(spectatorId, Spectators.States.PAB);
         genRepos.setBetA(spectatorId, (int)betSize);
-        genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
+        genRepos.setSpectatorMoney(spectatorId, (int) ((Spectators) Thread.currentThread()).getFunds());
 
         while(!acceptedSpectatorsBets[spectatorId]){
             waitForBet = false;
@@ -190,6 +199,7 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
+         numberFinishedBets++;
     }
 
     /**
@@ -298,7 +308,7 @@ public class BettingCenter {
 
         ((Spectators) Thread.currentThread()).setTransaction(earnings);
 
-        genRepos.setSpectatorMoney(spectatorId, ((Spectators) Thread.currentThread()).getFunds());
+        genRepos.setSpectatorMoney(spectatorId, (int) ((Spectators) Thread.currentThread()).getFunds());
     }
 
     /**

@@ -14,6 +14,10 @@ public class AfternoonAtRaces_Conc {
      */
     public static void main(String[] args) {
 
+        for(int i = 1; i < 10000; i++){
+
+            System.out.println("RUN: " + i);
+
         // Shared Regions Initialization
         GeneralRepository generalRepository = new GeneralRepository();
         Stable stable= new Stable(generalRepository);
@@ -40,6 +44,7 @@ public class AfternoonAtRaces_Conc {
         for(int id=0;id<SimulPar.S;id++){
             String name = "Spectactor"+Integer.toString(id);
             spectator[id]=new Spectators(name, id, bettingCenter, controlCenter, paddock);
+            generalRepository.setSpectatorMoney(id, (int)spectator[id].getFunds());
 
             spectator[id].start();
         }
@@ -75,5 +80,6 @@ public class AfternoonAtRaces_Conc {
         try{
             broker.join();
         }catch(InterruptedException e){}
+        }
     }
 }
