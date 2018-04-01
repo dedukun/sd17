@@ -240,6 +240,7 @@ public class BettingCenter {
             // Reset variables for next race
             raceBets.clear();
             numberAcceptedBets = 0;
+            numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
             return false;
