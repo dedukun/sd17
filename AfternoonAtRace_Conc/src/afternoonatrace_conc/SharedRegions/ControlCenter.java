@@ -129,9 +129,6 @@ public class ControlCenter{
      * Broker is starting the race.
      */
     public synchronized void startTheRace(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.STR);
-        genRepos.setBrokerState(Broker.States.STR);
-
         while(waitForEndRaceBroker){
             try{
                 wait();

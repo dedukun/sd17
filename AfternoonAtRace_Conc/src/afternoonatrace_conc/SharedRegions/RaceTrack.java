@@ -74,6 +74,8 @@ public class RaceTrack {
      * Broker wakes up one horse.
      */
     public synchronized void startTheRace(){
+        ((Broker) Thread.currentThread()).setState(Broker.States.STR);
+        genRepos.setBrokerState(Broker.States.STR);
 
         trackSize = ThreadLocalRandom.current().nextInt(20, 50);
         genRepos.setTrackSize(trackSize);
