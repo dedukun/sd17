@@ -94,6 +94,8 @@ public class Stable {
      *   @return List of the winning chances of the horses in the current race
      */
     public synchronized double[] summonHorsesToPaddock(int raceNumber){
+        ((Broker) Thread.currentThread()).setState(Broker.States.ANR);
+        genRepos.setBrokerState(Broker.States.ANR);
 
         genRepos.setRaceNumber(raceNumber);
 

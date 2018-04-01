@@ -89,9 +89,6 @@ public class ControlCenter{
      * Broker is waiting for the spectators finishing seeing the horses.
      */
     public synchronized void  summonHorsesToPaddock(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.ANR);
-        genRepos.setBrokerState(Broker.States.ANR);
-
         while(waitForEvaluation){
             try{
                 wait();
