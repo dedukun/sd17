@@ -14,10 +14,6 @@ public class AfternoonAtRaces_Conc {
      */
     public static void main(String[] args) {
 
-        for(int i = 1; i < 10000; i++){
-
-            System.out.println("RUN: " + i);
-
         // Shared Regions Initialization
         GeneralRepository generalRepository = new GeneralRepository();
         Stable stable= new Stable(generalRepository);
@@ -80,6 +76,5 @@ public class AfternoonAtRaces_Conc {
         try{
             broker.join();
         }catch(InterruptedException e){}
-        }
     }
 }
