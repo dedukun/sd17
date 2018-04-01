@@ -46,11 +46,6 @@ public class BettingCenter {
     private int numberAcceptedBets;
 
     /**
-     * Number of finished bets.
-     */
-    private int numberFinishedBets;
-
-    /**
      * List of Spectators waiting for Broker give gains - synchronization point.
      */
     private boolean[] waitForGains;
@@ -95,7 +90,6 @@ public class BettingCenter {
 
         raceBets = new ArrayList<>();
         numberAcceptedBets = 0;
-        numberFinishedBets = 0;
         acceptedSpectatorsBets = new boolean[SimulPar.S];
 
         spectatorsGains = new double[SimulPar.S];
@@ -125,6 +119,7 @@ public class BettingCenter {
      */
     public synchronized boolean acceptedAllBets(){
         if(numberAcceptedBets == SimulPar.S){
+
             // reset vars for race
             numberOfWinningBets = 0;
             numberAcceptedWinners = 0;
@@ -151,16 +146,13 @@ public class BettingCenter {
             }catch(InterruptedException e){}
         }
 
-        if(numberAcceptedBets < SimulPar.S){
-            int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
-
-            acceptedSpectatorsBets[lastSpectatorAccepted] = true;
-            numberAcceptedBets++;
-
-            notifyAll();
-        }
+        int lastSpectatorAccepted = raceBets.get(numberAcceptedBets).getSpectatorId();
 
         waitForBet = true;
+        acceptedSpectatorsBets[lastSpectatorAccepted] = true;
+        numberAcceptedBets++;
+
+        notifyAll();
     }
 
     /**
@@ -198,8 +190,6 @@ public class BettingCenter {
                 wait();
             }catch(InterruptedException e){}
         }
-
-         numberFinishedBets++;
     }
 
     /**
