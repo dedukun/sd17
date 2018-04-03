@@ -138,21 +138,31 @@ public class RaceTrack {
                 genRepos.setHorseState(horseID, HorseJockey.States.AFL);
 
                 finishedHorses++;
-                genRepos.setHorseEnd(horseID);
                 // If there are no winners in this group of moves, then this Horse is one of them
                 if(!winnersMet){
                     if(!winningHorses.isEmpty()){
                         if(horsesTravelledDistance[horseID] > horsesTravelledDistance[winningHorses.get(0)]){
+                            for(int secPlaceId : winningHorses){
+                                genRepos.setHorseEnd(secPlaceId, 2);
+                            }
+
                             winningHorses.clear();
                             winningHorses.add(horseID);
                         }
                         else if(horsesTravelledDistance[horseID] == horsesTravelledDistance[winningHorses.get(0)]){
+                            genRepos.setHorseEnd(horseID, 1);
+
                             winningHorses.add(horseID);
                         }
                     }
                     else{
                         winningHorses.add(horseID);
+
+                        genRepos.setHorseEnd(horseID, 1);
                     }
+                }
+                else{
+                    genRepos.setHorseEnd(horseID, finishedHorses);
                 }
             }
         }

@@ -43,11 +43,6 @@ public class GeneralRepository {
     private String filename;
 
     /**
-     * Number of horses that finished the race.
-     */
-    private int finishedHorses;
-
-    /**
     * File declaration.
     */
     private TextFile log = new TextFile();
@@ -305,9 +300,10 @@ public class GeneralRepository {
      * Set the Horse/Jockey pairs that have already finished the race.
      *
      *   @param horseId Identifier of the Horse/Jockey pair
+     *   @param place Place that the given Horse/Jockey pair finished the race
      */
-    public synchronized void setHorseEnd(int horseId){
-        this.horseEnd[horseId]=++finishedHorses;
+    public synchronized void setHorseEnd(int horseId, int place){
+        this.horseEnd[horseId]=place;
         //updateLog();
     }
 
@@ -338,7 +334,6 @@ public class GeneralRepository {
         Arrays.fill(horseIteration, 0);
         Arrays.fill(horsePosition, 0);
         Arrays.fill(horseEnd, -1);
-        finishedHorses = 0;
 
         this.raceNumber = num;
         //updateLog();
