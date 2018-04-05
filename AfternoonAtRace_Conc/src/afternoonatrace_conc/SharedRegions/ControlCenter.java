@@ -73,8 +73,8 @@ public class ControlCenter{
      */
     public synchronized boolean waitForNextRace(){
 
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.WRS);
-        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), Spectators.States.WRS);
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.WRS);
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), SpectatorsStates.WRS);
 
         while(waitForNextRace){
             try{
@@ -152,8 +152,8 @@ public class ControlCenter{
      * Spectator is watching the race.
      */
     public synchronized void goWatchTheRace(){
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.WAR);
-        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()) , Spectators.States.WAR);
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.WAR);
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()) , SpectatorsStates.WAR);
 
         while(waitForEndOfRace){
             try{
@@ -200,8 +200,8 @@ public class ControlCenter{
     * Broker is entertaining the guests.
     */
     public synchronized void entertainTheGuests(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.PHAB);
-        genRepos.setBrokerState(Broker.States.PHAB);
+        ((Broker) Thread.currentThread()).setState(BrokerStates.PHAB);
+        genRepos.setBrokerState(BrokerStates.PHAB);
 
         waitForNextRace = false;
         theresANewRace = false;
@@ -214,9 +214,9 @@ public class ControlCenter{
     */
     public synchronized void relaxABit(){
 
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.CB);
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.CB);
 
-        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), Spectators.States.CB);
+        genRepos.setSpectatorState((((Spectators) Thread.currentThread()).getSID()), SpectatorsStates.CB);
 
     }
 }

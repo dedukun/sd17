@@ -149,9 +149,9 @@ public class BettingCenter {
      * Broker is waiting for a bet placed by a Spectator and accepts it.
      */
     public synchronized void acceptTheBet(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.WFB);
+        ((Broker) Thread.currentThread()).setState(BrokerStates.WFB);
 
-        genRepos.setBrokerState(Broker.States.WFB);
+        genRepos.setBrokerState(BrokerStates.WFB);
 
         while(waitForBet){
             try{
@@ -177,7 +177,7 @@ public class BettingCenter {
      *   @param horseId Identifier of the Horse/Jockey pair that the Spectator is betting
      */
     public synchronized void placeABet(int horseId){
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.PAB);
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.PAB);
 
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
         double spectatorWallet = ((Spectators) Thread.currentThread()).getFunds();
@@ -195,9 +195,9 @@ public class BettingCenter {
 
         raceBets.add(new Bet(spectatorId, betSize, horseId));
 
-        genRepos.setSpectatorState(spectatorId, Spectators.States.PAB);
         genRepos.setBetA(spectatorId, (int)betSize);
         genRepos.setSpectatorMoney(spectatorId, (int) ((Spectators) Thread.currentThread()).getFunds());
+        genRepos.setSpectatorState(spectatorId, SpectatorsStates.PAB);
 
         while(!acceptedSpectatorsBets[spectatorId]){
             waitForBet = false;
@@ -222,8 +222,8 @@ public class BettingCenter {
      *   @return true if there is a winner, false if there's not.
      */
     public synchronized boolean areThereAnyWinners(int[] winningHorses){
-        ((Broker) Thread.currentThread()).setState(Broker.States.SA);
-        genRepos.setBrokerState(Broker.States.SA);
+        ((Broker) Thread.currentThread()).setState(BrokerStates.SA);
+        genRepos.setBrokerState(BrokerStates.SA);
 
         numberOfWinningHorses = winningHorses.length;
 
@@ -306,13 +306,13 @@ public class BettingCenter {
      * Spectator is waiting for the Broker to pay him back and collects the money that he has won.
      */
     public synchronized void goCollectTheGains(){
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.CTG);
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.CTG);
 
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
 
         spectatorWaitingGains.add(spectatorId);
 
-        genRepos.setSpectatorState(spectatorId, Spectators.States.CTG);
+        genRepos.setSpectatorState(spectatorId, SpectatorsStates.CTG);
 
         while(!waitForGains[spectatorId]){
             waitForWinningSpectator = false;

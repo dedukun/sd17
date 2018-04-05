@@ -21,31 +21,12 @@ public class Spectators extends Thread{
     /**
      * Current state of the Spectator.
      */
-    private States sstate;
+    private SpectatorsStates sstate;
 
     /**
      * Spectator's current funds.
      */
     private double wallet;
-
-    /**
-     * Enumerate with the Spectator States.
-     * WRS - WAITING_FOR_A_RACE_TO_START
-     * ATH - APPRAISING_THE_HORSES
-     * PAB - PLACING_A_BET
-     * WAR - WATCHING_A_RACE
-     * CTG - COLLECTING_THE_GAINS
-     * CB  - CELEBRATING
-     */
-    public static enum States
-    {
-        WRS,
-        ATH,
-        PAB,
-        WAR,
-        CTG,
-        CB
-    }
 
     /**
      * Reference to Betting Center.
@@ -88,7 +69,7 @@ public class Spectators extends Thread{
      *
      *   @return The current state
      */
-    public States getSState() {
+    public SpectatorsStates getSState() {
         return sstate;
     }
 
@@ -97,7 +78,7 @@ public class Spectators extends Thread{
      *
      *   @param sstate The new state
      */
-    public void setState(States sstate) {
+    public void setState(SpectatorsStates sstate) {
         this.sstate = sstate;
     }
 

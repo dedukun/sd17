@@ -68,7 +68,7 @@ public class Paddock {
      */
     public synchronized void proceedToPaddock(){
 
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ATP);
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATP);
 
 
         int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
@@ -76,7 +76,7 @@ public class Paddock {
 
         horsesAgilities[horseId] = horseAgility;
 
-        genRepos.setHorseState(horseId, HorseJockey.States.ATP);
+        genRepos.setHorseState(horseId, HorseJockeyStates.ATP);
 
         while(paradingHorses){
             try{
@@ -126,11 +126,11 @@ public class Paddock {
      */
     public synchronized int goCheckHorses(){
 
-        ((Spectators) Thread.currentThread()).setState(Spectators.States.ATH);
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.ATH);
 
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
 
-        genRepos.setSpectatorState(spectatorId, Spectators.States.ATH);
+        genRepos.setSpectatorState(spectatorId, SpectatorsStates.ATH);
 
         while(evaluatingHorses){
             try{

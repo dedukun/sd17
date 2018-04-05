@@ -74,8 +74,8 @@ public class RaceTrack {
      * Broker wakes up one horse.
      */
     public synchronized void startTheRace(){
-        ((Broker) Thread.currentThread()).setState(Broker.States.STR);
-        genRepos.setBrokerState(Broker.States.STR);
+        ((Broker) Thread.currentThread()).setState(BrokerStates.STR);
+        genRepos.setBrokerState(BrokerStates.STR);
 
         trackSize = ThreadLocalRandom.current().nextInt(20, 50);
         genRepos.setTrackSize(trackSize);
@@ -96,11 +96,11 @@ public class RaceTrack {
      * Horse/Jockey pair is waiting at the start line of the race track.
      */
     public synchronized void proceedToStartLine(){
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.ASL);
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ASL);
 
         int horseID = ((HorseJockey) Thread.currentThread()).getHJId();
 
-        genRepos.setHorseState(horseID, HorseJockey.States.ASL);
+        genRepos.setHorseState(horseID, HorseJockeyStates.ASL);
 
         while(waitToMove || horseID != horseMoving){
             try{
@@ -123,19 +123,20 @@ public class RaceTrack {
 
         // Check if horse already finished the race
         if(horsesTravelledDistance[horseID] < trackSize){
-            ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.RU);
-            genRepos.setHorseState(horseID, HorseJockey.States.RU);
+            ((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.RU);
+
             int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
             int move = ThreadLocalRandom.current().nextInt(1, horseAgility);
 
             horsesTravelledDistance[horseID] += move;
+
             genRepos.setHorsePosition(horseID, horsesTravelledDistance[horseID]);
             genRepos.setHorseIteration(horseID);
+            genRepos.setHorseState(horseID, HorseJockeyStates.RU);
 
             if(horsesTravelledDistance[horseID] >= trackSize){
 
-                ((HorseJockey) Thread.currentThread()).setState(HorseJockey.States.AFL);
-                genRepos.setHorseState(horseID, HorseJockey.States.AFL);
+                ((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.AFL);
 
                 finishedHorses++;
                 // If there are no winners in this group of moves, then this Horse is one of them
@@ -164,6 +165,8 @@ public class RaceTrack {
                 else{
                     genRepos.setHorseEnd(horseID, finishedHorses);
                 }
+
+                genRepos.setHorseState(horseID, HorseJockeyStates.AFL);
             }
         }
 

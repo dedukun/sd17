@@ -26,29 +26,12 @@ public class HorseJockey extends Thread{
     /**
      * Current state of the Horse/Jockey pair.
      */
-    private States hjstate;
+    private HorseJockeyStates hjstate;
 
     /**
      * Agility of the Horse/Jockey pair.
      */
     private int agility;
-
-    /**
-     * Enumerate with Horse/Jockey States.
-     * ATS - AT_THE_STABLE
-     * ATP - AT_THE_PADDOCK
-     * ASL - AT_THE_START_LINE
-     * RU  - RUNNING
-     * AFL - AT_THE_FINISH_LINE
-     */
-    public static enum States
-    {
-        ATS,
-        ATP,
-        ASL,
-        RU,
-        AFL
-    }
 
     /**
      * Reference to Control Center.
@@ -119,7 +102,7 @@ public class HorseJockey extends Thread{
      *
      *   @return The state
      */
-    public States getHJState() {
+    public HorseJockeyStates getHJState() {
         return hjstate;
     }
 
@@ -137,7 +120,7 @@ public class HorseJockey extends Thread{
      *
      *   @param hjstate New state
      */
-    public void setState(States hjstate) {
+    public void setState(HorseJockeyStates hjstate) {
         this.hjstate = hjstate;
     }
 

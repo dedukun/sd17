@@ -15,12 +15,12 @@ public class GeneralRepository {
     /**
     * Broker state.
     */
-    private Broker.States brkState;
+    private BrokerStates brkState;
 
     /**
     * Spectators state.
     */
-    private Spectators.States[] specState = new Spectators.States[SimulPar.S];
+    private SpectatorsStates[] specState = new SpectatorsStates[SimulPar.S];
 
     /**
     * Spectators wallet.
@@ -30,7 +30,7 @@ public class GeneralRepository {
     /**
     * Horses state.
     */
-    private HorseJockey.States[] horseState = new HorseJockey.States[SimulPar.C];
+    private HorseJockeyStates[] horseState = new HorseJockeyStates[SimulPar.C];
 
     /**
     * Horses agility.
@@ -325,7 +325,7 @@ public class GeneralRepository {
     public synchronized void setRaceNumber(int num){
 
         // Reset variables for the new race.
-        horseState = new HorseJockey.States[SimulPar.C];
+        horseState = new HorseJockeyStates[SimulPar.C];
         Arrays.fill(horseAgility, 0);
         trackSize = 0;
         Arrays.fill(betS, -1);
@@ -344,7 +344,7 @@ public class GeneralRepository {
      *
      *   @param state state of the Broker
      */
-    public synchronized void setBrokerState(Broker.States state){
+    public synchronized void setBrokerState(BrokerStates state){
         this.brkState=state;
 
         updateLog();
@@ -356,7 +356,7 @@ public class GeneralRepository {
      *   @param specId ID of the Spectator
      *   @param state state of the Spectator
      */
-    public synchronized void setSpectatorState(int specId,Spectators.States state){
+    public synchronized void setSpectatorState(int specId,SpectatorsStates state){
         this.specState[specId]=state;
 
         if(brkState != null)
@@ -380,7 +380,7 @@ public class GeneralRepository {
      *   @param horseId ID of the Horse
      *   @param state state of the Horse/Jockey pair.
      */
-    public synchronized void setHorseState(int horseId,HorseJockey.States state){
+    public synchronized void setHorseState(int horseId,HorseJockeyStates state){
         this.horseState[horseId]=state;
 
         if(brkState != null)

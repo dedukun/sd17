@@ -16,26 +16,7 @@ public class Broker extends Thread{
     /**
      * Current state of the Broker.
      */
-    private States bstate;
-
-    /**
-     * Enumerate with Broker States.
-     * OTE  - OPENING_THE_EVENT
-     * ANR  - ANNOUNCING_NEXT_RACE
-     * WFB  - WAITING_FOR_BETS
-     * STR  - SUPERVISING_THE_RACE
-     * SA   - SETTLING_ACCOUNTS
-     * PHAB - PLAYING_HOST_AT_THE_BAR
-     */
-    public static enum States
-    {
-        OTE,
-        ANR,
-        WFB,
-        STR,
-        SA,
-        PHAB
-    }
+    private BrokerStates bstate;
 
     /**
      * Reference to Betting Center.
@@ -69,7 +50,7 @@ public class Broker extends Thread{
     public Broker(String name, BettingCenter bettingCenter, ControlCenter controlCenter, RaceTrack raceTrack, Stable stable) {
         super(name);
         this.name = name;
-        this.bstate = States.OTE;
+        this.bstate = BrokerStates.OTE;
 
         this.bettingCenter = bettingCenter;
         this.controlCenter = controlCenter;
@@ -83,7 +64,7 @@ public class Broker extends Thread{
      *
      * 	 @param bstate The state
      */
-    public void setState(States bstate) {
+    public void setState(BrokerStates bstate) {
         this.bstate = bstate;
     }
 
@@ -92,7 +73,7 @@ public class Broker extends Thread{
      *
      *   @return The current state
      */
-    public States getBState() {
+    public BrokerStates getBState() {
         return bstate;
     }
 

@@ -1,7 +1,10 @@
 /**
- * Package with all the entities used in this problem.<br>
+ * Package with all the entities, and their states, used in this problem.<br>
  *  - Broker<br>
+ *  - BrokerStates<br>
  *  - HorseJockey<br>
- *  - Spectators
+ *  - HorseJockeStates<br>
+ *  - Spectators<br>
+ *  - SpectatorsStates
  */
 package afternoonatrace_conc.Entities;
