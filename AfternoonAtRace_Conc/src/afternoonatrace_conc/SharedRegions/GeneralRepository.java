@@ -150,7 +150,7 @@ public class GeneralRepository {
         // Some print logic
         String[] tmpHorseState = new String[SimulPar.C];
         for(int i = 0; i < SimulPar.C; i++){
-            if(horseState[i] != null)
+            if(horseState[i] != null && brkState != BrokerStates.OTE)
                 tmpHorseState[i] = horseState[i].toString();
             else
                 tmpHorseState[i] = "---";

@@ -117,9 +117,9 @@ public class Stable {
             double horseAgility = horsesAgilities[ idx ];
             horsesChances[i] =  horseAgility / sumAgilities;
 
-            genRepos.setHorseState(i, HorseJockeyStates.ATS);
             genRepos.setHorseAgility(i, (int)horseAgility);
             genRepos.setOdds(i, horsesChances[i]*100);
+            genRepos.setHorseState(i, HorseJockeyStates.ATS);
         }
 
         return horsesChances;
