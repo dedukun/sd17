@@ -68,15 +68,10 @@ public class Paddock {
      */
     public synchronized void proceedToPaddock(){
 
-        ((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATP);
-
-
         int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
         int horseAgility = ((HorseJockey) Thread.currentThread()).getAgility();
 
         horsesAgilities[horseId] = horseAgility;
-
-        genRepos.setHorseState(horseId, HorseJockeyStates.ATP);
 
         while(paradingHorses){
             try{
@@ -106,6 +101,12 @@ public class Paddock {
      *   @return true if the pair is the last one to arrive, false if not.
      */
     public synchronized boolean lastArrivedToPaddock() {
+
+        ((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATP);
+
+        int horseId = ((HorseJockey) Thread.currentThread()).getHJId();
+        genRepos.setHorseState(horseId, HorseJockeyStates.ATP);
+
         horsesAtPaddock++;
 
         if(horsesAtPaddock == SimulPar.C){
@@ -130,8 +131,6 @@ public class Paddock {
 
         int spectatorId = ((Spectators) Thread.currentThread()).getSID();
 
-        genRepos.setSpectatorState(spectatorId, SpectatorsStates.ATH);
-
         while(evaluatingHorses){
             try{
                 wait();
@@ -153,6 +152,12 @@ public class Paddock {
     public synchronized boolean lastCheckHorses(){
 
         spectatorsAtParade++;
+
+        ((Spectators) Thread.currentThread()).setState(SpectatorsStates.ATH);
+
+        int spectatorId = ((Spectators) Thread.currentThread()).getSID();
+
+        genRepos.setSpectatorState(spectatorId, SpectatorsStates.ATH);
 
         return spectatorsAtParade == SimulPar.S;
     }

@@ -200,9 +200,6 @@ public class ControlCenter{
     * Broker is entertaining the guests.
     */
     public synchronized void entertainTheGuests(){
-        ((Broker) Thread.currentThread()).setState(BrokerStates.PHAB);
-        genRepos.setBrokerState(BrokerStates.PHAB);
-
         waitForNextRace = false;
         theresANewRace = false;
 

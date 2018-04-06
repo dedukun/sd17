@@ -129,6 +129,8 @@ public class Stable {
      * Broker is closing the event and is waking up horses from stable.
      */
     public synchronized void entertainTheGuests(){
+        ((Broker) Thread.currentThread()).setState(BrokerStates.PHAB);
+        genRepos.setBrokerState(BrokerStates.PHAB);
 
         endEvent = true;
 

@@ -147,6 +147,12 @@ public class GeneralRepository {
         // Doubles formatter
         DecimalFormat formatter = new DecimalFormat("#0.0");
 
+        String tmpRaceNumber = "";
+        if(brkState == BrokerStates.OTE)
+            tmpRaceNumber = "-";
+        else
+            tmpRaceNumber = "" + raceNumber;
+
         // Some print logic
         String[] tmpHorseState = new String[SimulPar.C];
         for(int i = 0; i < SimulPar.C; i++){
@@ -234,7 +240,7 @@ public class GeneralRepository {
             tmpBrkState = brkState.toString();
 
         log.writelnString(" "+String.format("%4s",brkState)+"  "+String.format("%3s",tmpSpecState[0])+" "+String.format("%4s",specMoney[0])+" "+String.format("%3s",tmpSpecState[1])+" "+String.format("%4s",specMoney[1])+" "+String.format("%3s",tmpSpecState[2])+" "+String.format("%4s",specMoney[2])+" "+String.format("%3s",tmpSpecState[3])+" "+String.format("%4s",specMoney[3])+"  "+raceNumber+" "+String.format("%3s",tmpHorseState[0])+"  "+String.format("%2s",tmpHorseAgility[0])+"  "+String.format("%3s",tmpHorseState[1])+"  "+String.format("%2s",tmpHorseAgility[1])+"  "+String.format("%3s",tmpHorseState[2])+"  "+String.format("%2s",tmpHorseAgility[2])+"  "+String.format("%3s",tmpHorseState[3])+"  "+String.format("%2s",tmpHorseAgility[3]));
-        log.writelnString(" "+raceNumber+"  "+String.format("%2s",tmpTrackSize)+"   "+tmpBetS[0]+"  "+String.format("%4s",tmpBetA[0])+"  "+tmpBetS[1]+"  "+String.format("%4s",tmpBetA[1])+"  "+tmpBetS[2]+"  "+String.format("%4s",tmpBetA[2])+"  "+tmpBetS[3]+"  "+String.format("%4s",tmpBetA[3])+" "+String.format("%4s",String.format("%4s",tmpOdds[0]))+" "+String.format("%2s",tmpHorseIteration[0])+"  "+String.format("%2s",tmpHorsePosition[0])+"  "+tmpHorseEnd[0]+" "+String.format("%4s",String.format("%4s",tmpOdds[1]))+" "+String.format("%2s",tmpHorseIteration[1])+"  "+String.format("%2s",tmpHorsePosition[1])+"  "+tmpHorseEnd[1]+" "+String.format("%4s",String.format("%4s",tmpOdds[2]))+" "+String.format("%2s",tmpHorseIteration[2])+"  "+String.format("%2s",tmpHorsePosition[2])+"  "+tmpHorseEnd[2]+" "+String.format("%4s",String.format("%4s",tmpOdds[3]))+" "+String.format("%2s",tmpHorseIteration[3])+"  "+String.format("%2s",tmpHorsePosition[3])+"  "+tmpHorseEnd[3]);
+        log.writelnString(" "+tmpRaceNumber+"  "+String.format("%2s",tmpTrackSize)+"   "+tmpBetS[0]+"  "+String.format("%4s",tmpBetA[0])+"  "+tmpBetS[1]+"  "+String.format("%4s",tmpBetA[1])+"  "+tmpBetS[2]+"  "+String.format("%4s",tmpBetA[2])+"  "+tmpBetS[3]+"  "+String.format("%4s",tmpBetA[3])+" "+String.format("%4s",String.format("%4s",tmpOdds[0]))+" "+String.format("%2s",tmpHorseIteration[0])+"  "+String.format("%2s",tmpHorsePosition[0])+"  "+tmpHorseEnd[0]+" "+String.format("%4s",String.format("%4s",tmpOdds[1]))+" "+String.format("%2s",tmpHorseIteration[1])+"  "+String.format("%2s",tmpHorsePosition[1])+"  "+tmpHorseEnd[1]+" "+String.format("%4s",String.format("%4s",tmpOdds[2]))+" "+String.format("%2s",tmpHorseIteration[2])+"  "+String.format("%2s",tmpHorsePosition[2])+"  "+tmpHorseEnd[2]+" "+String.format("%4s",String.format("%4s",tmpOdds[3]))+" "+String.format("%2s",tmpHorseIteration[3])+"  "+String.format("%2s",tmpHorsePosition[3])+"  "+tmpHorseEnd[3]);
 
         if (!log.close()) {
             GenericIO.writelnString("Operation  " + filename + " failed!");
