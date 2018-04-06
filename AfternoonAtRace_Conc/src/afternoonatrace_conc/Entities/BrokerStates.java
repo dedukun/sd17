@@ -2,20 +2,37 @@ package afternoonatrace_conc.Entities;
 
 /**
  * Enumerate with Broker States.
- * OTE  - OPENING_THE_EVENT
- * ANR  - ANNOUNCING_NEXT_RACE
- * WFB  - WAITING_FOR_BETS
- * STR  - SUPERVISING_THE_RACE
- * SA   - SETTLING_ACCOUNTS
- * PHAB - PLAYING_HOST_AT_THE_BAR
  */
 public enum BrokerStates
 {
+    /**
+     * OPENING_THE_EVENT
+     */
     OTE,
+
+    /**
+     * ANNOUNCING_NEXT_RACE
+     */
     ANR,
+
+    /**
+     * WAITING_FOR_BETS
+     */
     WFB,
+
+    /**
+     * SUPERVISING_THE_RACE
+     */
     STR,
+
+    /**
+     * SETTLING_ACCOUNTS
+     */
     SA,
+
+    /**
+     * PLAYING_HOST_AT_THE_BAR
+     */
     PHAB
 }
 
