@@ -196,7 +196,7 @@ public class ControlCenter{
         return false;
     }
 
-    /*
+    /**
     * Broker is entertaining the guests.
     */
     public synchronized void entertainTheGuests(){
@@ -206,7 +206,7 @@ public class ControlCenter{
         notifyAll();
     }
 
-    /*
+    /**
     * Spectator is relaxing.
     */
     public synchronized void relaxABit(){
