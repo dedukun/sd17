@@ -195,6 +195,7 @@ public class BettingCenter {
 
         raceBets.add(new Bet(spectatorId, betSize, horseId));
 
+        genRepos.setBetS(spectatorId, horseId);
         genRepos.setBetA(spectatorId, (int)betSize);
         genRepos.setSpectatorMoney(spectatorId, (int) ((Spectators) Thread.currentThread()).getFunds());
         genRepos.setSpectatorState(spectatorId, SpectatorsStates.PAB);

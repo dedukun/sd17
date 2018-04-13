@@ -139,8 +139,6 @@ public class Paddock {
 
         int horseToBet = chooseHorse(spectatorId);
 
-        genRepos.setBetS(spectatorId, horseToBet);
-
         return horseToBet;
     }
 

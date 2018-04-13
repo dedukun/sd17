@@ -203,7 +203,7 @@ public class GeneralRepository {
 
         String[] tmpHorseIteration = new String[SimulPar.C];
         for(int i = 0; i < SimulPar.C; i++){
-            if(horseIteration[i] != 0)
+            if(horseIteration[i] != 0 || horseState[i] == HorseJockeyStates.ASL)
                 tmpHorseIteration[i] = Integer.toString(horseIteration[i]);
             else
                 tmpHorseIteration[i] = "--";
