@@ -4,11 +4,33 @@
  * and open the template in the editor.
  */
 package stableserver;
+import java.io.*;
 
 /**
  *
- * @author Filipe
+ * Defines the exchanged messages between Stable Server and clients.
  */
-public class Message {
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1114;
     
+    private String msgType="";
+    private int raceNumber;
+     
+    /*
+    *
+    *@param type Nome da função
+    */
+    public Message(String type){
+        msgType = type;
+    }
+    
+    /*
+    *
+    *@param type Nome da função
+    *@param raceNumberParam Number of the actual race
+    */
+    public Message(String type, int raceNumberParam){
+        msgType = type;
+        raceNumber=raceNumberParam;
+    }
 }

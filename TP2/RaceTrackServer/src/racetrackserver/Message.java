@@ -3,12 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package stableserver;
+package racetrackserver;
+import java.io.*;
 
 /**
  *
- * @author Filipe
+ * Defines the exchanged messages between Race Track Server and clients.
  */
-public class Message {
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1040;
     
+    private String msgType="";
+  
+    /*
+    *
+    *@param type Nome da função
+    */
+    public Message(String type){
+        msgType = type;
+    }
 }
