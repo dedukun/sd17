@@ -1,6 +1,5 @@
 package bettingcenterserver.Stubs;
 
-import bettingcenterserver.Communication.MessageType;
 
 public class BettingCenterStub {
 

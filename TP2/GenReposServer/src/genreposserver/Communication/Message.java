@@ -16,11 +16,17 @@ public class Message implements Serializable {
     private BrokerStates bstate;
     private HorseJockeyStates hjstate;
     private SpectatorStates sstate;
-    private int param1;
-    private int param2;
+    private int num;
+    private int size;
+    private int betAmount;
+    private int pos;
+    private int horseAgl;
+    private int place;
+    private int funds;
     private int horseId;
-    private int pecId;
-
+    private int specId;
+    private double odd;
+       
    /*
     *
     *  @param type Enumerate indicating the type of the message
@@ -32,11 +38,19 @@ public class Message implements Serializable {
     /*
     *
     *  @param type Enumerate indicating the type of the message
-    *  @param param1 Parameter of fucntion(num/size)
+    *  @param param1 Parameter of function(num/size)
     */
     public Message(MessageType type, int param1){
         msgType = type;
-        this.param1 = param1;
+        
+        switch(type.toString()) {
+            case "SET_RACE_NUMBER" : 
+                num = param1;
+                break;
+            case "SET_TRACK_SIZE":
+                size = param1;
+                break;
+        }
     }
 
     /*
@@ -47,10 +61,47 @@ public class Message implements Serializable {
     */
     public Message(MessageType type, int param1, int param2){
         msgType = type;
-        this.param1=param1;
-        this.param2=param2;
+        
+        switch(type.toString()){
+            case "SET_BET_A" :
+                specId = param1;
+                betAmount = param2;
+                break;
+            case "SET_BET_S" :
+                specId = param1;
+                horseId = param2;
+                break;
+            case "SET_HORSE_POSITION" :
+                horseId = param1;
+                pos = param2;
+                break;
+            case "SET_HORSE_AGILITY" :
+                horseId = param1;
+                horseAgl = param2;
+                break;
+            case "SET_HORSE_END" :
+                horseId = param1;
+                place = param2;
+                break;
+            case "SET_SPECATOR_MONEY" :
+                specId = param1;
+                funds = param2;
+                break;
+
+        }
     }
 
+    /*
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param oddParam representing the odds wanted
+    */
+    public Message(MessageType type, int horseidParam, double oddParam){
+        msgType = type;
+        horseId = horseidParam;
+        odd = oddParam;
+    }
+    
     /*
     *
     *  @param type Enumerate indicating the type of the message
@@ -92,5 +143,123 @@ public class Message implements Serializable {
      */
     public MessageType getMessageType(){
         return msgType;
+    }
+    
+    
+    /**
+     * Returns the broker state
+     *
+     *   @return Broker state
+     */
+    public BrokerStates getBstate() {
+        return bstate;
+    }
+
+    /**
+     * Returns the Horse/Jockey state
+     *
+     *   @return Horse/Jockey state
+     */
+    public HorseJockeyStates getHjstate() {
+        return hjstate;
+    }
+
+    /**
+     * Returns the Spectator state
+     *
+     *   @return Spectator state
+     */
+    public SpectatorStates getSstate() {
+        return sstate;
+    }
+
+    /**
+     * Returns the race number
+     *
+     *   @return race number
+     */
+    public int getNum() {
+        return num;
+    }
+
+    /**
+     * Returns the race track size
+     *
+     *   @return Race track size
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Returns the bet amount
+     *
+     *   @return Bet amount
+     */
+    public int getBetAmount() {
+        return betAmount;
+    }
+
+    /**
+     * Returns the position of a horse
+     *
+     *   @return a horse position
+     */
+    public int getPos() {
+        return pos;
+    }
+
+    /**
+     * Returns a horse agility
+     *
+     *   @return a horse agility
+     */
+    public int getHorseAgl() {
+        return horseAgl;
+    }
+
+    /**
+     * Returns the place of a horse/jockey pair
+     *
+     *   @return place of a horse/jockey pair
+     */
+    public int getPlace() {
+        return place;
+    }
+
+    /**
+     * Returns the funds of a spectator
+     *
+     *   @return a spectator funds
+     */
+    public int getFunds() {
+        return funds;
+    }
+
+    /**
+     * Returns a horse ID
+     *
+     *   @return horse ID
+     */
+    public int getHorseId() {
+        return horseId;
+    }
+
+    /**
+     * Returns a spec ID
+     *
+     *   @return spec ID
+     */
+    public int getSpecId() {
+        return specId;
+    }
+
+    /**
+     * Returns a horse odds
+     *
+     *   @return horse odd
+     */
+    public double getOdd() {
+        return odd;
     }
 }

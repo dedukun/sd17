@@ -13,7 +13,7 @@ public class Message implements Serializable {
     private int[] winningHorses;
     private int horseId;
     private double[] horseChances;
-
+    
     /**
     *
     *  @param type Enumerate indicating the type of the message
