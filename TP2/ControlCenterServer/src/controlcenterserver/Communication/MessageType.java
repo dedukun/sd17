@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controlcenterserver.Communication;
 
-/**
- *
- * @author xdye
- */
 public class MessageType {
 
     public static enum BettingCenter
@@ -25,6 +16,7 @@ public class MessageType {
 
     public static enum ControlCenter
     {
+        // Functions
         WAIT_FOR_NEXT_RACE,
         SUMMON_HORSES_TO_PADDOCK,
         UNBLOCK_GO_CHECK_HORSES,
@@ -35,7 +27,11 @@ public class MessageType {
         REPORT_RESULTS,
         HAVE_I_WON,
         ENTERTAIN_THE_GUESTS,
-        RELAX_A_BIT
+        RELAX_A_BIT,
+
+        // Replies
+        REPLY_WAIT_FOR_NEXT_RACE,
+        REPLY_HAVE_I_WON
     }
 
     public static enum GeneralRepository

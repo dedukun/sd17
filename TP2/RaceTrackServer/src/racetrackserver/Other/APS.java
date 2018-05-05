@@ -1,65 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package racetrackserver.Other;
 
-/**
- *
- * @author Filipe
- */
 public class APS {
 
     private final RaceTrack rt;
+
     public APS(){
         rt = new RaceTrack();
     }
-    /*
-    *Processes the message and returns a reply
+
+    /**
+    * Processes the message and returns a reply.
     *
-    *@param msg Mesage to be processed
+    *   @param msg Mesage to be processed
     *
     */
     public Message compute(Message msg) throws Exception{
         Message reply = null;
         switch(msg.getType()){
-            case "TODO":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                rt.getResults();
-                reply = new Message("Stuff");
-                break;
-            case "TODO1":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                rt.hasRaceFinished();
-                reply = new Message("Stuff");
-                break;
-            case "TODO2":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                rt.makeAMove();
-                reply = new Message("Stuff");
-                break;
-             case "TODO3":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                rt.proceedToStartLine();
-                reply = new Message("Stuff");
-                break;
-            case "TODO4":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
+            case RaceTrack.START_THE_RACE:
                 rt.startTheRace();
                 reply = new Message("Stuff");
                 break;
+
+            case RaceTrack.PROCEED_TO_START_LINE:
+                rt.proceedToStartLine();
+                reply = new Message("Stuff");
+                break;
+
+            case RaceTrack.MAKE_A_MOVE:
+                boolean move = rt.makeAMove();
+                reply = new Message(MessageType.RaceTrack.REPLY_MAKE_A_MOVE,move);
+                break;
+
+            case RaceTrack.HAS_RACE_FINISHED:
+                boolean finished = rt.hasRaceFinished();
+                reply = new Message(MessageType.RaceTrack.REPLY_HAS_RACE_FINISHED,finished);
+                break;
+
+            case RaceTrack.GET_RESULTS:
+                int[] results = rt.getResults();
+                reply = new Message(MessageType.RaceTrack.REPLY_GET_RESULTS,results);
+                break;
+
             default:
                 break;
         }
-        
         return reply;
     }
-    
-    
 }

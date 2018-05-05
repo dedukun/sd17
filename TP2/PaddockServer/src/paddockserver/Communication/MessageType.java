@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package paddockserver.Communication;
 
-/**
- *
- * @author xdye
- */
 public class MessageType {
 
     public static enum BettingCenter
@@ -59,11 +50,17 @@ public class MessageType {
 
     public static enum Paddock
     {
+        // Functions
         PROCEED_TO_PADDOCK,
         LAST_ARRIVED_TO_PADDOCK,
         GO_CHECK_HORSES,
         LAST_CHECK_HORSES,
-        UNBLOCK_GO_CHECK_HORSES
+        UNBLOCK_GO_CHECK_HORSES,
+
+        // Replies
+        REPLY_LAST_ARRIVED_TO_PADDOCK,
+        REPLY_GO_CHECK_HORSES,
+        REPLY_LAST_CHECK_HORSES
     }
 
     public static enum RaceTrack

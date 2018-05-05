@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bettingcenterserver.Communication;
 
-/**
- *
- * @author xdye
- */
 public class MessageType {
 
     public static enum BettingCenter
     {
+        // Functions
         SET_HORSES_WINNING_CHANCES,
         ACCEPTED_ALL_BETS,
         ACCEPT_THE_BET,
@@ -20,7 +12,10 @@ public class MessageType {
         ARE_THERE_ANY_WINNERS,
         HONOURED_ALL_THE_BETS,
         HONOUR_THE_BET,
-        GO_COLLECT_THE_GAINS
+        GO_COLLECT_THE_GAINS,
+
+        // Replies
+        REPLY_ACCEPTED_ALL_BETS,
     }
 
     public static enum ControlCenter

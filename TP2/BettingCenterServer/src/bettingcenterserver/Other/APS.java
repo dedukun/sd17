@@ -1,83 +1,69 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bettingcenterserver.Other;
 
-/**
- *
- * @author Filipe
- */
+import bettingcenterserver.Communication;
+
 public class APS {
 
     private final BettingCenter bc;
+
+    /**
+     * Betting Center Proxy Initialization.
+     */
     public APS(){
         bc = new BettingCenter();
     }
-    /*
-    *Processes the message and returns a reply
+
+    /**
+    * Processes the message and returns a reply.
     *
-    *@param msg Mesage to be processed
-    *
+    *   @param msg Mesage to be processed
     */
     public Message compute(Message msg) throws Exception{
         Message reply = null;
         switch(msg.getType()){
-            case "TODO":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.acceptedAllBets();
-                reply = new Message("Stuff");
-                break;
-            case "TODO1":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.acceptTheBet();
-                reply = new Message("Stuff");
-                break;
-            case "TODO2":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.areThereAnyWinners(msg.getWinningHorses());
-                reply = new Message("Stuff");
-                break;
-             case "TODO3":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.goCollectTheGains();
-                reply = new Message("Stuff");
-                break;
-            case "TODO4":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.honouredAllBets();
-                reply = new Message("Stuff");
-                break;
-            case "TODO5":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.honourTheBet();
-                reply = new Message("Stuff");
-                break;
-            case "TODO6":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
-                bc.placeABet(msg.getHorseId());
-                reply = new Message("Stuff");
-                break;
-            case "TODO7":
-                //Processar mensagem
-                //Escrever resposta ( se necessário ir buscar parametros para escrever resposta )
+            case BettingCenter.SET_HORSES_WINNING_CHANCES:
                 bc.setHorsesWinningChances(msg.getHorseChances());
                 reply = new Message("Stuff");
                 break;
+
+            case BettingCenter.ACCEPTED_ALL_BETS:
+                boolean accepted = bc.acceptedAllBets();
+                reply = new Message(MessageType.BettingCenter.REPLY_ACCEPTED_ALL_BETS, accepted);
+                break;
+
+            case BettingCenter.ACCEPT_THE_BET:
+                bc.acceptTheBet();
+                reply = new Message("Stuff");
+                break;
+
+             case BettingCenter.PLACE_A_BET:
+                bc.placeABet(msg.getHorseId());
+                reply = new Message("Stuff");
+                break;
+
+            case BettingCenter.ARE_THERE_ANY_WINNERS:
+                boolean winners = bc.areThereAnyWinners(msg.getWinningHorses());
+                reply = new Message(MessageType.BettingCenter.REPLY_ARE_THERE_ANY_WINNERS, winners);
+                break;
+
+            case BettingCenter.HONOURED_ALL_THE_BETS:
+                boolean honoured = bc.honouredAllBets();
+                reply = new Message(MessageType.BettingCenter.REPLY_HONOURED_ALL_THE_BETS,honoured);
+                break;
+
+            case BettingCenter.HONOUR_THE_BET:
+                bc.honourTheBet();
+                reply = new Message("Stuff");
+                break;
+
+            case BettingCenter.GO_COLLECT_THE_GAINS:
+                bc.goCollectTheGains();
+                reply = new Message("Stuff");
+                break;
+
             default:
                 break;
         }
-        
         return reply;
     }
-    
-    
 }

@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package racetrackserver.Communication;
 
-/**
- *
- * @author xdye
- */
 public class MessageType {
 
     public static enum BettingCenter
@@ -68,11 +59,17 @@ public class MessageType {
 
     public static enum RaceTrack
     {
+        // Functions
         START_THE_RACE,
         PROCEED_TO_START_LINE,
         MAKE_A_MOVE,
         HAS_RACE_FINISHED,
-        GET_RESULTS
+        GET_RESULTS,
+
+        // Replies
+        REPLY_MAKE_A_MOVE,
+        REPLY_HAS_RACE_FINISHED,
+        REPLY_GET_RESULTS
     }
 
     public static enum Stable

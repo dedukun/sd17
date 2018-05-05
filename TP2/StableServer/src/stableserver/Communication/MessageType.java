@@ -68,8 +68,12 @@ public class MessageType {
 
     public static enum Stable
     {
+        // Functions
         PROCEED_TO_STABLE,
         SUMMON_HORSES_TO_PADDOCK,
-        ENTERTAIN_THE_GUESTS
+        ENTERTAIN_THE_GUESTS,
+
+        // Reply
+        REPLY_SUMMON_HORSES_TO_PADDOCK
     }
 }
