@@ -9,15 +9,17 @@ import java.io.*;
 public class Message implements Serializable {
     private static final long serialVersionUID = 1032;
 
-    private MessageType msgType;
+    private MessageType.ControlCenter msgType;
     private int[] winners;
     private int hjid;
+    private boolean wait;
+    private boolean winner;
 
     /*
     *
     *  @param type Enumerate indicating the type of the message
     */
-    public Message(MessageType type){
+    public Message(MessageType.ControlCenter  type){
         msgType = type;
     }
 
@@ -26,7 +28,7 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param winnersParam number of winning horses
     */
-    public Message(MessageType type, int[] winnersParam){
+    public Message(MessageType.ControlCenter  type, int[] winnersParam){
         msgType = type;
         winners = winnersParam;
     }
@@ -36,9 +38,27 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param hjidParam ID of the desired horse/jockey pair
     */
-    public Message(MessageType type, int hjidParam){
+    public Message(MessageType.ControlCenter  type, int hjidParam){
         msgType = type;
         hjid=hjidParam;
+    }
+    
+    /*
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param param boolean winner/wait
+    */
+    public Message(MessageType.ControlCenter  type, boolean param){
+        msgType = type;
+        
+        switch(type){
+            case HAVE_I_WON:
+                winner = param;
+                break;
+            case WAIT_FOR_NEXT_RACE:
+                wait = param;
+                break;
+        }
     }
 
     /**
@@ -46,7 +66,7 @@ public class Message implements Serializable {
      *
      *   @return Enumerate indicating the type
      */
-    public MessageType getMessageType(){
+    public MessageType.ControlCenter  getMessageType(){
         return msgType;
     }
 

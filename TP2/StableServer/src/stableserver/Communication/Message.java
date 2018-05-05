@@ -9,14 +9,15 @@ import java.io.*;
 public class Message implements Serializable {
     private static final long serialVersionUID = 1114;
 
-    private MessageType msgType;
+    private MessageType.Stable msgType;
     private int raceNumber;
+    private double[] horse;
 
     /*
     *
     *  @param type Enumerate indicating the type of the message
     */
-    public Message(MessageType type){
+    public Message(MessageType.Stable type){
         msgType = type;
     }
 
@@ -25,9 +26,19 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param raceNumberParam Number of the actual race
     */
-    public Message(MessageType type, int raceNumberParam){
+    public Message(MessageType.Stable type, int raceNumberParam){
         msgType = type;
         raceNumber=raceNumberParam;
+    }
+    
+    /*
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param raceNumberParam Number of the actual race
+    */
+    public Message(MessageType.Stable type, double[] horseParam){
+        msgType = type;
+        horse = horseParam;
     }
 
     /**
@@ -35,7 +46,7 @@ public class Message implements Serializable {
      *
      *   @return Enumerate indicating the type
      */
-    public MessageType getMessageType(){
+    public MessageType.Stable getMessageType(){
         return msgType;
     }
 

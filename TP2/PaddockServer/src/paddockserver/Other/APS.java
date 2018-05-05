@@ -1,4 +1,5 @@
 package paddockserver.Other;
+import paddockserver.Communication.*;
 
 public class APS {
 
@@ -16,30 +17,30 @@ public class APS {
     */
     public Message compute(Message msg) throws Exception{
         Message reply = null;
-        switch(msg.getType()){
-            case Paddock.PROCEED_TO_PADDOCK:
+        switch(msg.getMessageType()){
+            case PROCEED_TO_PADDOCK:
                 pd.proceedToPaddock();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.Paddock.OK);
                 break;
 
-            case Paddock.LAST_ARRIVED_TO_PADDOCK:
-                boolean last = pd.lastArrivedToPaddock();
-                reply = new Message(MessageType.Paddock.REPLY_LAST_ARRIVED_TO_PADDOCK,last);
+            case LAST_ARRIVED_TO_PADDOCK:
+                boolean last1 = pd.lastArrivedToPaddock();
+                reply = new Message(MessageType.Paddock.REPLY_LAST_ARRIVED_TO_PADDOCK,last1);
                 break;
 
-            case Paddock.GO_CHECK_HORSES:
+            case GO_CHECK_HORSES:
                 int horseToBet = pd.goCheckHorses();
                 reply = new Message(MessageType.Paddock.REPLY_GO_CHECK_HORSES,horseToBet);
                 break;
 
-            case Paddock.LAST_CHECK_HORSES:
-                boolean last = pd.lastCheckHorses();
-                reply = new Message(MessageType.Paddock.REPLY_LAST_CHECK_HORSES,last);
+            case LAST_CHECK_HORSES:
+                boolean last2 = pd.lastCheckHorses();
+                reply = new Message(MessageType.Paddock.REPLY_LAST_CHECK_HORSES,last2);
                 break;
 
-            case Paddock.UNBLOCK_GO_CHECK_HORSES:
+            case UNBLOCK_GO_CHECK_HORSES:
                 pd.unblockGoCheckHorses();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.Paddock.OK);
                 break;
 
             default:

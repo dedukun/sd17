@@ -31,7 +31,8 @@ public class MessageType {
 
         // Replies
         REPLY_WAIT_FOR_NEXT_RACE,
-        REPLY_HAVE_I_WON
+        REPLY_HAVE_I_WON,
+        OK
     }
 
     public static enum GeneralRepository

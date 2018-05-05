@@ -45,7 +45,10 @@ public class MessageType {
         SET_SPECTATOR_STATE,
         SET_SPECTATOR_MONEY,
         SET_HORSE_STATE,
-        SET_HORSE_AGILITY
+        SET_HORSE_AGILITY,
+        
+        //Reply
+        OK
     }
 
     public static enum Paddock

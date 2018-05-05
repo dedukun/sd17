@@ -1,4 +1,5 @@
 package stableserver.Other;
+import stableserver.Communication.*;
 
 public class APS {
 
@@ -16,20 +17,20 @@ public class APS {
     */
     public Message compute(Message msg) throws Exception{
         Message reply = null;
-        switch(msg.getType()){
-            case Stable.PROCEED_TO_STABLE:
+        switch(msg.getMessageType()){
+            case PROCEED_TO_STABLE:
                 st.proceedToStable();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.Stable.OK);
                 break;
 
-            case Stable.SUMMON_HORSES_TO_PADDOCK:
-                double[] hosrse = st.summonHorsesToPaddock(msg.getRaceNumber());
-                reply = new Message(MessageType.Stable.REPLY_SUMMON_HORSES_TO_PADDOCK);
+            case SUMMON_HORSES_TO_PADDOCK:
+                double[] horse = st.summonHorsesToPaddock(msg.getRaceNumber());
+                reply = new Message(MessageType.Stable.REPLY_SUMMON_HORSES_TO_PADDOCK, horse);
                 break;
 
-            case Stable.ENTERTAIN_THE_GUESTS:
+            case ENTERTAIN_THE_GUESTS:
                 st.entertainTheGuests();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.Stable.OK);
                 break;
 
             default:

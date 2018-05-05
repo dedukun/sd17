@@ -9,16 +9,19 @@ import java.io.*;
 public class Message implements Serializable {
     private static final long serialVersionUID = 947;
 
-    private MessageType msgType;
+    private MessageType.BettingCenter msgType;
     private int[] winningHorses;
     private int horseId;
     private double[] horseChances;
+    private boolean accepted;
+    private boolean winners;
+    private boolean honoured;
     
     /**
     *
     *  @param type Enumerate indicating the type of the message
     */
-    public Message(MessageType type){
+    public Message(MessageType.BettingCenter type){
         msgType = type;
     }
 
@@ -27,7 +30,7 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param winningHorsesParam number of winning horses
     */
-    public Message(MessageType type, int[] winningHorsesParam){
+    public Message(MessageType.BettingCenter type, int[] winningHorsesParam){
         msgType = type;
         winningHorses = winningHorsesParam;
     }
@@ -37,7 +40,7 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param horseIdParam Id of the desired horse
     */
-    public Message(MessageType type, int horseIdParam){
+    public Message(MessageType.BettingCenter type, int horseIdParam){
         msgType = type;
         horseId = horseIdParam;
     }
@@ -47,9 +50,29 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param horseChancesParam Horses winning chances
     */
-    public Message(MessageType type, double[] horseChancesParam){
+    public Message(MessageType.BettingCenter type, double[] horseChancesParam){
         msgType = type;
         horseChances = horseChancesParam;
+    }
+    
+    /**
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param param Boolean accepted/winners/honoured
+    */
+    public Message(MessageType.BettingCenter type, boolean param){
+        msgType = type;
+        switch(type){
+            case REPLY_ACCEPTED_ALL_BETS :
+                accepted = param;
+                break;
+            case REPLY_ARE_THERE_ANY_WINNERS:
+                winners = param;
+                break;
+            case REPLY_HONOURED_ALL_THE_BETS:
+                honoured = param;
+                break;
+        }
     }
 
     /**
@@ -57,7 +80,7 @@ public class Message implements Serializable {
      *
      *   @return Enumerate indicating the type
      */
-    public MessageType getMessageType(){
+    public MessageType.BettingCenter getMessageType(){
         return msgType;
     }
 

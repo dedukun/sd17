@@ -69,7 +69,8 @@ public class MessageType {
         // Replies
         REPLY_MAKE_A_MOVE,
         REPLY_HAS_RACE_FINISHED,
-        REPLY_GET_RESULTS
+        REPLY_GET_RESULTS,
+        OK
     }
 
     public static enum Stable

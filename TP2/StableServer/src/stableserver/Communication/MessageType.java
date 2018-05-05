@@ -74,6 +74,7 @@ public class MessageType {
         ENTERTAIN_THE_GUESTS,
 
         // Reply
-        REPLY_SUMMON_HORSES_TO_PADDOCK
+        REPLY_SUMMON_HORSES_TO_PADDOCK,
+        OK
     }
 }

@@ -60,7 +60,8 @@ public class MessageType {
         // Replies
         REPLY_LAST_ARRIVED_TO_PADDOCK,
         REPLY_GO_CHECK_HORSES,
-        REPLY_LAST_CHECK_HORSES
+        REPLY_LAST_CHECK_HORSES,
+        OK
     }
 
     public static enum RaceTrack

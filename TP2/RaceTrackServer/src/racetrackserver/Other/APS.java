@@ -1,4 +1,5 @@
 package racetrackserver.Other;
+import racetrackserver.Communication.*;
 
 public class APS {
 
@@ -16,28 +17,28 @@ public class APS {
     */
     public Message compute(Message msg) throws Exception{
         Message reply = null;
-        switch(msg.getType()){
-            case RaceTrack.START_THE_RACE:
+        switch(msg.getMessageType()){
+            case START_THE_RACE:
                 rt.startTheRace();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.RaceTrack.OK);
                 break;
 
-            case RaceTrack.PROCEED_TO_START_LINE:
+            case PROCEED_TO_START_LINE:
                 rt.proceedToStartLine();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.RaceTrack.OK);
                 break;
 
-            case RaceTrack.MAKE_A_MOVE:
+            case MAKE_A_MOVE:
                 boolean move = rt.makeAMove();
                 reply = new Message(MessageType.RaceTrack.REPLY_MAKE_A_MOVE,move);
                 break;
 
-            case RaceTrack.HAS_RACE_FINISHED:
+            case HAS_RACE_FINISHED:
                 boolean finished = rt.hasRaceFinished();
                 reply = new Message(MessageType.RaceTrack.REPLY_HAS_RACE_FINISHED,finished);
                 break;
 
-            case RaceTrack.GET_RESULTS:
+            case GET_RESULTS:
                 int[] results = rt.getResults();
                 reply = new Message(MessageType.RaceTrack.REPLY_GET_RESULTS,results);
                 break;

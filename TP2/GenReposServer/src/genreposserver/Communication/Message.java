@@ -12,7 +12,7 @@ import java.io.*;
 public class Message implements Serializable {
     private static final long serialVersionUID = 1032;
 
-    private MessageType msgType;
+    private MessageType.GeneralRepository msgType;
     private BrokerStates bstate;
     private HorseJockeyStates hjstate;
     private SpectatorStates sstate;
@@ -31,7 +31,7 @@ public class Message implements Serializable {
     *
     *  @param type Enumerate indicating the type of the message
     */
-    public Message(MessageType type){
+    public Message(MessageType.GeneralRepository type){
         msgType = type;
     }
 
@@ -40,7 +40,7 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param param1 Parameter of function(num/size)
     */
-    public Message(MessageType type, int param1){
+    public Message(MessageType.GeneralRepository type, int param1){
         msgType = type;
         
         switch(type.toString()) {
@@ -59,7 +59,7 @@ public class Message implements Serializable {
     *  @param param1 First parameter of fucntion(specId/horseId/specId)
     *  @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
     */
-    public Message(MessageType type, int param1, int param2){
+    public Message(MessageType.GeneralRepository type, int param1, int param2){
         msgType = type;
         
         switch(type.toString()){
@@ -96,7 +96,7 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param oddParam representing the odds wanted
     */
-    public Message(MessageType type, int horseidParam, double oddParam){
+    public Message(MessageType.GeneralRepository type, int horseidParam, double oddParam){
         msgType = type;
         horseId = horseidParam;
         odd = oddParam;
@@ -107,7 +107,7 @@ public class Message implements Serializable {
     *  @param type Enumerate indicating the type of the message
     *  @param bstateParam Broker state
     */
-    public Message(MessageType type, BrokerStates bstateParam){
+    public Message(MessageType.GeneralRepository type, BrokerStates bstateParam){
         msgType = type;
         bstate = bstateParam;
     }
@@ -118,7 +118,7 @@ public class Message implements Serializable {
     *  @param horseidParam Horse ID
     *  @param bstateParam Broker state
     */
-    public Message(MessageType type, int horseidParam, HorseJockeyStates hjstateParam){
+    public Message(MessageType.GeneralRepository type, int horseidParam, HorseJockeyStates hjstateParam){
         msgType = type;
         horseId = horseidParam;
         hjstate = hjstateParam;
@@ -130,7 +130,7 @@ public class Message implements Serializable {
     *  @param specidParam Horse ID
     *  @param sstateParam Specator state
     */
-    public Message(MessageType type, int specidParam, SpectatorStates sstateParam){
+    public Message(MessageType.GeneralRepository type, int specidParam, SpectatorStates sstateParam){
         msgType = type;
         specId = specidParam;
         sstate = sstateParam;
@@ -141,7 +141,7 @@ public class Message implements Serializable {
      *
      *   @return Enumerate indicating the type
      */
-    public MessageType getMessageType(){
+    public MessageType.GeneralRepository getMessageType(){
         return msgType;
     }
     

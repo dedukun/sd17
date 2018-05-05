@@ -9,14 +9,45 @@ import java.io.*;
 public class Message implements Serializable {
     private static final long serialVersionUID = 1040;
 
-    private MessageType msgType;
+    private MessageType.RaceTrack msgType;
+    private boolean move;
+    private boolean finished;
+    private int[] param;
 
     /*
     *
     *@param type Nome da função
     */
-    public Message(MessageType type){
+    public Message(MessageType.RaceTrack type){
         msgType = type;
+    }
+    
+    /*
+    *
+    *@param type Nome da função
+    *@param param Boolean move/finished
+    */
+    public Message(MessageType.RaceTrack type, boolean param){
+        msgType = type;
+        
+        switch(type){
+            case MAKE_A_MOVE:
+                move = param;
+                break;
+            case HAS_RACE_FINISHED:
+                finished = param;
+                break;
+        }
+    }
+    
+    /*
+    *
+    *@param type Nome da função
+    *@param resultsParam results 
+    */
+    public Message(MessageType.RaceTrack type, int[] resultsParam){
+        msgType = type;
+        param = resultsParam;
     }
 
     /**
@@ -24,7 +55,7 @@ public class Message implements Serializable {
      *
      *   @return Enumerate indicating the type
      */
-    public MessageType getMessageType(){
+    public MessageType.RaceTrack getMessageType(){
         return msgType;
     }
 }

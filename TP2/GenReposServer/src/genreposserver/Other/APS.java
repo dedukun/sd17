@@ -1,4 +1,5 @@
 package genreposserver.Other;
+import genreposserver.Communication.*;
 
 public class APS {
 
@@ -15,80 +16,80 @@ public class APS {
     */
     public Message compute(Message msg) throws Exception{
         Message reply = null;
-        switch(msg.getType()){
-            case GeneralRepository.INIT_LOG:
+        switch(msg.getMessageType()){
+            case INIT_LOG:
                 gr.initLog();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.UPDATE_LOG:
+            case UPDATE_LOG:
                 gr.updateLog();
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_BET_S:
-                gr.setBetS(msg.getSpecID(),msg.getHorseID());
-                reply = new Message("Stuff");
+            case SET_BET_S:
+                gr.setBetS(msg.getSpecId(),msg.getHorseId());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_BET_A:
-                gr.setBetA(msg.getSpecID(),msg.getBetAmount());
-                reply = new Message("Stuff");
+            case SET_BET_A:
+                gr.setBetA(msg.getSpecId(),msg.getBetAmount());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_ODDS:
-                gr.setOdds(msg.getHorseID(),msg.getOdd());
-                reply = new Message("Stuff");
+            case SET_ODDS:
+                gr.setOdds(msg.getHorseId(),msg.getOdd());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_HORSE_ITERATION:
-                gr.setHorseIteration(msg.getHorseID());
-                reply = new Message("Stuff");
+            case SET_HORSE_ITERATION:
+                gr.setHorseIteration(msg.getHorseId());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_HORSE_POSITION:
-                gr.setHorsePossition(msg.getHorseID(),msg.getPos());
-                reply = new Message("Stuff");
+            case SET_HORSE_POSITION:
+                gr.setHorsePosition(msg.getHorseId(),msg.getPos());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_HORSE_END:
-                gr.setHorseEnd(msg.getHorseID(),msg.getPlace());
-                reply = new Message("Stuff");
+            case SET_HORSE_END:
+                gr.setHorseEnd(msg.getHorseId(),msg.getPlace());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_TRACK_SIZE:
+            case SET_TRACK_SIZE:
                 gr.setTrackSize(msg.getSize());
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_RACE_NUMBER:
+            case SET_RACE_NUMBER:
                 gr.setRaceNumber(msg.getNum());
-                reply = new Message("Stuff");
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_BROKER_STATE:
-                gr.setBrokerState(msg.getBrokerState());
-                reply = new Message("Stuff");
+            case SET_BROKER_STATE:
+                gr.setBrokerState(msg.getBstate());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_SPECTATOR_STATE:
-                gr.setSpectatorState(msg.getSpecID(),msg.getSpecatorState());
-                reply = new Message("Stuff");
+            case SET_SPECTATOR_STATE:
+                gr.setSpectatorState(msg.getSpecId(),msg.getSstate());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_SPECTATOR_MONEY:
-                gr.setSpectatorMoney(msg.getSpecID(),msg.getFunds());
-                reply = new Message("Stuff");
+            case SET_SPECTATOR_MONEY:
+                gr.setSpectatorMoney(msg.getSpecId(),msg.getFunds());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_HORSE_STATE:
-                gr.setHorseState(msg.getHorseID(),msg.getHorseState());
-                reply = new Message("Stuff");
+            case SET_HORSE_STATE:
+                gr.setHorseState(msg.getHorseId(),msg.getHjstate());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
-            case GeneralRepository.SET_HORSE_AGILITY:
-                gr.setHorseAgility(msg.getHorseID(),msg.getHorseAgl());
-                reply = new Message("Stuff");
+            case SET_HORSE_AGILITY:
+                gr.setHorseAgility(msg.getHorseId(),msg.getHorseAgl());
+                reply = new Message(MessageType.GeneralRepository.OK);
                 break;
 
             default:

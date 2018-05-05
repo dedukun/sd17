@@ -16,6 +16,9 @@ public class MessageType {
 
         // Replies
         REPLY_ACCEPTED_ALL_BETS,
+        REPLY_ARE_THERE_ANY_WINNERS,
+        REPLY_HONOURED_ALL_THE_BETS,
+        OK
     }
 
     public static enum ControlCenter
