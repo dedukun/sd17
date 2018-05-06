@@ -1,12 +1,17 @@
 package bettingcenterserver.Stubs;
 
+import bettingcenterserver.Communication.Message;
+import bettingcenterserver.Communication.MessageType;
+
+import bettingcenterserver.Other.Configurations;
+
 public class StableStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(BETTING_CENTRE_HOST, BETTING_CENTRE_PORT);
+        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PORT);
         while (!connection.open()) {
             try {
-                Thread.sleep(BETTING_CENTRE_TIME_TO_SLEEP);
+                Thread.sleep(Configurations.SLEEP_TIME);
             } catch (InterruptedException ie) {}
         }
         return connection;
@@ -15,11 +20,11 @@ public class StableStub {
     public void proceedToStable(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.PROCEED_TO_STABLE);
+        Message messageToSend = new Message(MessageType.STABLE_PROCEED_TO_STABLE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -27,24 +32,24 @@ public class StableStub {
     public double[] summonHorsesToPaddock(int raceNumber){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.SUMMON_HORSES_TO_PADDOCK);
+        Message messageToSend = new Message(MessageType.STABLE_SUMMON_HORSES_TO_PADDOCK, raceNumber);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getHorsesChances();
     }
 
     public void entertainTheGuests(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.ENTERTAIN_THE_GUESTS);
+        Message messageToSend = new Message(MessageType.STABLE_ENTERTAIN_THE_GUESTS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }

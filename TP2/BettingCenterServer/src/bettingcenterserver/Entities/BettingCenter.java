@@ -1,4 +1,4 @@
-package bettingcenterserver.Other;
+package bettingcenterserver.Entities;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
 import java.util.Arrays;

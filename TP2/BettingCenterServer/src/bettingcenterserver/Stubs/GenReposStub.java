@@ -1,12 +1,21 @@
 package bettingcenterserver.Stubs;
 
+import bettingcenterserver.Entities.BrokerStates;
+import bettingcenterserver.Entities.HorseJockeyStates;
+import bettingcenterserver.Entities.SpectatorStates;
+
+import bettingcenterserver.Communication.Message;
+import bettingcenterserver.Communication.MessageType;
+
+import bettingcenterserver.Other.Configurations;
+
 public class GenReposStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(BETTING_CENTRE_HOST, BETTING_CENTRE_PORT);
+        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PORT);
         while (!connection.open()) {
             try {
-                Thread.sleep(BETTING_CENTRE_TIME_TO_SLEEP);
+                Thread.sleep(Configurations.SLEEP_TIME);
             } catch (InterruptedException ie) {}
         }
         return connection;
@@ -15,11 +24,11 @@ public class GenReposStub {
     public void initLog(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.INIT_LOG);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_INIT_LOG);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -27,11 +36,11 @@ public class GenReposStub {
     public void updateLog(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.UPDATE_LOG);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_UPDATE_LOG);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -39,11 +48,11 @@ public class GenReposStub {
     public void setBetS(int specId, int horseId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_BET_S);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_BET_S, specId, horseId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -51,11 +60,11 @@ public class GenReposStub {
     public void setBetA(int specId, int betamount){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_BET_A);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_BET_A, specId, betamount);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -63,11 +72,11 @@ public class GenReposStub {
     public void setOdds(int horseId, double odd){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_ODDS);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_ODDS, horseId, odd);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -75,11 +84,11 @@ public class GenReposStub {
     public void setHorseIteration(int horseId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_HORSE_ITERATION);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_HORSE_ITERATION, horseId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -87,11 +96,11 @@ public class GenReposStub {
     public void setHorsePosition(int horseId, int pos){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_HORSE_POSITION);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_HORSE_POSITION, horseId, pos);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -99,11 +108,11 @@ public class GenReposStub {
     public void setHorseEnd(int horseId, int place){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_HORSE_END);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_HORSE_END, horseId, place);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -111,11 +120,11 @@ public class GenReposStub {
     public void setTrackSize(int size){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_TRACK_SIZE);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_TRACK_SIZE, size);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -123,11 +132,11 @@ public class GenReposStub {
     public void setRaceNumber(int num){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_RACE_NUMBER);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_RACE_NUMBER, num);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -135,23 +144,23 @@ public class GenReposStub {
     public void setBrokerState(BrokerStates state){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_BROKER_STATE);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_BROKER_STATE, state);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
 
-    public void setSpectatorState(int specId,SpectatorsStates state){
+    public void setSpectatorState(int specId, SpectatorStates state){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_SPECTATOR_STATE);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_SPECTATOR_STATE, specId, state);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -159,23 +168,23 @@ public class GenReposStub {
     public void setSpectatorMoney(int specId, int funds){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_SPECTATOR_MONEY);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_SPECTATOR_MONEY, specId, funds);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
 
-    public void setHorseState(int horseId,HorseJockeyStates state){
+    public void setHorseState(int horseId, HorseJockeyStates state){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_HORSE_STATE);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_HORSE_STATE, horseId, state);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -183,11 +192,11 @@ public class GenReposStub {
     public void setHorseAgility(int horseId,int horseAgl){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.GeneralRepository.SET_HORSE_AGILITY);
+        Message messageToSend = new Message(MessageType.GENERAL_REPO_SET_HORSE_AGILITY, horseId, horseAgl);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }

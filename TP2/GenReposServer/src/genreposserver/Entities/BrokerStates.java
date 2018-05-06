@@ -1,4 +1,4 @@
-package genreposserver.Other;
+package genreposserver.Entities;
 
 /**
  * Enumerate with Broker States.

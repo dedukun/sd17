@@ -1,4 +1,5 @@
 package racetrackserver.Other;
+import racetrackserver.Entities.RaceTrack;
 import racetrackserver.Communication.*;
 
 public class APS {
@@ -18,29 +19,29 @@ public class APS {
     public Message compute(Message msg) throws Exception{
         Message reply = null;
         switch(msg.getMessageType()){
-            case START_THE_RACE:
+            case RACE_TRACK_START_THE_RACE:
                 rt.startTheRace();
-                reply = new Message(MessageType.RaceTrack.OK);
+                reply = new Message(MessageType.OK);
                 break;
 
-            case PROCEED_TO_START_LINE:
+            case RACE_TRACK_PROCEED_TO_START_LINE:
                 rt.proceedToStartLine();
-                reply = new Message(MessageType.RaceTrack.OK);
+                reply = new Message(MessageType.OK);
                 break;
 
-            case MAKE_A_MOVE:
+            case RACE_TRACK_MAKE_A_MOVE:
                 boolean move = rt.makeAMove();
-                reply = new Message(MessageType.RaceTrack.REPLY_MAKE_A_MOVE,move);
+                reply = new Message(MessageType.RACE_TRACK_REPLY_MAKE_A_MOVE,move);
                 break;
 
-            case HAS_RACE_FINISHED:
+            case RACE_TRACK_HAS_RACE_FINISHED:
                 boolean finished = rt.hasRaceFinished();
-                reply = new Message(MessageType.RaceTrack.REPLY_HAS_RACE_FINISHED,finished);
+                reply = new Message(MessageType.RACE_TRACK_REPLY_HAS_RACE_FINISHED,finished);
                 break;
 
-            case GET_RESULTS:
+            case RACE_TRACK_GET_RESULTS:
                 int[] results = rt.getResults();
-                reply = new Message(MessageType.RaceTrack.REPLY_GET_RESULTS,results);
+                reply = new Message(MessageType.RACE_TRACK_REPLY_GET_RESULTS,results);
                 break;
 
             default:

@@ -1,4 +1,4 @@
-package controlcenterserver.Other;
+package controlcenterserver.Entities;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
 

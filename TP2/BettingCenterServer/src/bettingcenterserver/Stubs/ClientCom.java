@@ -1,4 +1,4 @@
-package bettingcenterserver.Other;
+package bettingcenterserver.Stubs;
 
 import genclass.GenericIO;
 import java.io.*;

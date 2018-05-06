@@ -1,13 +1,17 @@
 package bettingcenterserver.Stubs;
 
+import bettingcenterserver.Communication.Message;
+import bettingcenterserver.Communication.MessageType;
+
+import bettingcenterserver.Other.Configurations;
 
 public class BettingCenterStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(BETTING_CENTRE_HOST, BETTING_CENTRE_PORT);
+        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PORT);
         while (!connection.open()) {
             try {
-                Thread.sleep(BETTING_CENTRE_TIME_TO_SLEEP);
+                Thread.sleep(Configurations.SLEEP_TIME);
             } catch (InterruptedException ie) {}
         }
         return connection;
@@ -16,11 +20,11 @@ public class BettingCenterStub {
     public void setHorsesWinningChances(double[] horseChances){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.SET_HORSES_WINNING_CHANCES, horseChances);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_SET_HORSES_WINNING_CHANCES, horseChances);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -28,24 +32,24 @@ public class BettingCenterStub {
     public boolean acceptedAllBets(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.ACCEPTED_ALL_BETS);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_ACCEPTED_ALL_BETS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getAllBetsAccepted();
     }
 
     public void acceptTheBet(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.ACCEPT_THE_BET);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_ACCEPT_THE_BET);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -53,11 +57,11 @@ public class BettingCenterStub {
     public void placeABet(int horseId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.PLACE_A_BET);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_PLACE_A_BET);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -65,37 +69,37 @@ public class BettingCenterStub {
     public boolean areThereAnyWinners(int[] winningHorses){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.ARE_THERE_ANY_WINNERS);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_ARE_THERE_ANY_WINNERS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getAnyWinners();
     }
 
     public boolean honouredAllTheBets(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.HONOURED_ALL_THE_BETS);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_HONOURED_ALL_THE_BETS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getAllBetsHonoured();
     }
 
     public void honourTheBet(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.HONOUR_THE_BET);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_HONOUR_THE_BET);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -103,11 +107,11 @@ public class BettingCenterStub {
     public void goCollectTheGains(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BettingCenter.GO_COLLECT_THE_GAINS);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_GO_COLLECT_THE_GAINS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }

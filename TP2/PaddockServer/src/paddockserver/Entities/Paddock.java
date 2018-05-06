@@ -1,4 +1,4 @@
-package paddockserver.Other;
+package paddockserver.Entities;
 import afternoonatrace_conc.Main.SimulPar;
 import afternoonatrace_conc.Entities.*;
 import java.util.concurrent.ThreadLocalRandom;

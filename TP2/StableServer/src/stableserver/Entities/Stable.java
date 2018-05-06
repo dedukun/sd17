@@ -1,4 +1,4 @@
-package stableserver.Other;
+package stableserver.Entities;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
 

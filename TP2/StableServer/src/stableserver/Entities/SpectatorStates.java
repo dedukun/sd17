@@ -1,4 +1,4 @@
-package genreposserver.Other;
+package stableserver.Entities;
 
 /**
  * Enumerate with the Spectator States.

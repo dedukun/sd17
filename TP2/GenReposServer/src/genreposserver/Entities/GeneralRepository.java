@@ -1,10 +1,13 @@
-package genreposserver.Other;
+package genreposserver.Entities;
 import afternoonatrace_conc.Entities.*;
 import afternoonatrace_conc.Main.SimulPar;
 import java.util.Arrays;
 import java.text.DecimalFormat;
 import genclass.TextFile;
 import genclass.GenericIO;
+import genreposserver.Entities.BrokerStates;
+import genreposserver.Entities.HorseJockeyStates;
+import genreposserver.Entities.SpectatorStates;
 
 /**
  * General repository.<br>
@@ -20,7 +23,7 @@ public class GeneralRepository {
     /**
     * Spectators state.
     */
-    private SpectatorsStates[] specState = new SpectatorsStates[SimulPar.S];
+    private SpectatorStates[] specState = new SpectatorStates[SimulPar.S];
 
     /**
     * Spectators wallet.
@@ -362,7 +365,7 @@ public class GeneralRepository {
      *   @param specId ID of the Spectator
      *   @param state state of the Spectator
      */
-    public synchronized void setSpectatorState(int specId,SpectatorsStates state){
+    public synchronized void setSpectatorState(int specId, SpectatorStates state){
         this.specState[specId]=state;
 
         if(brkState != null)

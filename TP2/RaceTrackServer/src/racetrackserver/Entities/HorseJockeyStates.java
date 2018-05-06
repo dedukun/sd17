@@ -1,4 +1,4 @@
-package genreposserver.Other;
+package racetrackserver.Entities;
 
 /**
  * Enumerate with Horse/Jockey States.

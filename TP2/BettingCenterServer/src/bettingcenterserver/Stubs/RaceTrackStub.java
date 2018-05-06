@@ -1,12 +1,17 @@
 package bettingcenterserver.Stubs;
 
+import bettingcenterserver.Communication.Message;
+import bettingcenterserver.Communication.MessageType;
+
+import bettingcenterserver.Other.Configurations;
+
 public class RaceTrackStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(BETTING_CENTRE_HOST, BETTING_CENTRE_PORT);
+        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PORT);
         while (!connection.open()) {
             try {
-                Thread.sleep(BETTING_CENTRE_TIME_TO_SLEEP);
+                Thread.sleep(Configurations.SLEEP_TIME);
             } catch (InterruptedException ie) {}
         }
         return connection;
@@ -15,11 +20,11 @@ public class RaceTrackStub {
     public void startTheRace(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RaceTrack.START_THE_RACE);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_START_THE_RACE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -27,11 +32,11 @@ public class RaceTrackStub {
     public void proceedToStartLine(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RaceTrack.PROCEED_TO_START_LINE);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_PROCEED_TO_START_LINE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -39,39 +44,39 @@ public class RaceTrackStub {
     public boolean makeAMove(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RaceTrack.MAKE_A_MOVE);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_MAKE_A_MOVE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getMakeMove();
     }
 
     public boolean hasRaceFinished(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RaceTrack.HAS_RACE_FINISHED);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_HAS_RACE_FINISHED);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getRaceFinished();
     }
 
     public int[] getResults(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RaceTrack.GET_RESULTS);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_GET_RESULTS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getResults();
     }
 }

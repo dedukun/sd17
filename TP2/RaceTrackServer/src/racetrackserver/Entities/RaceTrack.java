@@ -1,4 +1,4 @@
-package racetrackserver.Other;
+package racetrackserver.Entities;
 import afternoonatrace_conc.Main.SimulPar;
 import afternoonatrace_conc.Entities.*;
 import java.util.concurrent.ThreadLocalRandom;

@@ -1,12 +1,17 @@
 package bettingcenterserver.Stubs;
 
+import bettingcenterserver.Communication.Message;
+import bettingcenterserver.Communication.MessageType;
+
+import bettingcenterserver.Other.Configurations;
+
 public class ControlCenterStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(BETTING_CENTRE_HOST, BETTING_CENTRE_PORT);
+        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PORT);
         while (!connection.open()) {
             try {
-                Thread.sleep(BETTING_CENTRE_TIME_TO_SLEEP);
+                Thread.sleep(Configurations.SLEEP_TIME);
             } catch (InterruptedException ie) {}
         }
         return connection;
@@ -15,24 +20,24 @@ public class ControlCenterStub {
     public boolean waitForNextRace(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.WAIT_FOR_NEXT_RACE);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_WAIT_FOR_NEXT_RACE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getWaitNextRace();
     }
 
     public void  summonHorsesToPaddock(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.SUMMON_HORSES_TO_PADDOCK);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_SUMMON_HORSES_TO_PADDOCK);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -40,11 +45,11 @@ public class ControlCenterStub {
     public void unblockGoCheckHorses(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.UNBLOCK_GO_CHECK_HORSES);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_UNBLOCK_GO_CHECK_HORSES);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -52,11 +57,11 @@ public class ControlCenterStub {
     public void unblockProceedToPaddock(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.UNBLOCK_PROCEED_TO_PADDOCK);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_UNBLOCK_PROCEED_TO_PADDOCK);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -64,11 +69,11 @@ public class ControlCenterStub {
     public void startTheRace(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.START_THE_RACE);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_START_THE_RACE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -76,11 +81,11 @@ public class ControlCenterStub {
     public void unblockMakeAMove(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.UNBLOCK_MAKE_A_MOVE);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_UNBLOCK_MAKE_A_MOVE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -88,11 +93,11 @@ public class ControlCenterStub {
     public void goWatchTheRace(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.GO_WATCH_THE_RACE);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_GO_WATCH_THE_RACE);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -100,7 +105,7 @@ public class ControlCenterStub {
     public void reportResults(int[] winners){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.REPORT_RESULTS);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_REPORT_RESULTS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -111,24 +116,24 @@ public class ControlCenterStub {
     public boolean haveIWon(int hjid){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.HAVE_I_WON);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_HAVE_I_WON);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
 
-        return messageReceived
+        return messageReceived.getHaveIWon();
     }
 
     public void entertainTheGuests(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.ENTERTAIN_THE_GUESTS);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_ENTERTAIN_THE_GUESTS);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }
@@ -136,11 +141,11 @@ public class ControlCenterStub {
     public void relaxABit(){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.ControlCenter.RELAX_A_BIT);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_RELAX_A_BIT);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getType() != MessageType.OK) {}
+        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
     }

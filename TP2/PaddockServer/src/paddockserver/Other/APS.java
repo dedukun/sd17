@@ -1,4 +1,5 @@
 package paddockserver.Other;
+import paddockserver.Entities.Paddock;
 import paddockserver.Communication.*;
 
 public class APS {
@@ -18,29 +19,29 @@ public class APS {
     public Message compute(Message msg) throws Exception{
         Message reply = null;
         switch(msg.getMessageType()){
-            case PROCEED_TO_PADDOCK:
+            case PADDOCK_PROCEED_TO_PADDOCK:
                 pd.proceedToPaddock();
-                reply = new Message(MessageType.Paddock.OK);
+                reply = new Message(MessageType.OK);
                 break;
 
-            case LAST_ARRIVED_TO_PADDOCK:
-                boolean last1 = pd.lastArrivedToPaddock();
-                reply = new Message(MessageType.Paddock.REPLY_LAST_ARRIVED_TO_PADDOCK,last1);
+            case PADDOCK_LAST_ARRIVED_TO_PADDOCK:
+                boolean lastPaddock = pd.lastArrivedToPaddock();
+                reply = new Message(MessageType.PADDOCK_REPLY_LAST_ARRIVED_TO_PADDOCK,lastPaddock);
                 break;
 
-            case GO_CHECK_HORSES:
+            case PADDOCK_GO_CHECK_HORSES:
                 int horseToBet = pd.goCheckHorses();
-                reply = new Message(MessageType.Paddock.REPLY_GO_CHECK_HORSES,horseToBet);
+                reply = new Message(MessageType.PADDOCK_REPLY_GO_CHECK_HORSES,horseToBet);
                 break;
 
-            case LAST_CHECK_HORSES:
-                boolean last2 = pd.lastCheckHorses();
-                reply = new Message(MessageType.Paddock.REPLY_LAST_CHECK_HORSES,last2);
+            case PADDOCK_LAST_CHECK_HORSES:
+                boolean lastHorses = pd.lastCheckHorses();
+                reply = new Message(MessageType.PADDOCK_REPLY_LAST_CHECK_HORSES,lastHorses);
                 break;
 
-            case UNBLOCK_GO_CHECK_HORSES:
+            case PADDOCK_UNBLOCK_GO_CHECK_HORSES:
                 pd.unblockGoCheckHorses();
-                reply = new Message(MessageType.Paddock.OK);
+                reply = new Message(MessageType.OK);
                 break;
 
             default:
