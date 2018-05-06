@@ -134,12 +134,12 @@ public class Spectators extends Thread{
             }
             int horseID = paddock.goCheckHorses(sid);
             //Unblocked by proceedToStartLine()
-            bettingCenter.placeABet(horseID,sid,wallet);//Blocked
+            wallet -= bettingCenter.placeABet(horseID,sid,wallet);//Blocked
             //Unblocked by acceptTheBet()
             controlCenter.goWatchTheRace(sid);//Blocked
             //Unblocked by reportResults()
             if(controlCenter.haveIWon(horseID))
-                bettingCenter.goCollectTheGains(sid,wallet);//Blocked
+                wallet += bettingCenter.goCollectTheGains(sid,wallet);//Blocked
                 //Unblocked by honourTheBets()
         }
         controlCenter.relaxABit(sid);

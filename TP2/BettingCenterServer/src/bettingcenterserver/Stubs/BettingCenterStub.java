@@ -54,16 +54,17 @@ public class BettingCenterStub {
         connection.close();
     }
 
-    public void placeABet(int horseId, int specId, double funds){
+    public double placeABet(int horseId, int specId, double funds){
         ClientCom connection = connectServer();
 
         Message messageToSend = new Message(MessageType.BETTING_CENTER_PLACE_A_BET, horseId, specId, funds);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
+        
+        return messageReceived.getSpecFunds();
     }
 
     public boolean areThereAnyWinners(int[] winningHorses){
@@ -104,15 +105,16 @@ public class BettingCenterStub {
         connection.close();
     }
 
-    public void goCollectTheGains(int specId, double funds){
+    public double goCollectTheGains(int specId, double funds){
         ClientCom connection = connectServer();
 
         Message messageToSend = new Message(MessageType.BETTING_CENTER_GO_COLLECT_THE_GAINS, specId, funds);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
-        if (messageReceived.getMessageType() != MessageType.OK) {}
 
         connection.close();
+        
+        return messageReceived.getSpecFunds();
     }
 }
