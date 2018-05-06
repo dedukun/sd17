@@ -3,7 +3,7 @@ package bettingcenterserver.Stubs;
 import bettingcenterserver.Communication.Message;
 import bettingcenterserver.Communication.MessageType;
 
-import bettingcenterserver.Other.Configurations;
+import bettingcenterserver.Auxiliar.Configurations;
 
 public class ControlCenterStub {
 
@@ -17,10 +17,10 @@ public class ControlCenterStub {
         return connection;
     }
 
-    public boolean waitForNextRace(){
+    public boolean waitForNextRace(int specId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.CONTROL_CENTER_WAIT_FOR_NEXT_RACE);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_WAIT_FOR_NEXT_RACE, specId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -90,10 +90,10 @@ public class ControlCenterStub {
         connection.close();
     }
 
-    public void goWatchTheRace(){
+    public void goWatchTheRace(int specId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.CONTROL_CENTER_GO_WATCH_THE_RACE);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_GO_WATCH_THE_RACE, specId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -138,10 +138,10 @@ public class ControlCenterStub {
         connection.close();
     }
 
-    public void relaxABit(){
+    public void relaxABit(int specId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.CONTROL_CENTER_RELAX_A_BIT);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_RELAX_A_BIT,specId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();

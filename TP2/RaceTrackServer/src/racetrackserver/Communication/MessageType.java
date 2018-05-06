@@ -3,6 +3,7 @@ package racetrackserver.Communication;
 public enum MessageType {
 
     OK,
+    END,
 
     // Betting Center
     // Functions
@@ -17,8 +18,10 @@ public enum MessageType {
 
     // Replies
     BETTING_CENTER_REPLY_ACCEPTED_ALL_BETS,
+    BETTING_CENTER_REPLY_PLACE_A_BET,
     BETTING_CENTER_REPLY_ARE_THERE_ANY_WINNERS,
     BETTING_CENTER_REPLY_HONOURED_ALL_THE_BETS,
+    BETTING_CENTER_REPLY_GO_COLLECT_THE_GAINS,
 
 
     // Betting Center

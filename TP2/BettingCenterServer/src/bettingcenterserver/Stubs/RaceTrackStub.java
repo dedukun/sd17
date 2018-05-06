@@ -3,7 +3,7 @@ package bettingcenterserver.Stubs;
 import bettingcenterserver.Communication.Message;
 import bettingcenterserver.Communication.MessageType;
 
-import bettingcenterserver.Other.Configurations;
+import bettingcenterserver.Auxiliar.Configurations;
 
 public class RaceTrackStub {
 
@@ -29,10 +29,10 @@ public class RaceTrackStub {
         connection.close();
     }
 
-    public void proceedToStartLine(){
+    public void proceedToStartLine(int hId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RACE_TRACK_PROCEED_TO_START_LINE);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_PROCEED_TO_START_LINE, hId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -41,10 +41,10 @@ public class RaceTrackStub {
         connection.close();
     }
 
-    public boolean makeAMove(){
+    public boolean makeAMove(int hId, int hAgl){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RACE_TRACK_MAKE_A_MOVE);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_MAKE_A_MOVE, hId, hAgl);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -54,10 +54,10 @@ public class RaceTrackStub {
         return messageReceived.getMakeMove();
     }
 
-    public boolean hasRaceFinished(){
+    public boolean hasRaceFinished(int hId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.RACE_TRACK_HAS_RACE_FINISHED);
+        Message messageToSend = new Message(MessageType.RACE_TRACK_HAS_RACE_FINISHED, hId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();

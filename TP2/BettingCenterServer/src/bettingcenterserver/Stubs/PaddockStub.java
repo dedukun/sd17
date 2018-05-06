@@ -3,7 +3,7 @@ package bettingcenterserver.Stubs;
 import bettingcenterserver.Communication.Message;
 import bettingcenterserver.Communication.MessageType;
 
-import bettingcenterserver.Other.Configurations;
+import bettingcenterserver.Auxiliar.Configurations;
 
 public class PaddockStub {
 
@@ -17,10 +17,10 @@ public class PaddockStub {
         return connection;
     }
 
-    public void proceedToPaddock(){
+    public void proceedToPaddock(int hId, int hAgl){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.PADDOCK_PROCEED_TO_PADDOCK);
+        Message messageToSend = new Message(MessageType.PADDOCK_PROCEED_TO_PADDOCK, hId, hAgl);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -29,10 +29,10 @@ public class PaddockStub {
         connection.close();
     }
 
-    public boolean lastArrivedToPaddock(){
+    public boolean lastArrivedToPaddock(int hId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.PADDOCK_LAST_ARRIVED_TO_PADDOCK);
+        Message messageToSend = new Message(MessageType.PADDOCK_LAST_ARRIVED_TO_PADDOCK, hId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -42,10 +42,10 @@ public class PaddockStub {
         return messageReceived.getLastToPaddock();
     }
 
-    public int goCheckHorses(){
+    public int goCheckHorses(int specId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.PADDOCK_GO_CHECK_HORSES);
+        Message messageToSend = new Message(MessageType.PADDOCK_GO_CHECK_HORSES, specId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -55,10 +55,10 @@ public class PaddockStub {
         return messageReceived.getHorseToBet();
     }
 
-    public boolean lastCheckHorses(){
+    public boolean lastCheckHorses(int specId){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.PADDOCK_LAST_CHECK_HORSES);
+        Message messageToSend = new Message(MessageType.PADDOCK_LAST_CHECK_HORSES, specId);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();

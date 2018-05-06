@@ -1,13 +1,13 @@
 package bettingcenterserver.Stubs;
 
-import bettingcenterserver.Entities.BrokerStates;
-import bettingcenterserver.Entities.HorseJockeyStates;
-import bettingcenterserver.Entities.SpectatorStates;
+import bettingcenterserver.Auxiliar.BrokerStates;
+import bettingcenterserver.Auxiliar.HorseJockeyStates;
+import bettingcenterserver.Auxiliar.SpectatorStates;
 
 import bettingcenterserver.Communication.Message;
 import bettingcenterserver.Communication.MessageType;
 
-import bettingcenterserver.Other.Configurations;
+import bettingcenterserver.Auxiliar.Configurations;
 
 public class GenReposStub {
 

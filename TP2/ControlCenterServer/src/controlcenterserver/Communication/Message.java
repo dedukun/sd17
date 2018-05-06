@@ -1,8 +1,8 @@
 package controlcenterserver.Communication;
 
-import controlcenterserver.Entities.BrokerStates;
-import controlcenterserver.Entities.HorseJockeyStates;
-import controlcenterserver.Entities.SpectatorStates;
+import controlcenterserver.Auxiliar.BrokerStates;
+import controlcenterserver.Auxiliar.HorseJockeyStates;
+import controlcenterserver.Auxiliar.SpectatorStates;
 
 import java.io.*;
 
@@ -11,12 +11,13 @@ import java.io.*;
  * Defines the exchanged messages between Betting Center Server and clients.
  */
 public class Message implements Serializable {
-    private static final long serialVersionUID = 1032;
+    private static final long serialVersionUID = 1114;
 
     private MessageType msgType;
 
     private int horseId;
     private double[] horsesChances;
+    private int raceNumber;
 
     // Betting Center
     private int[] winningHorses;
@@ -26,7 +27,6 @@ public class Message implements Serializable {
 
     // Control Center
     private int[] winners;
-    private int hjid;
     private boolean wait;
     private boolean winner;
 
@@ -34,7 +34,6 @@ public class Message implements Serializable {
     private BrokerStates bstate;
     private HorseJockeyStates hjstate;
     private SpectatorStates sstate;
-    private int raceNum;
     private int trackSize;
     private int betAmount;
     private int pos;
@@ -42,6 +41,7 @@ public class Message implements Serializable {
     private int horseIter;
     private int place;
     private int funds;
+    private double specFunds;
     private int specId;
     private double odd;
 
@@ -56,7 +56,7 @@ public class Message implements Serializable {
     private int[] results;
 
     // Stable
-    private int raceNumber;
+
 
     /**
     *
@@ -74,11 +74,17 @@ public class Message implements Serializable {
     public Message(MessageType type, int param){
         msgType = type;
         switch(type){
-            case BETTING_CENTER_PLACE_A_BET:
+            case CONTROL_CENTER_HAVE_I_WON:
                 horseId = param;
                 break;
-            case CONTROL_CENTER_HAVE_I_WON:
-                hjid = param;
+            case CONTROL_CENTER_WAIT_FOR_NEXT_RACE:
+                specId = param;
+                break;
+            case CONTROL_CENTER_GO_WATCH_THE_RACE:
+                specId = param;
+                break;
+            case CONTROL_CENTER_RELAX_A_BIT:
+                specId = param;
                 break;
             case GENERAL_REPO_SET_HORSE_ITERATION:
                 horseIter = param;
@@ -87,7 +93,16 @@ public class Message implements Serializable {
                 trackSize = param;
                 break;
             case GENERAL_REPO_SET_RACE_NUMBER:
-                raceNum = param;
+                raceNumber = param;
+                break;
+            case PADDOCK_LAST_ARRIVED_TO_PADDOCK:
+                horseId = param;
+                break;
+            case PADDOCK_GO_CHECK_HORSES:
+                specId = param;
+                break;
+            case PADDOCK_LAST_CHECK_HORSES:
+                specId = param;
                 break;
             case PADDOCK_REPLY_GO_CHECK_HORSES:
                 horseToBet = param;
@@ -95,6 +110,13 @@ public class Message implements Serializable {
             case STABLE_SUMMON_HORSES_TO_PADDOCK:
                 raceNumber = param;
                 break;
+            case RACE_TRACK_PROCEED_TO_START_LINE:
+                horseId = param;
+                break;
+            case RACE_TRACK_HAS_RACE_FINISHED:
+                horseId = param;
+                break;
+
         }
     }
 
@@ -132,18 +154,90 @@ public class Message implements Serializable {
                 horseId = param1;
                 horseAgl = param2;
                 break;
+            case PADDOCK_PROCEED_TO_PADDOCK:
+                horseId = param1;
+                horseAgl = param2;
+                break;
+            case RACE_TRACK_MAKE_A_MOVE:
+                horseId = param1;
+                horseAgl = param2;
+                break;
+        }
+    }
+    
+    /**
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param param1 First parameter of fucntion(specId/horseId/specId)
+    *  @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
+    *  @param param3 ...
+    */
+    public Message(MessageType type, int param1, int param2, int param3){
+        msgType = type;
+
+        switch(type){
+            case STABLE_PROCEED_TO_STABLE:
+                horseId = param1;
+                raceNumber = param2;
+                horseAgl = param3;
+                break;
         }
     }
 
     /**
     *
     *  @param type Enumerate indicating the type of the message
-    *  @param oddParam representing the odds wanted
+    *  @param param1 representing the odds wanted
+    *  @param param2
     */
-    public Message(MessageType type, int horseidParam, double oddParam){
+    public Message(MessageType type, int param1, double param2){
         msgType = type;
-        horseId = horseidParam;
-        odd = oddParam;
+        switch(type){  
+            case BETTING_CENTER_GO_COLLECT_THE_GAINS:
+                specId = param1;
+                specFunds = param2;
+                break;
+            case GENERAL_REPO_SET_ODDS:
+                horseId = param1;
+                odd = param2;
+                break;
+        }         
+    }
+    
+        /**
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param param1 First parameter of fucntion(specId/horseId/specId)
+    *  @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
+    *  @param param3 ...
+    */
+    public Message(MessageType type, int param1, int param2, double param3){
+        msgType = type;
+
+        switch(type){
+            case BETTING_CENTER_PLACE_A_BET:
+                horseId = param1;
+                specId = param2;
+                specFunds = param3;
+                break;
+        }
+    }
+    
+        /**
+    *
+    *  @param type Enumerate indicating the type of the message
+    *  @param param Id of the desired horse
+    */
+    public Message(MessageType type, double param){
+        msgType = type;
+        switch(type){
+            case BETTING_CENTER_REPLY_PLACE_A_BET:
+                specFunds = param;
+                break;
+            case BETTING_CENTER_REPLY_GO_COLLECT_THE_GAINS:
+                specFunds = param;
+                break;
+        }
     }
 
     /**
@@ -279,6 +373,22 @@ public class Message implements Serializable {
     public double[] getHorsesChances(){
         return horsesChances;
     }
+    
+    /**
+     *
+     *  @return Race Number
+     */
+    public int getRaceNumber(){
+        return raceNumber;
+    }
+    
+    /**
+     *
+     *  @return Spectator Funds
+     */
+    public double getSpecFunds(){
+        return specFunds;
+    }
 
     /*******************Betting Center*******************/
     /**
@@ -315,13 +425,6 @@ public class Message implements Serializable {
      */
     public int[] getWinners(){
         return winners;
-    }
-
-    /**
-     *
-     */
-    public int getHorseJockeyId(){
-        return hjid;
     }
 
     /**
@@ -364,15 +467,6 @@ public class Message implements Serializable {
      */
     public SpectatorStates getSstate() {
         return sstate;
-    }
-
-    /**
-     * Returns the race number
-     *
-     *   @return race number
-     */
-    public int getRaceNum() {
-        return raceNum;
     }
 
     /**
@@ -503,11 +597,5 @@ public class Message implements Serializable {
 
 
     /***********************Stable***********************/
-    /**
-     *
-     *  @return Race Number
-     */
-    public int getRaceNumber(){
-        return raceNumber;
-    }
+
 }

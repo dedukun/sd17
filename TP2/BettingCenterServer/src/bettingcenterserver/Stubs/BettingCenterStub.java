@@ -3,7 +3,7 @@ package bettingcenterserver.Stubs;
 import bettingcenterserver.Communication.Message;
 import bettingcenterserver.Communication.MessageType;
 
-import bettingcenterserver.Other.Configurations;
+import bettingcenterserver.Auxiliar.Configurations;
 
 public class BettingCenterStub {
 
@@ -54,10 +54,10 @@ public class BettingCenterStub {
         connection.close();
     }
 
-    public void placeABet(int horseId){
+    public void placeABet(int horseId, int specId, double funds){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BETTING_CENTER_PLACE_A_BET);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_PLACE_A_BET, horseId, specId, funds);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -69,7 +69,7 @@ public class BettingCenterStub {
     public boolean areThereAnyWinners(int[] winningHorses){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BETTING_CENTER_ARE_THERE_ANY_WINNERS);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_ARE_THERE_ANY_WINNERS, winningHorses);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -104,10 +104,10 @@ public class BettingCenterStub {
         connection.close();
     }
 
-    public void goCollectTheGains(){
+    public void goCollectTheGains(int specId, double funds){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.BETTING_CENTER_GO_COLLECT_THE_GAINS);
+        Message messageToSend = new Message(MessageType.BETTING_CENTER_GO_COLLECT_THE_GAINS, specId, funds);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();

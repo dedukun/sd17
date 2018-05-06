@@ -3,7 +3,7 @@ package bettingcenterserver.Stubs;
 import bettingcenterserver.Communication.Message;
 import bettingcenterserver.Communication.MessageType;
 
-import bettingcenterserver.Other.Configurations;
+import bettingcenterserver.Auxiliar.Configurations;
 
 public class StableStub {
 
@@ -17,10 +17,10 @@ public class StableStub {
         return connection;
     }
 
-    public void proceedToStable(){
+    public void proceedToStable(int hId, int hRaceNumber, int horseAgl){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.STABLE_PROCEED_TO_STABLE);
+        Message messageToSend = new Message(MessageType.STABLE_PROCEED_TO_STABLE, hId, hRaceNumber, horseAgl);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
