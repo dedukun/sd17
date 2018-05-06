@@ -11,7 +11,7 @@ import java.io.*;
  * Defines the exchanged messages between Betting Center Server and clients.
  */
 public class Message implements Serializable {
-    private static final long serialVersionUID = 1114;
+    private static final long serialVersionUID = 1108;
 
     private MessageType msgType;
 
