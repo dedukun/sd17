@@ -8,7 +8,7 @@ import spectatorclient.Auxiliar.Configurations;
 public class BettingCenterStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PORT);
+        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.BC_PORT);
         while (!connection.open()) {
             try {
                 Thread.sleep(Configurations.SLEEP_TIME);

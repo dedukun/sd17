@@ -17,7 +17,7 @@ public class ControlCenterServer {
 
         ServiceProvider spro;
 
-        scon = new ServerCom(Configurations.PORT);
+        scon = new ServerCom(Configurations.CC_PORT);
         scon.start();
 
         GenericIO.writelnString("Starting Control Center");

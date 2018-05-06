@@ -16,7 +16,7 @@ public class GenReposServer {
 
         ServiceProvider spro;
 
-        scon = new ServerCom(Configurations.PORT);
+        scon = new ServerCom(Configurations.GR_PORT);
         scon.start();
 
         GenericIO.writelnString("Starting General Repository");

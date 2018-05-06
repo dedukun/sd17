@@ -16,7 +16,7 @@ public class PaddockServer {
 
         ServiceProvider spro;
 
-        scon = new ServerCom(Configurations.PORT);
+        scon = new ServerCom(Configurations.PD_PORT);
         scon.start();
 
         GenericIO.writelnString("Starting Paddock");

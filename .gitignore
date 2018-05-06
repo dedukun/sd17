@@ -11,3 +11,7 @@
 /TP2/GenReposServer/build/
 /TP2/BrokerClient/build/
 /TP2/ControlCenterServer/build/
+/TP2/PaddockServer/build/
+/TP2/SpectatorClient/build/
+/TP2/RaceTrackServer/build/
+/TP2/StableServer/build/

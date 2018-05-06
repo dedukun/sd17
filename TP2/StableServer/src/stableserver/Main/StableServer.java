@@ -16,7 +16,7 @@ public class StableServer {
 
         ServiceProvider spro;
 
-        scon = new ServerCom(Configurations.PORT);
+        scon = new ServerCom(Configurations.ST_PORT);
         scon.start();
 
         GenericIO.writelnString("Starting Stable");

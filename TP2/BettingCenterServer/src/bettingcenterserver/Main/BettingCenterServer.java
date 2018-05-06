@@ -17,7 +17,7 @@ public class BettingCenterServer {
 
         ServiceProvider spro;
 
-        scon = new ServerCom(Configurations.PORT);
+        scon = new ServerCom(Configurations.BC_PORT);
         scon.start();
 
         GenericIO.writelnString("Starting Betting Center");
