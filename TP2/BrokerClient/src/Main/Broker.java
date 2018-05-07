@@ -55,9 +55,9 @@ public class Broker extends Thread{
         this.name = name;
         this.bstate = BrokerStates.OTE;
 
-        //this.bettingCenter = new BettingCenterStub();
-        //this.controlCenter = new ControlCenterStub();
-        //this.raceTrack = new RaceTrackStub();
+        this.bettingCenter = new BettingCenterStub();
+        this.controlCenter = new ControlCenterStub();
+        this.raceTrack = new RaceTrackStub();
         this.stable = new StableStub();
     }
 
