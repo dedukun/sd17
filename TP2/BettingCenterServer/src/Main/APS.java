@@ -19,8 +19,8 @@ public class APS {
     /**
     * Processes the message and returns a reply.
     *
-    *   @param msg Mesage to be processed
-    *   @return 
+    *   @param msg Message to be processed
+    *   @return A message Reply
     *   @throws MessageException
     */
     public Message compute(Message msg) throws MessageException{
@@ -77,7 +77,9 @@ public class APS {
     }
     
     /**
+     * Checks if BettingCenter is still alive
      * 
+     * @return true if it is alive
      */
     public boolean isAlive(){
         return isAlive;

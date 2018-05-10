@@ -369,14 +369,17 @@ public class Message implements Serializable {
     }
 
     /**
-     *
+     * Returns the horses chances
+     * 
+     *   @return double[] with the horseChances
      */
     public double[] getHorsesChances(){
         return horsesChances;
     }
     
     /**
-     *
+     * Returns the race number
+     * 
      *  @return Race Number
      */
     public int getRaceNumber(){
@@ -393,28 +396,36 @@ public class Message implements Serializable {
 
     /*******************Betting Center*******************/
     /**
-     *
+     * Returns the horses that have won
+     * 
+     *  @return int[] with the horses that have won
      */
     public int[] getWinningHorses(){
         return winningHorses;
     }
 
     /**
-     *
+     * Checks if all the bets were accepted
+     * 
+     *  @return true if all the bets were accepted
      */
     public boolean getAllBetsAccepted(){
         return acceptedBets;
     }
 
     /**
-     *
+     * Checks if there is any winner
+     * 
+     *  @return true if there are winners
      */
     public boolean getAnyWinners(){
         return anyWinners;
     }
 
     /**
-     *
+     * Checks if all the bets were honoured
+     * 
+     *  @return true if the bets were all honoured
      */
     public boolean getAllBetsHonoured(){
         return honouredBets;
@@ -422,21 +433,27 @@ public class Message implements Serializable {
 
     /*******************Control Center*******************/
     /**
-     *
+     * Returns the winners
+     * 
+     * @return a int[] with the winners 
      */
     public int[] getWinners(){
         return winners;
     }
 
     /**
-     *
+     * Checks if a spectator has won
+     * 
+     *  @return true if the spectator has won
      */
     public boolean getHaveIWon(){
         return winner;
     }
 
     /**
-     *
+     * Checks if a spectator is waiting for the next race
+     * 
+     *  @return true if he is waiting
      */
     public boolean getWaitNextRace(){
         return wait;
@@ -544,7 +561,9 @@ public class Message implements Serializable {
     }
 
     /**
-     *
+     * Returns the current horse Iteration
+     * 
+     *  @return a int with the horse iteration
      */
     public int getHorseIter(){
         return horseIter;
@@ -553,21 +572,27 @@ public class Message implements Serializable {
 
     /**********************Paddock***********************/
     /**
-     *
+     * Returns if the horse is the last to arrive to paddock
+     * 
+     * @return true if it is
      */
     public boolean getLastToPaddock(){
         return lastToPaddock;
     }
 
     /**
-     *
+     * Returns the horse to be betted
+     * 
+     * @return the id of the horse to be betted
      */
     public int getHorseToBet(){
         return horseToBet;
     }
 
     /**
-     *
+     * Checks if it is the last spectator to check the horses
+     * 
+     * @returns true if it is the last spectator to check the horses
      */
     public boolean getLastCheckHorses(){
         return lastCheckHorses;
@@ -576,21 +601,27 @@ public class Message implements Serializable {
 
     /*********************Race Track*********************/
     /**
-     *
+     * Check if a move has been done
+     * 
+     * @returns true if a move has been done
      */
     public boolean getMakeMove(){
         return move;
     }
 
     /**
-     *
+     * Checks if the race has finished
+     * 
+     * @returns true if the race has finished
      */
     public boolean getRaceFinished(){
         return finished;
     }
 
     /**
-     *
+     * Returns the race results
+     * 
+     * @return int[] with the horses place
      */
     public int[] getResults(){
         return results;
