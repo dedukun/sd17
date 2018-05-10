@@ -101,7 +101,6 @@ public class RaceTrack {
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ASL);
 
         int horseID = hId;
-
         genRepos.setHorseState(horseID, HorseJockeyStates.ASL);
 
         while(waitToMove || horseID != horseMoving){
@@ -219,6 +218,7 @@ public class RaceTrack {
      *   @return Array of identifier of the horse(s) that have won the race
      */
     public synchronized int[] getResults(){
+        System.out.println("Results "+winningHorses);
         return winningHorses.stream().mapToInt(i->i).toArray();
     }
 }

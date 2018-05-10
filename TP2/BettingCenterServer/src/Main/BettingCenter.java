@@ -124,6 +124,7 @@ public class BettingCenter {
      *   @param horseChances List of Horses/Jockey pairs winning chances
      */
     public synchronized void setHorsesWinningChances(double[] horseChances){
+        System.out.println(Arrays.toString(horseChances)+" Horses chances");
         currentHorsesWinningChances = horseChances;
     }
 

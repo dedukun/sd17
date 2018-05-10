@@ -8,6 +8,7 @@ import Stubs.RaceTrackStub;
 import Stubs.StableStub;
 
 import Auxiliar.SimulPar;
+import java.util.Arrays;
 
 /**
  * Broker Entity.<br>
@@ -96,6 +97,7 @@ public class Broker extends Thread{
             raceTrack.startTheRace();
             controlCenter.startTheRace();//Blocked
             int[] winnerHorses = raceTrack.getResults();
+            System.out.println("Results "+Arrays.toString(winnerHorses));
             controlCenter.reportResults(winnerHorses);
             if(bettingCenter.areThereAnyWinners(winnerHorses)){
                 while(!bettingCenter.honouredAllTheBets())

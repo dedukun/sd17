@@ -106,7 +106,7 @@ public class ControlCenterStub {
     public void reportResults(int[] winners){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.CONTROL_CENTER_REPORT_RESULTS);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_REPORT_RESULTS,winners);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();
@@ -117,7 +117,7 @@ public class ControlCenterStub {
     public boolean haveIWon(int hjid){
         ClientCom connection = connectServer();
 
-        Message messageToSend = new Message(MessageType.CONTROL_CENTER_HAVE_I_WON);
+        Message messageToSend = new Message(MessageType.CONTROL_CENTER_HAVE_I_WON,hjid);
         connection.writeObject(messageToSend);
 
         Message messageReceived = (Message) connection.readObject();

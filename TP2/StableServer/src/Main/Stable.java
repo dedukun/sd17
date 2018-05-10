@@ -68,7 +68,7 @@ public class Stable {
     public synchronized void proceedToStable(int hId, int hRaceNumber, int horseAgl){
 
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATS);
-        
+        System.out.println("Horse "+hId+" of race "+hRaceNumber+" with agility "+horseAgl+" arrived");
         int horseRaceNumber = hRaceNumber;
         int horseId = hId;
         int horseAgility = horseAgl;
@@ -76,7 +76,10 @@ public class Stable {
         int index = horseId + (SimulPar.C * horseRaceNumber);
         horsesAgilities[index] = horseAgility;
 
-        genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
+        if(hRaceNumber == currentRace || (currentRace == -1 && hRaceNumber == 0)){
+            System.out.println("Horse Print");
+            genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
+        }
 
         while( !endEvent && horseRaceNumber != currentRace){
             try{
@@ -101,6 +104,7 @@ public class Stable {
     public synchronized double[] summonHorsesToPaddock(int raceNumber){
         //((Broker) Thread.currentThread()).setState(BrokerStates.ANR);
 
+        System.out.println("Race number "+raceNumber);
         genRepos.setRaceNumber(raceNumber);
         genRepos.setBrokerState(BrokerStates.ANR);
 
@@ -124,7 +128,6 @@ public class Stable {
 
             genRepos.setHorseAgility(i, (int)horseAgility);
             genRepos.setOdds(i, horsesChances[i]*100);
-            genRepos.setHorseState(i, HorseJockeyStates.ATS);
         }
 
         return horsesChances;
