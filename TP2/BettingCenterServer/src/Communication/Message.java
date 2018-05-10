@@ -165,7 +165,7 @@ public class Message implements Serializable {
                 break;
         }
     }
-    
+
     /**
     *
     *  @param type Enumerate indicating the type of the message
@@ -193,7 +193,7 @@ public class Message implements Serializable {
     */
     public Message(MessageType type, int param1, double param2){
         msgType = type;
-        switch(type){  
+        switch(type){
             case BETTING_CENTER_GO_COLLECT_THE_GAINS:
                 specId = param1;
                 specFunds = param2;
@@ -202,9 +202,9 @@ public class Message implements Serializable {
                 horseId = param1;
                 odd = param2;
                 break;
-        }         
+        }
     }
-    
+
         /**
     *
     *  @param type Enumerate indicating the type of the message
@@ -223,7 +223,7 @@ public class Message implements Serializable {
                 break;
         }
     }
-    
+
         /**
     *
     *  @param type Enumerate indicating the type of the message
@@ -374,7 +374,7 @@ public class Message implements Serializable {
     public double[] getHorsesChances(){
         return horsesChances;
     }
-    
+
     /**
      *
      *  @return Race Number
@@ -382,7 +382,7 @@ public class Message implements Serializable {
     public int getRaceNumber(){
         return raceNumber;
     }
-    
+
     /**
      *
      *  @return Spectator Funds

@@ -1,5 +1,6 @@
 package Main;
 
+import Auxiliar.SimulPar;
 import Communication.Message;
 import Communication.MessageException;
 import Communication.MessageType;
@@ -7,7 +8,7 @@ import Communication.MessageType;
 public class APS {
 
     private final BettingCenter bc;
-    private boolean isAlive = true;
+    private int totalEntities = 1 + SimulPar.S;
 
     /**
      * Betting Center Proxy Initialization.
@@ -67,7 +68,7 @@ public class APS {
                 break;
                 
             case END:
-                isAlive = false;
+                totalEntities--;
                 break;
 
             default:
@@ -78,8 +79,9 @@ public class APS {
     
     /**
      * 
+     * @return
      */
     public boolean isAlive(){
-        return isAlive;
+        return totalEntities!=0;
     }
 }

@@ -39,6 +39,7 @@ public class StableStub {
         Message messageReceived = (Message) connection.readObject();
 
         connection.close();
+
         return messageReceived.getHorsesChances();
     }
 
