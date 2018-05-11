@@ -1,4 +1,5 @@
 package Main;
+import Auxiliar.SimulPar;
 import Communication.MessageType;
 import Communication.MessageException;
 import Communication.Message;
@@ -6,7 +7,8 @@ import Communication.Message;
 public class APS {
 
     private final RaceTrack rt;
-    private boolean isAlive = true;
+    private int totalEntities = 1 + (SimulPar.K * SimulPar.C);
+
 
     public APS(){
         rt = new RaceTrack();
@@ -45,21 +47,27 @@ public class APS {
                 int[] results = rt.getResults();
                 reply = new Message(MessageType.RACE_TRACK_REPLY_GET_RESULTS,results);
                 break;
-                
+
             case END:
-                isAlive = false;
+                System.out.println("END IN "+totalEntities);
+                totalEntities--;
+                reply = new Message(MessageType.OK);
                 break;
-                
+
             default:
                 break;
         }
         return reply;
     }
-    
+
     /**
-     * 
+     * @return
      */
     public boolean isAlive(){
-        return isAlive;
+        if(totalEntities==0){
+            rt.shutdownGenRepo();
+            return false;
+        }
+        return true;
     }
 }

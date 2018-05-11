@@ -165,7 +165,6 @@ public class ControlCenter{
             }catch(InterruptedException e){}
         }
 
-        System.out.println("Spectator "+specId+" finished WAR");
         spectatosLeavingStands++;
         if(spectatosLeavingStands == SimulPar.S){
             // Reset Vars
@@ -180,7 +179,6 @@ public class ControlCenter{
      *   @param winners Array with the identifier of the winning Horse/Jockey pair(s)
      */
     public synchronized void reportResults(int[] winners){
-        System.out.println("Report Resuts "+Arrays.toString(winners));
         raceWinners = winners;
         waitForEndOfRace = false;
 
@@ -194,7 +192,6 @@ public class ControlCenter{
      *   @return true if the pair has won, false if not.
      */
     public synchronized boolean haveIWon(int hjid){
-        System.out.println("WINNERS "+Arrays.toString(raceWinners));
         for(int winner : raceWinners){
             if(winner == hjid){
                 return true;
@@ -222,5 +219,13 @@ public class ControlCenter{
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.CB);
 
         genRepos.setSpectatorState(specId, SpectatorStates.CB);
+    }
+    
+    
+    /**
+     * Send a message to the General Reposutory telling that this server is shutting down 
+     */
+    public synchronized void shutdownGenRepo(){
+        genRepos.endServer();
     }
 }

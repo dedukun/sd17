@@ -97,7 +97,6 @@ public class Broker extends Thread{
             raceTrack.startTheRace();
             controlCenter.startTheRace();//Blocked
             int[] winnerHorses = raceTrack.getResults();
-            System.out.println("Results "+Arrays.toString(winnerHorses));
             controlCenter.reportResults(winnerHorses);
             if(bettingCenter.areThereAnyWinners(winnerHorses)){
                 while(!bettingCenter.honouredAllTheBets())
@@ -106,5 +105,11 @@ public class Broker extends Thread{
         }
         stable.entertainTheGuests(); // Unblock Horses
         controlCenter.entertainTheGuests();
+
+        // send shutdown
+        bettingCenter.endServer();
+        controlCenter.endServer();
+        raceTrack.endServer();
+        stable.endServer();
     }
 }

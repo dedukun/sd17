@@ -143,5 +143,10 @@ public class Spectators extends Thread{
                 //Unblocked by honourTheBets()
         }
         controlCenter.relaxABit(sid);
+
+        // send shutdown
+        bettingCenter.endServer();
+        controlCenter.endServer();
+        paddock.endServer();
     }
 }

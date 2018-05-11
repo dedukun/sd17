@@ -42,8 +42,7 @@ public class Stable {
     private boolean waitAtStable;
 
     /**
-     * Stable initialization
-
+     * Stable initialization.
      */
     public Stable(){
         this.genRepos = new GenReposStub();
@@ -68,7 +67,6 @@ public class Stable {
     public synchronized void proceedToStable(int hId, int hRaceNumber, int horseAgl){
 
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATS);
-        System.out.println("Horse "+hId+" of race "+hRaceNumber+" with agility "+horseAgl+" arrived");
         int horseRaceNumber = hRaceNumber;
         int horseId = hId;
         int horseAgility = horseAgl;
@@ -77,7 +75,6 @@ public class Stable {
         horsesAgilities[index] = horseAgility;
 
         if(hRaceNumber == currentRace || (currentRace == -1 && hRaceNumber == 0)){
-            System.out.println("Horse Print");
             genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
         }
 
@@ -103,8 +100,8 @@ public class Stable {
      */
     public synchronized double[] summonHorsesToPaddock(int raceNumber){
         //((Broker) Thread.currentThread()).setState(BrokerStates.ANR);
-
-        System.out.println("Race number "+raceNumber);
+        
+        genRepos.setBrokerState(BrokerStates.OTE);
         genRepos.setRaceNumber(raceNumber);
         genRepos.setBrokerState(BrokerStates.ANR);
 
@@ -143,5 +140,12 @@ public class Stable {
         endEvent = true;
 
         notifyAll();
+    }
+    
+    /**
+     * Send a message to the General Reposutory telling that this server is shutting down 
+     */
+    public synchronized void shutdownGenRepo(){
+        genRepos.endServer();
     }
 }

@@ -213,4 +213,11 @@ public class Paddock {
         }
         return horse;
     }
+    
+    /**
+     * Send a message to the General Reposutory telling that this server is shutting down 
+     */
+    public synchronized void shutdownGenRepo(){
+        genRepos.endServer();
+    }
 }

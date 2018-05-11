@@ -88,6 +88,11 @@ public class GeneralRepository {
     * Horses that have finished.
     */
     private int[] horseEnd = new int[SimulPar.C];
+    
+    /**
+     * Horses in gen repo
+     */
+    private int horsesInRepo;
 
     /**
     * First line to print.
@@ -160,7 +165,7 @@ public class GeneralRepository {
         // Some print logic
         String[] tmpHorseState = new String[SimulPar.C];
         for(int i = 0; i < SimulPar.C; i++){
-            if(horseState[i] != null && brkState != BrokerStates.OTE)
+            if(horseState[i] != null)
                 tmpHorseState[i] = horseState[i].toString();
             else
                 tmpHorseState[i] = "---";
@@ -335,7 +340,8 @@ public class GeneralRepository {
     public synchronized void setRaceNumber(int num){
 
         // Reset variables for the new race.
-        horseState = new HorseJockeyStates[SimulPar.C];
+        if (num != 0)
+            horseState = new HorseJockeyStates[SimulPar.C];
         Arrays.fill(horseAgility, 0);
         trackSize = 0;
         Arrays.fill(betS, -1);
@@ -393,7 +399,10 @@ public class GeneralRepository {
     public synchronized void setHorseState(int horseId,HorseJockeyStates state){
         this.horseState[horseId]=state;
 
-        updateLog();
+        horsesInRepo++;
+        if(horsesInRepo > SimulPar.C){
+            updateLog();     
+        }
     }
 
     /**

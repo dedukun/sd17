@@ -95,8 +95,6 @@ public class BettingCenter {
 
     /**
      * Betting Center initialization.
-     *
-     *  @param genRepos Reference to General Repository
      */
     public BettingCenter(){
         this.genRepos = new GenReposStub();
@@ -124,7 +122,6 @@ public class BettingCenter {
      *   @param horseChances List of Horses/Jockey pairs winning chances
      */
     public synchronized void setHorsesWinningChances(double[] horseChances){
-        System.out.println(Arrays.toString(horseChances)+" Horses chances");
         currentHorsesWinningChances = horseChances;
     }
 
@@ -179,8 +176,8 @@ public class BettingCenter {
      * Spectator places a bet and is waiting for the broker to accept it.
      *
      *   @param horseId Identifier of the Horse/Jockey pair that the Spectator is betting
-     *   @param specId
-     *   @param funds
+     *   @param specId Spectator's Id
+     *   @param funds Spectator's wallet
      *   @return Bet Size
      */
     public synchronized double placeABet(int horseId, int specId, double funds){
@@ -313,8 +310,9 @@ public class BettingCenter {
     /**
      * Spectator is waiting for the Broker to pay him back and collects the money that he has won.
      * 
-     *   @param specId
-     *   @param funds
+     *   @param specId Spectator's Id
+     *   @param funds Spectator's wallet
+     *   @return Eearnings
      */
     public synchronized double goCollectTheGains(int specId, double funds){
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.CTG);
@@ -347,6 +345,13 @@ public class BettingCenter {
         }
         
         return earnings;
+    }
+    
+    /**
+     * Send a message to the General Reposutory telling that this server is shutting down 
+     */
+    public synchronized void shutdownGenRepo(){
+        genRepos.endServer();
     }
 
     /**

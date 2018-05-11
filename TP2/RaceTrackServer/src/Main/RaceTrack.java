@@ -218,7 +218,13 @@ public class RaceTrack {
      *   @return Array of identifier of the horse(s) that have won the race
      */
     public synchronized int[] getResults(){
-        System.out.println("Results "+winningHorses);
         return winningHorses.stream().mapToInt(i->i).toArray();
+    }
+    
+    /**
+     * Send a message to the General Reposutory telling that this server is shutting down 
+     */
+    public synchronized void shutdownGenRepo(){
+        genRepos.endServer();
     }
 }

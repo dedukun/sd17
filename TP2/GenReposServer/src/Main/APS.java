@@ -7,7 +7,7 @@ import Communication.Message;
 public class APS {
 
     private GeneralRepository gr;
-    private boolean isAlive = true;
+    private int totalRegions = 5;
 
     /**
      * Instantiation of the proxy provider.
@@ -102,7 +102,9 @@ public class APS {
                 break;
 
             case END:
-                isAlive = false;
+                System.out.println("Regions "+totalRegions);
+                totalRegions--;
+                reply = new Message(MessageType.OK);
                 break;
 
             default:
@@ -115,6 +117,6 @@ public class APS {
      *   @return
      */
     public boolean isAlive(){
-        return isAlive;
+        return totalRegions!=0;
     }
 }

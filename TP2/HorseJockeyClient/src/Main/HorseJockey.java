@@ -147,5 +147,11 @@ public class HorseJockey extends Thread{
         }while(!raceTrack.hasRaceFinished(hjid)); // Blocked
         //unblocked by startTheRace() or makeAMove()
         stable.proceedToStable(hjid, raceNumber, agility);
+
+        //send shutdown
+        controlCenter.endServer();
+        paddock.endServer();
+        raceTrack.endServer();
+        stable.endServer();
     }
 }

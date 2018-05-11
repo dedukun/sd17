@@ -5,11 +5,15 @@ import Auxiliar.Configurations;
 import genclass.GenericIO;
 import java.net.SocketTimeoutException;
 
-
+/**
+ * Main File.
+ */
 public class BettingCenterServer {
 
     /**
-     * @param args the command line arguments
+     * Main program.
+     * 
+     *   @param args the command line arguments
      */
     public static void main(String[] args) {
 

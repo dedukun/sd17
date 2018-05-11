@@ -5,6 +5,9 @@ import Communication.Message;
 import Communication.MessageException;
 import Communication.MessageType;
 
+/**
+ * Betting Center's Proxy Server.
+ */
 public class APS {
 
     private final BettingCenter bc;
@@ -20,8 +23,8 @@ public class APS {
     /**
     * Processes the message and returns a reply.
     *
-    *   @param msg Mesage to be processed
-    *   @return 
+    *   @param msg Message to be processed
+    *   @return A message Reply
     *   @throws MessageException
     */
     public Message compute(Message msg) throws MessageException{
@@ -68,7 +71,9 @@ public class APS {
                 break;
                 
             case END:
+                System.out.println("END IN "+totalEntities);
                 totalEntities--;
+                reply = new Message(MessageType.OK);
                 break;
 
             default:
@@ -78,10 +83,15 @@ public class APS {
     }
     
     /**
+     * Checks if BettingCenter is still alive.
      * 
-     * @return
+     * @return true if it is alive
      */
     public boolean isAlive(){
-        return totalEntities!=0;
+        if(totalEntities==0){
+            bc.shutdownGenRepo();
+            return false;
+        }
+        return true;
     }
 }

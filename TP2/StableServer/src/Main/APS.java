@@ -1,4 +1,5 @@
 package Main;
+import Auxiliar.SimulPar;
 import Communication.MessageType;
 import Communication.MessageException;
 import Communication.Message;
@@ -6,7 +7,8 @@ import Communication.Message;
 public class APS {
 
     private final Stable st;
-    private boolean isAlive = true;
+    private int totalEntities = 1 + (SimulPar.K * SimulPar.C);
+
 
     public APS(){
         st = new Stable();
@@ -37,7 +39,9 @@ public class APS {
                 break;
                 
             case END:
-                isAlive = false;
+                System.out.println("END IN "+totalEntities);
+                totalEntities--;
+                reply = new Message(MessageType.OK);
                 break;
 
             default:
@@ -47,9 +51,13 @@ public class APS {
     }
     
     /**
-     * 
+     * @return
      */
     public boolean isAlive(){
-        return isAlive;
+        if(totalEntities==0){
+            st.shutdownGenRepo();
+            return false;
+        }
+        return true;
     }
 }

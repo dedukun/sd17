@@ -54,4 +54,16 @@ public class StableStub {
 
         connection.close();
     }
+    
+    public void endServer(){
+        ClientCom connection = connectServer();
+
+        Message messageToSend = new Message(MessageType.END);
+        connection.writeObject(messageToSend);
+
+        Message messageReceived = (Message) connection.readObject();
+        if (messageReceived.getMessageType() != MessageType.OK) {}
+
+        connection.close();
+    }
 }
