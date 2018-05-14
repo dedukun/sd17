@@ -17,7 +17,7 @@ public class BettingCenterServer {
      */
     public static void main(String[] args) {
 
-        APS betCenProxy = new APS();;
+        APS betCenProxy = new APS();
         ServerCom scon, sconi;
 
         ServiceProvider spro;
