@@ -4,10 +4,51 @@ package Auxiliar;
  * Configurations with the ports used and the host name.
  */
 public class Configurations {
+
     /**
-     * String representing the hostname.
+     * Betting Center Host name.
      */
-    public static final String HOST = "localhost";
+    public static final String BC_HOST = "l040101-ws01.ua.pt";
+
+    /**
+     * Broker Host name.
+     */
+    public static final String BR_HOST = "l040101-ws02.ua.pt";
+
+    /**
+     * Control Center Host name.
+     */
+    public static final String CC_HOST = "l040101-ws03.ua.pt";
+
+    /**
+     * General Repository Host name.
+     */
+    public static final String GR_HOST = "l040101-ws04.ua.pt";
+
+    /**
+     * Horse Jockey Host name.
+     */
+    public static final String HJ_HOST = "l040101-ws05.ua.pt";
+
+    /**
+     * Paddock Host name.
+     */
+    public static final String PD_HOST = "l040101-ws06.ua.pt";
+
+    /**
+     * Race Track Host name.
+     */
+    public static final String RT_HOST = "l040101-ws09.ua.pt";
+
+    /**
+     * Spectator Host name.
+     */
+    public static final String SP_HOST = "l040101-ws08.ua.pt";
+
+    /**
+     * Stable Host name.
+     */
+    public static final String ST_HOST = "l040101-ws10.ua.pt";
 
     /**
      * Sleep time when client connection is not opened.

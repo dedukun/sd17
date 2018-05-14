@@ -9,7 +9,7 @@ import Auxiliar.Configurations;
 public class RaceTrackStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.RT_PORT);
+        ClientCom connection = new ClientCom(Configurations.RT_HOST, Configurations.RT_PORT);
         while (!connection.open()) {
             try {
                 Thread.sleep(Configurations.SLEEP_TIME);

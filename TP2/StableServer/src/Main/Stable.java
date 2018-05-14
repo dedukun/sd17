@@ -83,6 +83,10 @@ public class Stable {
                 wait();
             }catch(InterruptedException e){}
         }
+        
+        if(endEvent){
+            genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
+        }
 
         horsesThatLeftStable++;
         if(horsesThatLeftStable == SimulPar.C){

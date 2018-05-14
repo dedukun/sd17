@@ -9,7 +9,7 @@ import Auxiliar.Configurations;
 public class StableStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.ST_PORT);
+        ClientCom connection = new ClientCom(Configurations.ST_HOST, Configurations.ST_PORT);
         while (!connection.open()) {
             try {
                 Thread.sleep(Configurations.SLEEP_TIME);

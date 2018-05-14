@@ -5,9 +5,7 @@ import java.io.*;
 import java.net.*;
 
 /**
- *   Este tipo de dados implementa o canal de comunicação, lado do servidor, para uma comunicação baseada em passagem de
- *   mensagens sobre sockets usando o protocolo TCP.
- *   A transferência de dados é baseada em objectos, um objecto de cada vez.
+ *   Server side communication sockets.
  */
 
 public class ServerCom
@@ -48,9 +46,9 @@ public class ServerCom
    private ObjectOutputStream out = null;
 
   /**
-   *  Instanciação de um canal de comunicação (forma 1).
+   *  Instatiation of a communication channel.
    *
-   *    @param portNumb número do port de escuta do servidor
+   *    @param portNumb number of the listening port
    */
 
    public ServerCom (int portNumb)
@@ -59,10 +57,10 @@ public class ServerCom
    }
 
   /**
-   *  Instanciação de um canal de comunicação (forma 2).
+   *  Instatiation of a communication channel.
    *
-   *    @param portNumb número do port de escuta do servidor
-   *    @param lSocket socket de escuta
+   *    @param portNumb number of the listening port
+   *    @param lSocket listening socket
    */
 
    public ServerCom (int portNumb, ServerSocket lSocket)
@@ -72,9 +70,8 @@ public class ServerCom
    }
 
   /**
-   *  Estabelecimento do serviço.
-   *  Instanciação de um socket de escuta e sua associação ao endereço da máquina local
-   *  e ao port de escuta públicos.
+   *  Start of the serice.
+   *  Instatiation of a listening socket and it's association to the address of the local machine and the public listening ports.
    */
 
    public void start ()
@@ -99,8 +96,8 @@ public class ServerCom
    }
 
   /**
-   *  Encerramento do serviço.
-   *  Fecho do socket de escuta.
+   *  End of service.
+   *  Close the communication socket.
    */
 
    public void end ()
@@ -117,12 +114,12 @@ public class ServerCom
    }
 
   /**
-   *  Processo de escuta.
-   *  Criação de um canal de comunicação para um pedido pendente.
-   *  Instanciação de um socket de comunicação e sua associação ao endereço do cliente.
-   *  Abertura dos streams de entrada e de saída do socket.
+   *  Listening process.
+   *  Criation of a communication channel toa  pending request.
+   *  Instatiation of a communication socket and it's association to a client.
+   *  Opening of the input and output socket streams.
    *
-   *    @return canal de comunicação
+   *    @return communication channel
    */
 
    public ServerCom accept() throws SocketTimeoutException
@@ -176,9 +173,9 @@ public class ServerCom
    }
 
   /**
-   *  Fecho do canal de comunicação.
-   *  Fecho dos streams de entrada e de saída do socket.
-   *  Fecho do socket de comunicação.
+   *  Closing of the communication channel.
+   *  Closing of the input and output socket streams.
+   *  Closing of the communication socket.
    */
 
    public void close ()
@@ -215,9 +212,9 @@ public class ServerCom
    }
 
   /**
-   *  Leitura de um objecto do canal de comunicação.
+   *  Reading of an object from the communication channel.
    *
-   *    @return objecto lido
+   *    @return Read object
    */
 
    public Object readObject ()
@@ -250,9 +247,9 @@ public class ServerCom
    }
 
   /**
-   *  Escrita de um objecto no canal de comunicação.
+   *  Writing of an object in the communication channel
    *
-   *    @param toClient objecto a ser escrito
+   *    @param toClient object being written
    */
 
    public void writeObject (Object toClient)

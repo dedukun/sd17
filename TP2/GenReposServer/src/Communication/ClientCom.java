@@ -5,49 +5,47 @@ import java.io.*;
 import java.net.*;
 
 /**
- *   Este tipo de dados implementa o canal de comunicação, lado do cliente, para uma comunicação baseada em passagem de
- *   mensagens sobre sockets usando o protocolo TCP.
- *   A transferência de dados é baseada em objectos.
+ *   This type of data implements communication channel based on sockets over TCP.
  */
 
 public class ClientCom
 {
   /**
-   *  Socket de comunicação
+   *  Communication socket
    *    @serialField commSocket
    */
 
    private Socket commSocket = null;
 
   /**
-   *  Nome do sistema computacional onde está localizado o servidor.
+   *  Name of the computer where the server is located.
    */
 
    private String serverHostName = null;
 
   /**
-   *  Número do port de escuta do servidor.
+   *  Number of the server's port.
    */
 
    private int serverPortNumb;
 
   /**
-   *  Stream de entrada do canal de comunicação.
+   *  Input stream of the communication channel.
    */
 
    private ObjectInputStream in = null;
 
   /**
-   *  Stream de saída do canal de comunicação.
+   *  Output stream of the communication channel.
    */
 
    private ObjectOutputStream out = null;
 
   /**
-   *  Instanciação de um canal de comunicação.
+   *  Instatiation of the communication channel.
    *
-   *    @param hostName nome do sistema computacional onde está localizado o servidor
-   *    @param portNumb número do port de escuta do servidor
+   *    @param hostName name of the computacional system where the server is located
+   *    @param portNumb number of the listening port
    */
 
    public ClientCom (String hostName, int portNumb)
@@ -57,12 +55,12 @@ public class ClientCom
    }
 
   /**
-   *  Abertura do canal de comunicação.
-   *  Instanciação de um socket de comunicação e sua associação ao endereço do servidor.
-   *  Abertura dos streams de entrada e de saída do socket.
+   *  Opening of the communication channel.
+   *  Instatiation of a communication socket and it's association with the server.
+   *  Opening of the input and output streams.
    *
-   *    @return true, se o canal de comunicação foi aberto; <br>
-   *            false, em caso contrário.
+   *    @return true, if channel has been open <\br>
+   *            false, otherwise
    */
 
    public boolean open ()
@@ -138,9 +136,9 @@ public class ClientCom
    }
 
   /**
-   *  Fecho do canal de comunicação.
-   *  Fecho dos streams de entrada e de saída do socket.
-   *  Fecho do socket de comunicação.
+   *  Close the communication channel.
+   *  Close of input and output streams.
+   *  Close of the communication socket.
    */
 
    public void close ()
@@ -177,9 +175,9 @@ public class ClientCom
    }
 
   /**
-   *  Leitura de um objecto do canal de comunicação.
+   *  Reading object in the communication channel
    *
-   *    @return objecto lido
+   *    @return Object read
    */
 
    public Object readObject ()
@@ -212,9 +210,9 @@ public class ClientCom
    }
 
   /**
-   *  Escrita de um objecto no canal de comunicação.
+   *  Writing object in the communication channel
    *
-   *    @param toServer objecto a ser escrito
+   *    @param toServer object being written
    */
 
    public void writeObject (Object toServer)

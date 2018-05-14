@@ -7,7 +7,6 @@ import Auxiliar.SpectatorStates;
 import java.io.*;
 
 /**
- *
  * Defines the exchanged messages between Betting Center Server and clients.
  */
 public class Message implements Serializable {
@@ -60,17 +59,19 @@ public class Message implements Serializable {
 
 
     /**
-    *
+    * Create a new Message.
+    * 
     *  @param type Enumerate indicating the type of the message
     */
     public Message(MessageType type){
         msgType = type;
     }
 
-    /**
+    /**    
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param Id of the desired horse
+    *  @param type enumerate indicating the type of the message
+    *  @param param integer indicating a generic param of the message
     */
     public Message(MessageType type, int param){
         msgType = type;
@@ -122,10 +123,11 @@ public class Message implements Serializable {
     }
 
     /**
-    *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param1 First parameter of fucntion(specId/horseId/specId)
-    *  @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
+    * Create a new Message.
+    * 
+    *    @param type Enumerate indicating the type of the message
+    *    @param param1 First parameter of fucntion(specId/horseId/specId)
+    *    @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
     */
     public Message(MessageType type, int param1, int param2){
         msgType = type;
@@ -167,11 +169,12 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param1 First parameter of fucntion(specId/horseId/specId)
-    *  @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
-    *  @param param3 ...
+    *    @param type Enumerate indicating the type of the message
+    *    @param param1 First  parameter of fucntion (horseId)
+    *    @param param2 Second parameter of function (raceNumber)
+    *    @param param3 Third  parameter of function (horseAgl)
     */
     public Message(MessageType type, int param1, int param2, int param3){
         msgType = type;
@@ -186,10 +189,11 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param1 representing the odds wanted
-    *  @param param2
+    *    @param type Enumerate indicating the type of the message
+    *    @param param1 First parameter of the function (horseId or specId)
+    *    @param param2 Second parameter of the function (specFunds or horseOdds)
     */
     public Message(MessageType type, int param1, double param2){
         msgType = type;
@@ -205,12 +209,13 @@ public class Message implements Serializable {
         }
     }
 
-        /**
+    /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param1 First parameter of fucntion(specId/horseId/specId)
-    *  @param param2 Second parameter of function (betamount/horseId/horseAgl/place/pos/funds)
-    *  @param param3 ...
+    *    @param type Enumerate indicating the type of the message
+    *    @param param1 First parameter of fucntion(horseId)
+    *    @param param2 Second parameter of function (specId)
+    *    @param param3 Third parameter of function (specFunds)
     */
     public Message(MessageType type, int param1, int param2, double param3){
         msgType = type;
@@ -225,9 +230,10 @@ public class Message implements Serializable {
     }
 
     /**
-    *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param Id of the desired horse
+    * Create a new Message.
+    * 
+    *   @param type Enumerate indicating the type of the message
+    *   @param param Spectator's wallet
     */
     public Message(MessageType type, double param){
         msgType = type;
@@ -242,9 +248,10 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param bstateParam Broker state
+    *   @param type Enumerate indicating the type of the message
+    *   @param bstateParam Broker's state
     */
     public Message(MessageType type, BrokerStates bstateParam){
         msgType = type;
@@ -252,10 +259,11 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param horseidParam Horse ID
-    *  @param bstateParam Broker state
+    *    @param type Enumerate indicating the type of the message
+    *    @param horseidParam Horse ID
+    *    @param hjstateParam Horse state
     */
     public Message(MessageType type, int horseidParam, HorseJockeyStates hjstateParam){
         msgType = type;
@@ -264,10 +272,11 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param specidParam Horse ID
-    *  @param sstateParam Specator state
+    *   @param type Enumerate indicating the type of the message
+    *   @param specidParam Spectator ID
+    *   @param sstateParam Specator state
     */
     public Message(MessageType type, int specidParam, SpectatorStates sstateParam){
         msgType = type;
@@ -276,9 +285,10 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param number of winning horses
+    *   @param type Enumerate indicating the type of the message
+    *   @param param array with the winning horses
     */
     public Message(MessageType type, int[] param){
         msgType = type;
@@ -296,9 +306,10 @@ public class Message implements Serializable {
     }
 
     /**
+    * Create a new Message.
     *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param Horses winning chances
+    *   @param type Enumerate indicating the type of the message
+    *   @param param array with the horses chances
     */
     public Message(MessageType type, double[] param){
         msgType = type;
@@ -313,9 +324,10 @@ public class Message implements Serializable {
     }
 
     /**
-    *
-    *  @param type Enumerate indicating the type of the message
-    *  @param param Boolean accepted/winners/honoured
+    * Create a new Message.
+    * 
+    *   @param type Enumerate indicating the type of the message
+    *   @param param Boolean accepted/winners/honoured
     */
     public Message(MessageType type, boolean param){
         msgType = type;
@@ -592,7 +604,7 @@ public class Message implements Serializable {
     /**
      * Checks if it is the last spectator to check the horses
      * 
-     * @returns true if it is the last spectator to check the horses
+     * @return true if it is the last spectator to check the horses
      */
     public boolean getLastCheckHorses(){
         return lastCheckHorses;
@@ -603,7 +615,7 @@ public class Message implements Serializable {
     /**
      * Check if a move has been done
      * 
-     * @returns true if a move has been done
+     * @return true if a move has been done
      */
     public boolean getMakeMove(){
         return move;
@@ -612,7 +624,7 @@ public class Message implements Serializable {
     /**
      * Checks if the race has finished
      * 
-     * @returns true if the race has finished
+     * @return true if the race has finished
      */
     public boolean getRaceFinished(){
         return finished;

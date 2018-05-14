@@ -9,7 +9,7 @@ import Auxiliar.Configurations;
 public class ControlCenterStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.CC_PORT);
+        ClientCom connection = new ClientCom(Configurations.CC_HOST, Configurations.CC_PORT);
         while (!connection.open()) {
             try {
                 Thread.sleep(Configurations.SLEEP_TIME);

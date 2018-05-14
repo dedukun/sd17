@@ -9,7 +9,7 @@ import Auxiliar.Configurations;
 public class PaddockStub {
 
     private ClientCom connectServer() {
-        ClientCom connection = new ClientCom(Configurations.HOST, Configurations.PD_PORT);
+        ClientCom connection = new ClientCom(Configurations.PD_HOST, Configurations.PD_PORT);
         while (!connection.open()) {
             try {
                 Thread.sleep(Configurations.SLEEP_TIME);

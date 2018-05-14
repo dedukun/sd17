@@ -1,5 +1,8 @@
 package Communication;
 
+/**
+ * Class representing a message exception.
+ */
 public class MessageException extends Exception{
 
     /**

@@ -1,56 +1,85 @@
 #!/bin/bash
 
-clear
+printf "Machines password: "
+read -s PASSWORD
 
-function build {
-    folder=$1
+servers=( "BettingCenterServer" "ControlCenterServer" "GenReposServer" "PaddockServer" "RaceTrackServer" "StableServer" )
+serversMachines=( "l040101-ws01.ua.pt" "l040101-ws03.ua.pt" "l040101-ws04.ua.pt" "l040101-ws06.ua.pt" "l040101-ws09.ua.pt" "l040101-ws10.ua.pt" )
+src=Src
 
-    # Get the main class and build directory from the project properties
-    properties="./$folder/nbproject/project.properties"
-    mainClassProperty=$(cat $properties | grep "main.class=")
-    mainClass="${mainClassProperty/main.class=/}"
+printf "\nBuilding Servers...\n"
 
-    # Compile source
-    if [ ! -f "./$folder/src/$(echo $mainClass | tr . /).java" ]; then
-      echo "The main class ${mainClass} wasn't found"
-      exit 1
-    fi
+mkdir $src
 
-    # Run clean
-    if [ "$1" == "clean" ]; then
-      eval "ant -q -f $(pwd)/$folder -Dnb.internal.action.name=rebuild clean jar"
-    fi
-}
-
-
-servers=( "BettingCenterServer" "ControlCenterServer" "GenReposServer" "PaddockServer"
-"RaceTrackServer" "StableServer" )
-
-printf "Building Servers...\n"
-
-for server in "${servers[@]}"
+for i in $(seq 0 $((${#servers[@]}-1)))
 do
+    printf "  "${servers[$i]}"...\n"
 
-    printf "  "$server"..."
+    # Get source files
+    cp -r ${servers[$i]}/src ./$src/${servers[$i]}
 
-    build $server
+    # go to copied directory
+    cd $src/${servers[$i]}
 
-    echo "done"
+    # compile
+    javac Main/${servers[$i]}.java
 
-    # run program
-    #eval "ant -q -f $(pwd)/$server -Dnb.internal.action.name=run run"
+    # remove code
+    rm -rf  */*.java
+
+    cd ..
+
+    # zip .class
+    zip -qr ${servers[$i]}.zip  ${servers[$i]}/*
+
+    rm -rf ${servers[$i]}/
+
+    # send to corresponding remote machine
+    sshpass -p $PASSWORD sftp -q sd0202@${serversMachines[$i]}: <<< $'put '${servers[$i]}'.zip'
+
+    # unzip in remote machine
+    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "rm -rf ${servers[$i]}; unzip -q ${servers[$i]}.zip; rm ${servers[$i]}.zip"
+
+    cd ..
 done
 
 clients=( "BrokerClient" "HorseJockeyClient" "SpectatorClient" )
+clientsMachines=( "l040101-ws02.ua.pt" "l040101-ws05.ua.pt" "l040101-ws08.ua.pt" )
 
 printf "\nBuilding Clients...\n"
 
-for client in "${clients[@]}"
+for i in $(seq 0 $((${#clients[@]}-1)))
 do
+    printf "  "${clients[$i]}"...\n"
 
-    printf "  "$client"..."
+    # Get source files
+    cp -r ${clients[$i]}/src ./$src/${clients[$i]}
 
-    build $client
+    # go to copied directory
+    cd $src/${clients[$i]}
 
-    echo "done"
+    # compile
+    javac Main/${clients[$i]}.java
+
+    # remove code
+    rm -rf  */*.java
+
+    cd ..
+
+    # zip .class
+    zip -qr ${clients[$i]}.zip  ${clients[$i]}/*
+
+    rm -rf ${clients[$i]}/
+
+    # send to corresponding remote machine
+    sshpass -p $PASSWORD sftp -q sd0202@${clientsMachines[$i]}: <<< $'put '${clients[$i]}'.zip'
+
+    # unzip in remote machine
+    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "rm -rf ${clients[$i]}; unzip -q ${clients[$i]}; rm ${clients[$i]}.zip"
+
+    cd ..
 done
+
+rm -rf $src
+
+echo "All done"
