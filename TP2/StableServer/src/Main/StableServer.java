@@ -36,5 +36,5 @@ public class StableServer {
         }
 
         GenericIO.writelnString("Service Terminated");
-    }  
+    }
 }

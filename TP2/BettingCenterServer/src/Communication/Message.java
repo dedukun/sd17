@@ -89,7 +89,7 @@ public class Message implements Serializable {
                 specId = param;
                 break;
             case GENERAL_REPO_SET_HORSE_ITERATION:
-                horseIter = param;
+                horseId = param;
                 break;
             case GENERAL_REPO_SET_TRACK_SIZE:
                 trackSize = param;
@@ -570,15 +570,6 @@ public class Message implements Serializable {
      */
     public double getOdd() {
         return odd;
-    }
-
-    /**
-     * Returns the current horse Iteration
-     * 
-     *  @return a int with the horse iteration
-     */
-    public int getHorseIter(){
-        return horseIter;
     }
 
 
