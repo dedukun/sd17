@@ -12,7 +12,7 @@ public class GenReposServer {
      */
     public static void main(String[] args) {
 
-        APS genRepoProxy = new APS();;
+        APS genRepoProxy = new APS();
         ServerCom scon, sconi;
 
         ServiceProvider spro;
