@@ -3,8 +3,10 @@ package serverSide.BettingCenter;
 import auxiliary.SimulPar;
 import auxiliary.BrokerStates;
 import auxiliary.SpectatorStates;
+import auxiliary.TimeVector;
 import interfaces.BettingCenterInterface;
 import interfaces.GenReposInterface;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.ArrayList;
 
@@ -93,6 +95,9 @@ public class BettingCenter implements BettingCenterInterface{
      * Reference to General Repository.
      */
     private final GenReposInterface genRepos;
+    
+    
+    private TimeVector clk;
 
     /**
      * Betting Center initialization.
@@ -122,8 +127,10 @@ public class BettingCenter implements BettingCenterInterface{
      *
      *   @param horseChances List of Horses/Jockey pairs winning chances
      */
-    public synchronized void setHorsesWinningChances(double[] horseChances){
+    public synchronized TimeVector setHorsesWinningChances(double[] horseChances, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         currentHorsesWinningChances = horseChances;
+        return clk;
     }
 
     /**
