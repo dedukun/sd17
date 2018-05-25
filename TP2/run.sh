@@ -17,7 +17,7 @@ do
     Main.*' | awk '{print \$2}' | head -n 1)"
 
     # run in remote machine
-    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "cd ${servers[$i]}; nohup java Main.${servers[$i]} > server.out 2> server.err < /dev/null &"
+    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "cd ${servers[$i]}; java Main.${servers[$i]} > server.out 2> server.err < /dev/null &"
 
     echo "done"
 done
@@ -38,7 +38,7 @@ do
     Main.*' | awk '{print \$2}' | head -n 1)"
 
     # run in remote machine
-    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "cd ${clients[$i]}; nohup java Main.${clients[$i]} > client.out 2> client.err < /dev/null &"
+    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "cd ${clients[$i]}; java Main.${clients[$i]} > client.out 2> client.err < /dev/null &"
 
     echo "done"
 done
