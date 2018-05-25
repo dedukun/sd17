@@ -159,12 +159,13 @@ public class BettingCenter implements BettingCenterInterface{
             return new ReturnStruct(clk, true);
         }
         return new ReturnStruct(clk, false);
+
     }
 
     /**
      * Broker is waiting for a bet placed by a Spectator and accepts it.
      */
-   
+
     @Override
     public synchronized ReturnStruct acceptTheBet(TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
@@ -186,7 +187,7 @@ public class BettingCenter implements BettingCenterInterface{
 
             notifyAll();
         }
-        
+
         return new ReturnStruct(clk);
     }
 
@@ -238,7 +239,7 @@ public class BettingCenter implements BettingCenterInterface{
 
             notifyAll();
         }
-        
+
         return new ReturnStruct(clk, betSize);
     }
 
@@ -251,7 +252,6 @@ public class BettingCenter implements BettingCenterInterface{
     @Override
     public synchronized ReturnStruct areThereAnyWinners(int[] winningHorses, TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
-        
         //((Broker) Thread.currentThread()).setState(BrokerStates.SA);
         genRepos.setBrokerState(BrokerStates.SA, clk);
 
@@ -286,7 +286,6 @@ public class BettingCenter implements BettingCenterInterface{
     @Override
     public synchronized ReturnStruct honouredAllTheBets(TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
-        boolean to_ret;
         if(numberFinishedWinners == numberOfWinningBets){
 
             // Reset variables for next race
@@ -298,7 +297,7 @@ public class BettingCenter implements BettingCenterInterface{
             to_ret = true;
         }
         to_ret = false;
-        
+
         return new ReturnStruct(clk, to_ret);
     }
 
@@ -335,18 +334,18 @@ public class BettingCenter implements BettingCenterInterface{
             waitForGains[spectatorId] = true;
 
             notifyAll();
-        }   
+        }
         return new ReturnStruct(clk);
     }
 
     /**
      * Spectator is waiting for the Broker to pay him back and collects the money that he has won.
-     * 
+     *
      *   @param specId Spectator's Id
      *   @param funds Spectator's wallet
      *   @return Eearnings
      */
-    
+
     @Override
     public synchronized ReturnStruct goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException {
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.CTG);
@@ -377,12 +376,12 @@ public class BettingCenter implements BettingCenterInterface{
 
             notifyAll();
         }
-        
+
         return new ReturnStruct(clk, earnings);
     }
-    
+
     /**
-     * Send a message to the General Reposutory telling that this server is shutting down 
+     * Send a message to the General Reposutory telling that this server is shutting down
      */
     public synchronized void shutdownGenRepo(){
         //Não modificado por agora
