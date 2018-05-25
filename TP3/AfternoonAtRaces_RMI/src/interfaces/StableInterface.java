@@ -13,9 +13,34 @@ import java.rmi.RemoteException;
  */
 public interface StableInterface extends Remote{
 
-    public ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk);
+    /**
+     * Horse/Jockey pair waits at the stable.
+     *
+     *   @param hId
+     *   @param hRaceNumber
+     *   @param horseAgl
+     *   @param clk Clock
+     *   @return Clock
+     *   @throws RemoteException may throw during a execution of a remote method call
+     */
+    public ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk) throws RemoteException;
 
-    public ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk);
+    /**
+     * Broker awakes Horse/Jockey pairs in the stable.
+     *
+     *   @param raceNumber Number of the race that is going to occur
+     *   @param clk Clock
+     *   @return Clock and a list of the winning chances of the horses in the current race
+     *   @throws RemoteException may throw during a execution of a remote method call
+     */
+    public ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk) throws RemoteException;
 
-    public ReturnStruct entertainTheGuests(TimeVector clk);
+    /**
+     * Broker is closing the event and is waking up horses from stable.
+     *
+     *   @param clk Clock
+     *   @return Clock
+     *   @throws RemoteException may throw during a execution of a remote method call
+     */
+    public ReturnStruct entertainTheGuests(TimeVector clk) throws RemoteException;
 }

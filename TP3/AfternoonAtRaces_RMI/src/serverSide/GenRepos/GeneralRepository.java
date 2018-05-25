@@ -121,6 +121,7 @@ public class GeneralRepository  implements GenReposInterface{
     /**
     * Prints header of the logger file.
     */
+    @Override
     public synchronized ReturnStruct initLog(TimeVector clk){
         if (!log.openForWriting(".", filename)) {
             GenericIO.writelnString("Operation " + filename + " failed!");
@@ -149,6 +150,7 @@ public class GeneralRepository  implements GenReposInterface{
     /**
     * Updates the log when a change happens.
     */
+    @Override
     public synchronized ReturnStruct updateLog(TimeVector clk){
 
         if (!log.openForAppending(".", filename)) {
@@ -268,6 +270,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param specId Identifier of the Spectator
      *   @param horseId Identifier of the Horse/Jockey pair
      */
+    @Override
     public synchronized ReturnStruct setBetS(int specId, int horseId, TimeVector clk){
         this.betS[specId]=horseId;
         //updateLog();
@@ -281,6 +284,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param specId Identifier of the Spectator
      *   @param betamount Amount betted
      */
+    @Override
     public synchronized ReturnStruct setBetA(int specId, int betamount, TimeVector clk){
         this.betA[specId] = betamount;
         //updateLog();
@@ -294,6 +298,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param horseId Identifier of the Horse/Jockey pair
      *   @param odd Chance of winning in percentage
      */
+    @Override
     public synchronized ReturnStruct setOdds(int horseId, double odd, TimeVector clk){
         this.odds[horseId] = odd;
         updateLog();
@@ -306,6 +311,7 @@ public class GeneralRepository  implements GenReposInterface{
      *
      *   @param horseId Identifier of the Horse/Jockey pair
      */
+    @Override
     public synchronized ReturnStruct setHorseIteration(int horseId, TimeVector clk){
         this.horseIteration[horseId]++;
         //updateLog();
@@ -319,6 +325,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param horseId Identifier of the Horse/Jockey pair
      *   @param pos Current position
      */
+    @Override
     public synchronized ReturnStruct setHorsePosition(int horseId, int pos, TimeVector clk){
         horsePosition[horseId] = pos;
         //updateLog();
@@ -332,6 +339,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param horseId Identifier of the Horse/Jockey pair
      *   @param place Place that the given Horse/Jockey pair finished the race
      */
+    @Override
     public synchronized ReturnStruct setHorseEnd(int horseId, int place, TimeVector clk){
         this.horseEnd[horseId]=place;
         //updateLog();
@@ -344,6 +352,7 @@ public class GeneralRepository  implements GenReposInterface{
      *
      *   @param size size of the track
      */
+    @Override
     public synchronized ReturnStruct setTrackSize(int size, TimeVector clk){
         this.trackSize=size;
         //updateLog();
@@ -356,6 +365,7 @@ public class GeneralRepository  implements GenReposInterface{
      *
      *   @param num number race being run
      */
+    @Override
     public synchronized ReturnStruct setRaceNumber(int num, TimeVector clk){
 
         // Reset variables for the new race.
@@ -381,6 +391,7 @@ public class GeneralRepository  implements GenReposInterface{
      *
      *   @param state state of the Broker
      */
+    @Override
     public synchronized ReturnStruct setBrokerState(BrokerStates state, TimeVector clk){
         this.brkState=state;
 
@@ -395,6 +406,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param specId ID of the Spectator
      *   @param state state of the Spectator
      */
+    @Override
     public synchronized ReturnStruct setSpectatorState(int specId, SpectatorStates state, TimeVector clk){
         this.specState[specId]=state;
 
@@ -410,6 +422,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param specId ID of the Spectator
      *   @param funds funds of the Spectator
      */
+    @Override
     public synchronized ReturnStruct setSpectatorMoney(int specId, int funds, TimeVector clk){
         this.specMoney[specId]=funds;
         //updateLog();
@@ -423,6 +436,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param horseId ID of the Horse
      *   @param state state of the Horse/Jockey pair.
      */
+    @Override
     public synchronized ReturnStruct setHorseState(int horseId,HorseJockeyStates state, TimeVector clk){
         this.horseState[horseId]=state;
 
@@ -440,6 +454,7 @@ public class GeneralRepository  implements GenReposInterface{
      *   @param horseId ID of the Horse
      *   @param horseAgl agility of the Horse/Jockey pair.
      */
+    @Override
     public synchronized ReturnStruct setHorseAgility(int horseId,int horseAgl, TimeVector clk){
         this.horseAgility[horseId]=horseAgl;
         //updateLog();

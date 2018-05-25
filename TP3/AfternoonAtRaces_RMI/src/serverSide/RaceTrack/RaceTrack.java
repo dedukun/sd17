@@ -76,6 +76,7 @@ public class RaceTrack implements RaceTrackInterface{
     /**
      * Broker wakes up one horse.
      */
+    @Override
     public synchronized ReturnStruct startTheRace(TimeVector clk){
         //((Broker) Thread.currentThread()).setState(BrokerStates.STR);
         genRepos.setBrokerState(BrokerStates.STR);
@@ -100,6 +101,7 @@ public class RaceTrack implements RaceTrackInterface{
     /**
      * Horse/Jockey pair is waiting at the start line of the race track.
      */
+    @Override
     public synchronized ReturnStruct proceedToStartLine(int hId, TimeVector clk){
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ASL);
 
@@ -125,6 +127,7 @@ public class RaceTrack implements RaceTrackInterface{
      *   @param hAgl
      *   @return Boolean representing if the race has ended
      */
+    @Override
     public synchronized ReturnStruct makeAMove(int hId, int hAgl, TimeVector clk){
 
         int horseID = hId;
@@ -202,6 +205,7 @@ public class RaceTrack implements RaceTrackInterface{
      *   @param hId
      *   @return Race finished
      */
+    @Override
     public synchronized ReturnStruct hasRaceFinished(int hId, TimeVector clk){
 
         int horseID = hId;
@@ -222,7 +226,8 @@ public class RaceTrack implements RaceTrackInterface{
      *
      *   @return Array of identifier of the horse(s) that have won the race
      */
-    public synchronized ReturnStruct[] getResults(TimeVector clk){
+    @Override
+    public synchronized ReturnStruct getResults(TimeVector clk){
         return ReturnStruct(clk, winningHorses.stream().mapToInt(i->i).toArray());
     }
 

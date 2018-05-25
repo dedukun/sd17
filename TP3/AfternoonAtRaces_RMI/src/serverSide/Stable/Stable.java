@@ -65,6 +65,7 @@ public class Stable implements StableInterface{
      *   @param hRaceNumber
      *   @param horseAgl
      */
+    @Override
     public synchronized ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk){
 
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATS);
@@ -105,6 +106,7 @@ public class Stable implements StableInterface{
      *   @param raceNumber Number of the race that is going to occur
      *   @return List of the winning chances of the horses in the current race
      */
+    @Override
     public synchronized ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk){
         //((Broker) Thread.currentThread()).setState(BrokerStates.ANR);
 
@@ -140,6 +142,7 @@ public class Stable implements StableInterface{
     /**
      * Broker is closing the event and is waking up horses from stable.
      */
+    @Override
     public synchronized ReturnStruct entertainTheGuests(, TimeVector clk){
         //((Broker) Thread.currentThread()).setState(BrokerStates.PHAB);
         genRepos.setBrokerState(BrokerStates.PHAB);

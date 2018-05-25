@@ -96,7 +96,7 @@ public class BettingCenter implements BettingCenterInterface{
      * Reference to General Repository.
      */
     private final GenReposInterface genRepos;
-    
+
     /**
      * Reference to Time Vector.
      */
@@ -165,7 +165,6 @@ public class BettingCenter implements BettingCenterInterface{
     /**
      * Broker is waiting for a bet placed by a Spectator and accepts it.
      */
-
     @Override
     public synchronized ReturnStruct acceptTheBet(TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
@@ -201,10 +200,10 @@ public class BettingCenter implements BettingCenterInterface{
      */
     @Override
     public synchronized ReturnStruct placeABet(int horseId, int specId, double funds, TimeVector clk) throws RemoteException {
-        
+
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.PAB);
         //Mudar aqui para RMI, não usar currentThread
-        
+
         this.clk.updateTime(clk.getTime());
         int spectatorId = specId;
         double spectatorWallet = funds;
@@ -294,11 +293,11 @@ public class BettingCenter implements BettingCenterInterface{
             numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
-            to_ret = true;
-        }
-        to_ret = false;
+            return new ReturnStruct(clk, true);
 
-        return new ReturnStruct(clk, to_ret);
+        }
+        return new ReturnStruct(clk, false);
+
     }
 
     /**
@@ -345,7 +344,6 @@ public class BettingCenter implements BettingCenterInterface{
      *   @param funds Spectator's wallet
      *   @return Eearnings
      */
-
     @Override
     public synchronized ReturnStruct goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException {
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.CTG);

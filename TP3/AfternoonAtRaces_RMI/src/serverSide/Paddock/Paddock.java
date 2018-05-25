@@ -71,6 +71,7 @@ public class Paddock  implements PaddockInterface{
      *   @param hId
      *   @param hAgl
      */
+    @Override
     public synchronized ReturnStruct proceedToPaddock(int hId, int hAgl, TimeVector clk, TimeVector clk){
 
         int horseId = hId;
@@ -108,6 +109,7 @@ public class Paddock  implements PaddockInterface{
      *   @param hId
      *   @return true if the pair is the last one to arrive, false if not.
      */
+    @Override
     public synchronized ReturnStruct lastArrivedToPaddock(int hId, TimeVector clk) {
 
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATP);
@@ -134,6 +136,7 @@ public class Paddock  implements PaddockInterface{
      *   @param specId
      *   @return The identifier of the Horse/Jockey pair to bet on
      */
+    @Override
     public synchronized ReturnStruct goCheckHorses(int specId, TimeVector clk){
 
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.ATH);
@@ -157,6 +160,7 @@ public class Paddock  implements PaddockInterface{
      *   @param specId
      *   @return true if it is the last horse to be checked, false if not.
      */
+    @Override
     public synchronized ReturnStruct lastCheckHorses(int specId, TimeVector clk){
 
         spectatorsAtParade++;
@@ -173,6 +177,7 @@ public class Paddock  implements PaddockInterface{
     /**
      * Last Spectator to check the horses wakes them up.
      */
+    @Override
     public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk){
 
         paradingHorses = false;
