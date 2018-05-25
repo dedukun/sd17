@@ -10,17 +10,27 @@ import java.rmi.RemoteException;
  * Control Center's interface
  */
 public interface ControlCenterInterface extends Remote{
-    
-   //TODO
-   /**
-   *  Execution of remote code.
-   *  
-   *    @param t code to be executed remotely
-   *
-   *    @return return value of the invocation of method execute of t
-   *
-   *    @throws RemoteException if the invocation of the remote method fails
-   */
 
-   Object executeTask (ControlCenter cc) throws RemoteException;
+    public boolean waitForNextRace(int specId);
+
+    public void  summonHorsesToPaddock();
+
+    public void unblockGoCheckHorses();
+
+    public void unblockProceedToPaddock();
+
+    public void startTheRace();
+
+    public void unblockMakeAMove();
+
+    public void goWatchTheRace(int specId);
+
+    public void reportResults(int[] winners);
+
+    public boolean haveIWon(int hjid);
+
+    public void entertainTheGuests();
+
+    public void relaxABit(int specId);
+
 }
