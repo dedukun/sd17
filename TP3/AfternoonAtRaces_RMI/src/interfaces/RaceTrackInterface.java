@@ -11,13 +11,13 @@ import java.rmi.RemoteException;
  */
 public interface RaceTrackInterface extends Remote{
 
-    public void startTheRace();
+    public ReturnStruct startTheRace(TimeVector clk);
 
-    public void proceedToStartLine(int hId);
+    public ReturnStruct proceedToStartLine(int hId, TimeVector clk);
 
-    public boolean makeAMove(int hId, int hAgl);
+    public ReturnStruct makeAMove(int hId, int hAgl, TimeVector clk);
 
-    public boolean hasRaceFinished(int hId);
+    public ReturnStruct hasRaceFinished(int hId, TimeVector clk);
 
-    public int[] getResults();
+    public ReturnStruct[] getResults(TimeVector clk);
 }

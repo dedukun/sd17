@@ -11,13 +11,13 @@ import java.rmi.RemoteException;
  */
 public interface PaddockInterface extends Remote{
 
-    public void proceedToPaddock(int hId, int hAgl);
+    public ReturnStruct proceedToPaddock(int hId, int hAgl, TimeVector clk);
 
-    public boolean lastArrivedToPaddock(int hId);
+    public ReturnStruct lastArrivedToPaddock(int hId, TimeVector clk);
 
-    public int goCheckHorses(int specId);
+    public ReturnStruct goCheckHorses(int specId, TimeVector clk);
 
-    public boolean lastCheckHorses(int specId);
+    public ReturnStruct lastCheckHorses(int specId, TimeVector clk);
 
-    public void unblockGoCheckHorses();
+    public ReturnStruct unblockGoCheckHorses(TimeVector clk);
 }

@@ -11,9 +11,9 @@ import java.rmi.RemoteException;
  */
 public interface StableInterface extends Remote{
 
-    public void proceedToStable(int hId, int hRaceNumber, int horseAgl);
+    public ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk);
 
-    public double[] summonHorsesToPaddock(int raceNumber);
+    public ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk);
 
-    public void entertainTheGuests();
+    public ReturnStruct entertainTheGuests(TimeVector clk);
 }
