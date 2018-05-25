@@ -2,6 +2,7 @@ package serverSide.BettingCenter;
 
 import auxiliary.SimulPar;
 import auxiliary.BrokerStates;
+import auxiliary.ReturnStruct;
 import auxiliary.SpectatorStates;
 import auxiliary.TimeVector;
 import interfaces.BettingCenterInterface;
@@ -120,6 +121,7 @@ public class BettingCenter implements BettingCenterInterface{
         waitForBet = true;
         waitForWinningSpectator = true;
         waitForGains = new boolean[SimulPar.S];
+        clk = new TimeVector();
     }
 
     /**
@@ -127,10 +129,11 @@ public class BettingCenter implements BettingCenterInterface{
      *
      *   @param horseChances List of Horses/Jockey pairs winning chances
      */
-    public synchronized TimeVector setHorsesWinningChances(double[] horseChances, TimeVector clk){
+    @Override
+    public synchronized ReturnStruct setHorsesWinningChances(double[] horseChances, TimeVector clk){
         this.clk.updateTime(clk.getTime());
         currentHorsesWinningChances = horseChances;
-        return clk;
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -138,7 +141,10 @@ public class BettingCenter implements BettingCenterInterface{
      *
      *   @return true if all the bets were accepted or false if not.
      */
-    public synchronized boolean acceptedAllBets(){
+    @Override
+    public synchronized ReturnStruct acceptedAllBets(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
+        boolean ret_bool;
         if(numberFinishedBets == SimulPar.S){
 
             // reset vars for race
@@ -149,17 +155,20 @@ public class BettingCenter implements BettingCenterInterface{
             Arrays.fill(waitForGains, Boolean.FALSE);
             Arrays.fill(spectatorsGains, 0);
 
-            return true;
+            ret_bool = true;
         }
-        return false;
+        ret_bool = false;
+        
+        return new ReturnStruct(clk,ret_bool);
     }
 
     /**
      * Broker is waiting for a bet placed by a Spectator and accepts it.
      */
-    public synchronized void acceptTheBet(){
-        //((Broker) Thread.currentThread()).setState(BrokerStates.WFB);
-
+   
+    @Override
+    public synchronized ReturnStruct acceptTheBet(TimeVector clk) throws RemoteException {
+        this.clk.updateTime(clk.getTime());
         genRepos.setBrokerState(BrokerStates.WFB);
 
         while(waitForBet){
@@ -178,6 +187,8 @@ public class BettingCenter implements BettingCenterInterface{
 
             notifyAll();
         }
+        
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -188,7 +199,8 @@ public class BettingCenter implements BettingCenterInterface{
      *   @param funds Spectator's wallet
      *   @return Bet Size
      */
-    public synchronized double placeABet(int horseId, int specId, double funds){
+    @Override
+    public synchronized ReturnStruct placeABet(int horseId, int specId, double funds, TimeVector clk) throws RemoteException {
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.PAB);
 
         int spectatorId = specId;
@@ -225,7 +237,7 @@ public class BettingCenter implements BettingCenterInterface{
             notifyAll();
         }
         
-        return betSize;
+        return new ReturnStruct(clk, betSize);
     }
 
     /**
@@ -234,7 +246,11 @@ public class BettingCenter implements BettingCenterInterface{
      *   @param winningHorses List of winning horses
      *   @return true if there is a winner, false if there's not.
      */
-    public synchronized boolean areThereAnyWinners(int[] winningHorses){
+    @Override
+    public synchronized ReturnStruct areThereAnyWinners(int[] winningHorses, TimeVector clk) throws RemoteException {
+        this.clk.updateTime(clk.getTime());
+        
+        boolean to_ret;
         //((Broker) Thread.currentThread()).setState(BrokerStates.SA);
         genRepos.setBrokerState(BrokerStates.SA);
 
@@ -256,9 +272,11 @@ public class BettingCenter implements BettingCenterInterface{
             numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
-            return false;
+            to_ret = false;
         }
-        return true;
+        to_ret = true;
+        
+        return new ReturnStruct(clk,to_ret);
     }
 
     /**
@@ -266,7 +284,10 @@ public class BettingCenter implements BettingCenterInterface{
      *
      *   @return true if all the bets were honoured, false if not.
      */
-    public synchronized boolean honouredAllTheBets(){
+    @Override
+    public synchronized ReturnStruct honouredAllTheBets(TimeVector clk) throws RemoteException {
+        
+        boolean to_ret;
         if(numberFinishedWinners == numberOfWinningBets){
 
             // Reset variables for next race
@@ -275,15 +296,18 @@ public class BettingCenter implements BettingCenterInterface{
             numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
-            return true;
+            to_ret = true;
         }
-        return false;
+        to_ret = false;
+        
+        return new ReturnStruct(clk, to_ret);
     }
 
     /**
      * Broker is waiting for a Spectator to come collect their gains and is paying back the Spectator
      */
-    public synchronized void honourTheBet(){
+    @Override
+    public synchronized ReturnStruct honourTheBet(TimeVector clk) throws RemoteException {
 
         while(waitForWinningSpectator){
             try{
@@ -312,7 +336,8 @@ public class BettingCenter implements BettingCenterInterface{
             waitForGains[spectatorId] = true;
 
             notifyAll();
-        }
+        }   
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -322,7 +347,9 @@ public class BettingCenter implements BettingCenterInterface{
      *   @param funds Spectator's wallet
      *   @return Eearnings
      */
-    public synchronized double goCollectTheGains(int specId, double funds){
+    
+    @Override
+    public synchronized ReturnStruct goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException {
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.CTG);
 
         int spectatorId = specId;
@@ -330,7 +357,7 @@ public class BettingCenter implements BettingCenterInterface{
 
         spectatorWaitingGains.add(spectatorId);
 
-        genRepos.setSpectatorState(spectatorId, SpectatorStates.CTG);
+        //genRepos.setSpectatorState(spectatorId, SpectatorStates.CTG);
 
         while(!waitForGains[spectatorId]){
             waitForWinningSpectator = false;
@@ -342,7 +369,7 @@ public class BettingCenter implements BettingCenterInterface{
 
         double earnings = spectatorsGains[spectatorId];
 
-        genRepos.setSpectatorMoney(spectatorId, (int) (spectatorWallet + earnings));
+        //genRepos.setSpectatorMoney(spectatorId, (int) (spectatorWallet + earnings));
 
         numberFinishedWinners++;
 
@@ -352,7 +379,7 @@ public class BettingCenter implements BettingCenterInterface{
             notifyAll();
         }
         
-        return earnings;
+        return new ReturnStruct(clk, earnings);
     }
     
     /**
@@ -361,6 +388,7 @@ public class BettingCenter implements BettingCenterInterface{
     public synchronized void shutdownGenRepo(){
         genRepos.endServer();
     }
+
 
     /**
      * Class representing a bet by a Spectator.

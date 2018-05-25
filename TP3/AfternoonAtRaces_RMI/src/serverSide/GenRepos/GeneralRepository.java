@@ -1,12 +1,12 @@
 package serverSide.GenRepos;
-import Auxiliar.SimulPar;
+import auxiliary.SimulPar;
 import java.util.Arrays;
 import java.text.DecimalFormat;
 import genclass.TextFile;
 import genclass.GenericIO;
-import Auxiliar.BrokerStates;
-import Auxiliar.HorseJockeyStates;
-import Auxiliar.SpectatorStates;
+import auxiliary.BrokerStates;
+import auxiliary.HorseJockeyStates;
+import auxiliary.SpectatorStates;
 import interfaces.GenReposInterface;
 
 /**

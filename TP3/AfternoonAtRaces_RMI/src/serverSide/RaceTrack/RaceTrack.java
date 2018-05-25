@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import Stubs.GenReposStub;
-import Auxiliar.SimulPar;
-import Auxiliar.BrokerStates;
-import Auxiliar.HorseJockeyStates;
+import auxiliary.SimulPar;
+import auxiliary.BrokerStates;
+import auxiliary.HorseJockeyStates;
 import interfaces.RaceTrackInterface;
 
 /**

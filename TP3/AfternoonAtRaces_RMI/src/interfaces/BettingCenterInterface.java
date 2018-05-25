@@ -1,5 +1,6 @@
 package interfaces;
 
+import auxiliary.ReturnStruct;
 import auxiliary.SimulPar;
 import auxiliary.TimeVector;
 import serverSide.BettingCenter.BettingCenter;
@@ -12,23 +13,23 @@ import java.rmi.RemoteException;
  */
 public interface BettingCenterInterface extends Remote{
 
-   public TimeVector setHorsesWinningChances(double[] horseChances, TimeVector clk) throws RemoteException;
+   public ReturnStruct setHorsesWinningChances(double[] horseChances, TimeVector clk) throws RemoteException;
 
-   public TimeVector acceptedAllBets(TimeVector clk) throws RemoteException;
+   public ReturnStruct acceptedAllBets(TimeVector clk) throws RemoteException;
 
-   public TimeVector acceptTheBet(TimeVector clk) throws RemoteException;
+   public ReturnStruct acceptTheBet(TimeVector clk) throws RemoteException;
 
-   public TimeVector placeABet(int horseId, int specId, double funds, TimeVector clk) throws RemoteException;
+   public ReturnStruct placeABet(int horseId, int specId, double funds, TimeVector clk) throws RemoteException;
 
-   public TimeVector areThereAnyWinners(int[] winningHorses, TimeVector clk) throws RemoteException;
+   public ReturnStruct areThereAnyWinners(int[] winningHorses, TimeVector clk) throws RemoteException;
 
-   public TimeVector honouredAllTheBets(TimeVector clk) throws RemoteException;
+   public ReturnStruct honouredAllTheBets(TimeVector clk) throws RemoteException;
 
-   public TimeVector honourTheBet(TimeVector clk) throws RemoteException;
+   public ReturnStruct honourTheBet(TimeVector clk) throws RemoteException;
 
-   public TimeVector goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException;
+   public ReturnStruct goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException;
 
    //Not implemented by now
-   public void shutdown() throws RemoteException;
+   //public void shutdown() throws RemoteException;
 
 }

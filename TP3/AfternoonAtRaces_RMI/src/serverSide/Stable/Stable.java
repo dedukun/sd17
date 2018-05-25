@@ -1,8 +1,8 @@
 package serverSide.Stable;
 
-import Auxiliar.SimulPar;
-import Auxiliar.BrokerStates;
-import Auxiliar.HorseJockeyStates;
+import auxiliary.SimulPar;
+import auxiliary.BrokerStates;
+import auxiliary.HorseJockeyStates;
 import Stubs.GenReposStub;
 import interfaces.StableInterface;
 

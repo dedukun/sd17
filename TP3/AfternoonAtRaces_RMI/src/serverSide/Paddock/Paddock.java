@@ -2,9 +2,9 @@ package serverSide.Paddock;
 
 import java.util.concurrent.ThreadLocalRandom;
 import Stubs.GenReposStub;
-import Auxiliar.HorseJockeyStates;
-import Auxiliar.SpectatorStates;
-import Auxiliar.SimulPar;
+import auxiliary.HorseJockeyStates;
+import auxiliary.SpectatorStates;
+import auxiliary.SimulPar;
 import interfaces.PaddockInterface;
 
 /**
