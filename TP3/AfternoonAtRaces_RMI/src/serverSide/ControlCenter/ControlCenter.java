@@ -1,8 +1,11 @@
 package serverSide.ControlCenter;
 
-import Stubs.GenReposStub;
-import Auxiliar.SimulPar;
-import Auxiliar.SpectatorStates;
+//import Stubs.GenReposStub;
+import auxiliary.ReturnStruct;
+import interfaces.GenReposInterface;
+import auxiliary.SimulPar;
+import auxiliary.SpectatorStates;
+import auxiliary.TimeVector;
 import interfaces.ControlCenterInterface;
 import java.util.Arrays;
 
@@ -10,7 +13,7 @@ import java.util.Arrays;
  * Control Center.<br>
  * Where all general operations happens.
  */
-public class ControlCenter  implements ControlCenterInterface{
+public class ControlCenter implements ControlCenterInterface{
 
     /**
      * Boolean that represents all the races were already runned. //TODO change this
@@ -50,13 +53,18 @@ public class ControlCenter  implements ControlCenterInterface{
     /**
      * Reference to General Repository.
      */
-    private GenReposStub genRepos;
-
+    private GenReposInterface genRepos;
+    
+    /**
+     * Reference to Time Vector.
+     */
+    private TimeVector clk;
+    
     /**
      * ControlCenter intilization.
      */
-    public ControlCenter(){
-        this.genRepos= new GenReposStub();
+    public ControlCenter(GenReposInterface genRepos){
+        this.genRepos= genRepos;
 
         spectatosLeavingStands = 0;
 
@@ -74,10 +82,10 @@ public class ControlCenter  implements ControlCenterInterface{
      *   @param specId
      *   @return There's at least a race left
      */
-    public synchronized boolean waitForNextRace(int specId){
-
+    public synchronized ReturnStruct waitForNextRace(int specId, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.WRS);
-        genRepos.setSpectatorState(specId, SpectatorStates.WRS);
+        genRepos.setSpectatorState(specId, SpectatorStates.WRS, clk);
 
         while(waitForNextRace){
             try{
@@ -85,13 +93,14 @@ public class ControlCenter  implements ControlCenterInterface{
             }catch(InterruptedException e){}
         }
 
-        return theresANewRace;
+        return new ReturnStruct(clk,theresANewRace);
     }
 
     /**
      * Broker is waiting for the spectators finishing seeing the horses.
      */
-    public synchronized void  summonHorsesToPaddock(){
+    public synchronized ReturnStruct summonHorsesToPaddock(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         while(waitForEvaluation){
             try{
                 wait();
@@ -100,13 +109,14 @@ public class ControlCenter  implements ControlCenterInterface{
 
         // Reset var for next race
         waitForEvaluation = true;
+        return new ReturnStruct(clk);
     }
 
     /**
      * Last Spectator that finished watching the horses wakes up Broker.
      */
-    public synchronized void unblockGoCheckHorses(){
-
+    public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         // reset var for next race
         waitForNextRace = true;
 
@@ -114,24 +124,28 @@ public class ControlCenter  implements ControlCenterInterface{
         waitForEvaluation = false;
 
         notifyAll();
+        
+        return new ReturnStruct(clk);
     }
 
 
     /**
      * The last Horse/Jockey pair to arrive at the Paddock wakes up Spectators to go see the parade.
      */
-    public synchronized void unblockProceedToPaddock(){
-
+    public synchronized ReturnStruct unblockProceedToPaddock(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         waitForNextRace = false;
 
         notifyAll(); // Wake up Spectators
+        return new ReturnStruct(clk);
     }
 
 
     /**
      * Broker is starting the race.
      */
-    public synchronized void startTheRace(){
+    public synchronized ReturnStruct startTheRace(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         while(waitForEndRaceBroker){
             try{
                 wait();
@@ -140,15 +154,18 @@ public class ControlCenter  implements ControlCenterInterface{
 
         // Reset for next race
         waitForEndRaceBroker = true;
+        return new ReturnStruct(clk);
     }
 
     /**
      * Last Horse/Jockey pair to make a move wakes up the Broker.
      */
-    public synchronized void unblockMakeAMove(){
+    public synchronized ReturnStruct unblockMakeAMove(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         waitForEndRaceBroker = false;
 
         notifyAll();
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -156,9 +173,10 @@ public class ControlCenter  implements ControlCenterInterface{
      * 
      *   @param specId
      */
-    public synchronized void goWatchTheRace(int specId){
+    public synchronized ReturnStruct goWatchTheRace(int specId, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.WAR);
-        genRepos.setSpectatorState(specId , SpectatorStates.WAR);
+        genRepos.setSpectatorState(specId , SpectatorStates.WAR, clk);
 
         while(waitForEndOfRace){
             try{
@@ -172,6 +190,9 @@ public class ControlCenter  implements ControlCenterInterface{
             spectatosLeavingStands = 0;
             waitForEndOfRace = true;
         }
+        
+        return new ReturnStruct(clk);
+        
     }
 
     /**
@@ -179,11 +200,14 @@ public class ControlCenter  implements ControlCenterInterface{
      *
      *   @param winners Array with the identifier of the winning Horse/Jockey pair(s)
      */
-    public synchronized void reportResults(int[] winners){
+    public synchronized ReturnStruct reportResults(int[] winners, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         raceWinners = winners;
         waitForEndOfRace = false;
 
         notifyAll();
+        
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -192,23 +216,28 @@ public class ControlCenter  implements ControlCenterInterface{
      *   @param hjid Horse/Jockey pair identifier
      *   @return true if the pair has won, false if not.
      */
-    public synchronized boolean haveIWon(int hjid){
+    public synchronized ReturnStruct haveIWon(int hjid, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         for(int winner : raceWinners){
             if(winner == hjid){
-                return true;
+                return new ReturnStruct(clk, true);
             }
         }
-        return false;
+        return new ReturnStruct(clk, false);
     }
 
     /**
     * Broker is entertaining the guests.
     */
-    public synchronized void entertainTheGuests(){
+    public synchronized ReturnStruct entertainTheGuests(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         waitForNextRace = false;
         theresANewRace = false;
 
         notifyAll();
+        
+        return new ReturnStruct(clk);
+        
     }
 
     /**
@@ -216,10 +245,13 @@ public class ControlCenter  implements ControlCenterInterface{
     *   
     *   @param specId
     */
-    public synchronized void relaxABit(int specId){
+    public synchronized ReturnStruct relaxABit(int specId, TimeVector clk){
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.CB);
-
-        genRepos.setSpectatorState(specId, SpectatorStates.CB);
+        this.clk.updateTime(clk.getTime());
+        
+        genRepos.setSpectatorState(specId, SpectatorStates.CB, clk);
+        
+        return new ReturnStruct(clk);
     }
     
     
@@ -227,6 +259,6 @@ public class ControlCenter  implements ControlCenterInterface{
      * Send a message to the General Reposutory telling that this server is shutting down 
      */
     public synchronized void shutdownGenRepo(){
-        genRepos.endServer();
+        //genRepos.endServer();
     }
 }

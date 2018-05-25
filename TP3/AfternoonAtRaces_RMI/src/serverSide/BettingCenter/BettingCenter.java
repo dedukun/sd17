@@ -97,14 +97,16 @@ public class BettingCenter implements BettingCenterInterface{
      */
     private final GenReposInterface genRepos;
     
-    
+    /**
+     * Reference to Time Vector.
+     */
     private TimeVector clk;
 
     /**
      * Betting Center initialization.
      */
-    public BettingCenter(){
-        this.genRepos = new GenReposStub();
+    public BettingCenter(GenReposInterface genRepos){
+        this.genRepos = genRepos;
 
         raceBets = new ArrayList<>();
         numberAcceptedBets = 0;
@@ -144,7 +146,6 @@ public class BettingCenter implements BettingCenterInterface{
     @Override
     public synchronized ReturnStruct acceptedAllBets(TimeVector clk){
         this.clk.updateTime(clk.getTime());
-        boolean ret_bool;
         if(numberFinishedBets == SimulPar.S){
 
             // reset vars for race
@@ -155,11 +156,9 @@ public class BettingCenter implements BettingCenterInterface{
             Arrays.fill(waitForGains, Boolean.FALSE);
             Arrays.fill(spectatorsGains, 0);
 
-            ret_bool = true;
+            return new ReturnStruct(clk, true);
         }
-        ret_bool = false;
-        
-        return new ReturnStruct(clk,ret_bool);
+        return new ReturnStruct(clk, false);
     }
 
     /**
@@ -169,7 +168,7 @@ public class BettingCenter implements BettingCenterInterface{
     @Override
     public synchronized ReturnStruct acceptTheBet(TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
-        genRepos.setBrokerState(BrokerStates.WFB);
+        genRepos.setBrokerState(BrokerStates.WFB, clk);
 
         while(waitForBet){
             try{
@@ -201,8 +200,11 @@ public class BettingCenter implements BettingCenterInterface{
      */
     @Override
     public synchronized ReturnStruct placeABet(int horseId, int specId, double funds, TimeVector clk) throws RemoteException {
+        
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.PAB);
-
+        //Mudar aqui para RMI, não usar currentThread
+        
+        this.clk.updateTime(clk.getTime());
         int spectatorId = specId;
         double spectatorWallet = funds;
         double betSize;
@@ -217,10 +219,10 @@ public class BettingCenter implements BettingCenterInterface{
 
         raceBets.add(new Bet(spectatorId, betSize, horseId));
 
-        genRepos.setBetS(spectatorId, horseId);
-        genRepos.setBetA(spectatorId, (int)betSize);
-        genRepos.setSpectatorMoney(spectatorId, (int) (spectatorWallet-betSize));
-        genRepos.setSpectatorState(spectatorId, SpectatorStates.PAB);
+        genRepos.setBetS(spectatorId, horseId, clk);
+        genRepos.setBetA(spectatorId, (int)betSize, clk);
+        genRepos.setSpectatorMoney(spectatorId, (int) (spectatorWallet-betSize), clk);
+        genRepos.setSpectatorState(spectatorId, SpectatorStates.PAB, clk);
 
         while(!acceptedSpectatorsBets[spectatorId]){
             waitForBet = false;
@@ -250,9 +252,8 @@ public class BettingCenter implements BettingCenterInterface{
     public synchronized ReturnStruct areThereAnyWinners(int[] winningHorses, TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
         
-        boolean to_ret;
         //((Broker) Thread.currentThread()).setState(BrokerStates.SA);
-        genRepos.setBrokerState(BrokerStates.SA);
+        genRepos.setBrokerState(BrokerStates.SA, clk);
 
         numberOfWinningHorses = winningHorses.length;
 
@@ -272,11 +273,9 @@ public class BettingCenter implements BettingCenterInterface{
             numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
-            to_ret = false;
+            return new ReturnStruct(clk, false);
         }
-        to_ret = true;
-        
-        return new ReturnStruct(clk,to_ret);
+        return new ReturnStruct(clk, true);
     }
 
     /**
@@ -286,7 +285,7 @@ public class BettingCenter implements BettingCenterInterface{
      */
     @Override
     public synchronized ReturnStruct honouredAllTheBets(TimeVector clk) throws RemoteException {
-        
+        this.clk.updateTime(clk.getTime());
         boolean to_ret;
         if(numberFinishedWinners == numberOfWinningBets){
 
@@ -308,7 +307,7 @@ public class BettingCenter implements BettingCenterInterface{
      */
     @Override
     public synchronized ReturnStruct honourTheBet(TimeVector clk) throws RemoteException {
-
+        this.clk.updateTime(clk.getTime());
         while(waitForWinningSpectator){
             try{
                 wait();
@@ -351,13 +350,13 @@ public class BettingCenter implements BettingCenterInterface{
     @Override
     public synchronized ReturnStruct goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException {
         //((Spectators) Thread.currentThread()).setState(SpectatorsStates.CTG);
-
+        this.clk.updateTime(clk.getTime());
         int spectatorId = specId;
         double spectatorWallet = funds;
 
         spectatorWaitingGains.add(spectatorId);
 
-        //genRepos.setSpectatorState(spectatorId, SpectatorStates.CTG);
+        genRepos.setSpectatorState(spectatorId, SpectatorStates.CTG,clk);
 
         while(!waitForGains[spectatorId]){
             waitForWinningSpectator = false;
@@ -386,7 +385,8 @@ public class BettingCenter implements BettingCenterInterface{
      * Send a message to the General Reposutory telling that this server is shutting down 
      */
     public synchronized void shutdownGenRepo(){
-        genRepos.endServer();
+        //Não modificado por agora
+        //genRepos.endServer();
     }
 
 

@@ -8,8 +8,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import genclass.GenericIO;
 import interfaces.BettingCenterInterface;
+import interfaces.GenReposInterface;
 import interfaces.Register;
 import java.rmi.Remote;
+import registry.RegistryConfiguration;
 
 /**
  *  This data type instantiates and registers a remote object that will run mobile code.
@@ -24,15 +26,29 @@ public class BettingCenterServer{
    public static void main(String[] args)
    {
     /* get location of the registry service */
-
+     GenReposInterface genReposInterface = null;
      String rmiRegHostName;
      int rmiRegPortNumb;
 
+     //Modificar isto para ir buscar parametetros ao ficheiro de confguração
      GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
      rmiRegHostName = GenericIO.readlnString ();
      GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
      rmiRegPortNumb = GenericIO.readlnInt ();
 
+     //Vai buscar interface do Genereal Repository
+     try {
+            Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_GEN_REPOS);
+        } catch (RemoteException e) {
+            System.out.println("Exception finding logger: " + e.getMessage() + "!");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (NotBoundException e) {
+            System.out.println("Logger is not registed: " + e.getMessage() + "!");
+            e.printStackTrace();
+            System.exit(1);
+        }
     /* create and install the security manager */
 
      if (System.getSecurityManager () == null)
@@ -42,7 +58,7 @@ public class BettingCenterServer{
     /* instantiate a remote object that runs mobile code and generate a stub for it */
 
 	//Fazer equivalente para servers
-     BettingCenter bc = new BettingCenter ();
+     BettingCenter bc = new BettingCenter(genReposInterface);
      BettingCenterInterface bcStub = null;
 	 
 	 //Endicar porto de escuta
