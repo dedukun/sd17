@@ -67,11 +67,11 @@ public class Paddock  implements PaddockInterface{
 
     /**
      * Horse/Jockey pair are parading at the paddock.
-     * 
+     *
      *   @param hId
      *   @param hAgl
      */
-    public synchronized void proceedToPaddock(int hId, int hAgl){
+    public synchronized ReturnStruct proceedToPaddock(int hId, int hAgl, TimeVector clk, TimeVector clk){
 
         int horseId = hId;
         int horseAgility = hAgl;
@@ -98,6 +98,8 @@ public class Paddock  implements PaddockInterface{
 
             notifyAll();
         }
+
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -106,7 +108,7 @@ public class Paddock  implements PaddockInterface{
      *   @param hId
      *   @return true if the pair is the last one to arrive, false if not.
      */
-    public synchronized boolean lastArrivedToPaddock(int hId) {
+    public synchronized ReturnStruct lastArrivedToPaddock(int hId, TimeVector clk) {
 
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATP);
 
@@ -121,9 +123,9 @@ public class Paddock  implements PaddockInterface{
             evaluatingHorses = true;
             spectatorsAtParade = 0;
 
-            return true;
+            return new ReturnStruct(clk, true);
         }
-        return false;
+        return new ReturnStruct(clk, false);
     }
 
     /**
@@ -132,7 +134,7 @@ public class Paddock  implements PaddockInterface{
      *   @param specId
      *   @return The identifier of the Horse/Jockey pair to bet on
      */
-    public synchronized int goCheckHorses(int specId){
+    public synchronized ReturnStruct goCheckHorses(int specId, TimeVector clk){
 
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.ATH);
 
@@ -146,7 +148,7 @@ public class Paddock  implements PaddockInterface{
 
         int horseToBet = chooseHorse(spectatorId);
 
-        return horseToBet;
+        return new ReturnStruct(clk, horseToBet);
     }
 
     /**
@@ -155,7 +157,7 @@ public class Paddock  implements PaddockInterface{
      *   @param specId
      *   @return true if it is the last horse to be checked, false if not.
      */
-    public synchronized boolean lastCheckHorses(int specId){
+    public synchronized ReturnStruct lastCheckHorses(int specId, TimeVector clk){
 
         spectatorsAtParade++;
 
@@ -165,17 +167,19 @@ public class Paddock  implements PaddockInterface{
 
         genRepos.setSpectatorState(spectatorId, SpectatorStates.ATH);
 
-        return spectatorsAtParade == SimulPar.S;
+        return new ReturnStruct(clk, spectatorsAtParade == SimulPar.S);
     }
 
     /**
      * Last Spectator to check the horses wakes them up.
      */
-    public synchronized void unblockGoCheckHorses(){
+    public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk){
 
         paradingHorses = false;
 
         notifyAll();
+
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -212,13 +216,15 @@ public class Paddock  implements PaddockInterface{
             default:
                 horse = ThreadLocalRandom.current().nextInt(1,SimulPar.C);
         }
-        return horse;
+        return new ReturnStruct(clk, horse);
     }
-    
+
     /**
-     * Send a message to the General Reposutory telling that this server is shutting down 
+     * Send a message to the General Reposutory telling that this server is shutting down
      */
-    public synchronized void shutdownGenRepo(){
+    public synchronized ReturnStruct shutdownGenRepo(TimeVector clk){
         genRepos.endServer();
+
+        return new ReturnStruct(clk);
     }
 }

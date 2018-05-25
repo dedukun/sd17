@@ -60,18 +60,18 @@ public class Stable implements StableInterface{
 
     /**
      * Horse/Jockey pair waits at the stable.
-     * 
+     *
      *   @param hId
      *   @param hRaceNumber
      *   @param horseAgl
      */
-    public synchronized void proceedToStable(int hId, int hRaceNumber, int horseAgl){
+    public synchronized ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk){
 
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATS);
         int horseRaceNumber = hRaceNumber;
         int horseId = hId;
         int horseAgility = horseAgl;
-        
+
         int index = horseId + (SimulPar.C * horseRaceNumber);
         horsesAgilities[index] = horseAgility;
 
@@ -84,7 +84,7 @@ public class Stable implements StableInterface{
                 wait();
             }catch(InterruptedException e){}
         }
-        
+
         if(endEvent){
             genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
         }
@@ -95,6 +95,8 @@ public class Stable implements StableInterface{
             horsesThatLeftStable = 0;
             currentRace = -1;
         }
+
+        return new ReturnStruct(clk);
     }
 
     /**
@@ -103,9 +105,9 @@ public class Stable implements StableInterface{
      *   @param raceNumber Number of the race that is going to occur
      *   @return List of the winning chances of the horses in the current race
      */
-    public synchronized double[] summonHorsesToPaddock(int raceNumber){
+    public synchronized ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk){
         //((Broker) Thread.currentThread()).setState(BrokerStates.ANR);
-        
+
         genRepos.setBrokerState(BrokerStates.OTE);
         genRepos.setRaceNumber(raceNumber);
         genRepos.setBrokerState(BrokerStates.ANR);
@@ -132,25 +134,29 @@ public class Stable implements StableInterface{
             genRepos.setOdds(i, horsesChances[i]*100);
         }
 
-        return horsesChances;
+        return new ReturnStruct(clk, horsesChances);
     }
 
     /**
      * Broker is closing the event and is waking up horses from stable.
      */
-    public synchronized void entertainTheGuests(){
+    public synchronized ReturnStruct entertainTheGuests(, TimeVector clk){
         //((Broker) Thread.currentThread()).setState(BrokerStates.PHAB);
         genRepos.setBrokerState(BrokerStates.PHAB);
 
         endEvent = true;
 
         notifyAll();
+
+        return new ReturnStruct(clk);
     }
-    
+
     /**
-     * Send a message to the General Reposutory telling that this server is shutting down 
+     * Send a message to the General Reposutory telling that this server is shutting down
      */
-    public synchronized void shutdownGenRepo(){
+    public synchronized ReturnStruct shutdownGenRepo(, TimeVector clk){
         genRepos.endServer();
+
+        return new ReturnStruct(clk);
     }
 }
