@@ -12,9 +12,9 @@ import java.io.Serializable;
  * Vectorial clock to keep track of the order
  */
 public class TimeVector implements Serializable {
-    
-    private static final long serialVersionUID = 9135L ;
-    
+
+    private static final long serialVersionUID = 1945916302401871747L;
+        
     private int time;
     
     public TimeVector(){
