@@ -1,6 +1,8 @@
 package interfaces;
 
+import auxiliary.ReturnStruct;
 import auxiliary.SimulPar;
+import auxiliary.TimeVector;
 import serverSide.ControlCenter.ControlCenter;
 
 import java.rmi.Remote;
@@ -11,26 +13,26 @@ import java.rmi.RemoteException;
  */
 public interface ControlCenterInterface extends Remote{
 
-    public boolean waitForNextRace(int specId);
+    public ReturnStruct waitForNextRace(int specId, TimeVector clk);
 
-    public void  summonHorsesToPaddock();
+    public ReturnStruct summonHorsesToPaddock(TimeVector clk);
 
-    public void unblockGoCheckHorses();
+    public ReturnStruct unblockGoCheckHorses(TimeVector clk);
 
-    public void unblockProceedToPaddock();
+    public ReturnStruct unblockProceedToPaddock(TimeVector clk);
 
-    public void startTheRace();
+    public ReturnStruct startTheRace(TimeVector clk);
 
-    public void unblockMakeAMove();
+    public ReturnStruct unblockMakeAMove(TimeVector clk);
 
-    public void goWatchTheRace(int specId);
+    public ReturnStruct goWatchTheRace(int specId, TimeVector clk);
 
-    public void reportResults(int[] winners);
+    public ReturnStruct reportResults(int[] winners, TimeVector clk);
 
-    public boolean haveIWon(int hjid);
+    public ReturnStruct haveIWon(int hjid, TimeVector clk);
 
-    public void entertainTheGuests();
+    public ReturnStruct entertainTheGuests(TimeVector clk);
 
-    public void relaxABit(int specId);
+    public ReturnStruct relaxABit(int specId, TimeVector clk);
 
 }

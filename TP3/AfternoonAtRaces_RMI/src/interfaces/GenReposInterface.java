@@ -1,6 +1,9 @@
 package interfaces;
 
+import auxiliary.*;
+import auxiliary.ReturnStruct;
 import auxiliary.SimulPar;
+import auxiliary.TimeVector;
 import serverSide.GenRepos.GeneralRepository;
 
 import java.rmi.Remote;
@@ -11,33 +14,33 @@ import java.rmi.RemoteException;
  */
 public interface GenReposInterface extends Remote{
 
-    public void initLog();
+    public ReturnStruct initLog(TimeVector clk);
 
-    public void updateLog();
+    public ReturnStruct updateLog(TimeVector clk);
 
-    public void setBetS(int specId, int horseId);
+    public ReturnStruct setBetS(int specId, int horseId, TimeVector clk);
 
-    public void setBetA(int specId, int betamount);
+    public ReturnStruct setBetA(int specId, int betamount, TimeVector clk);
 
-    public void setOdds(int horseId, double odd);
+    public ReturnStruct setOdds(int horseId, double odd, TimeVector clk);
 
-    public void setHorseIteration(int horseId);
+    public ReturnStruct setHorseIteration(int horseId, TimeVector clk);
 
-    public void setHorsePosition(int horseId, int pos);
+    public ReturnStruct setHorsePosition(int horseId, int pos, TimeVector clk);
 
-    public void setHorseEnd(int horseId, int place);
+    public ReturnStruct setHorseEnd(int horseId, int place, TimeVector clk);
 
-    public void setTrackSize(int size);
+    public ReturnStruct setTrackSize(int size, TimeVector clk);
 
-    public void setRaceNumber(int num);
+    public ReturnStruct setRaceNumber(int num, TimeVector clk);
 
-    public void setBrokerState(BrokerStates state);
+    public ReturnStruct setBrokerState(BrokerStates state, TimeVector clk);
 
-    public void setSpectatorState(int specId,SpectatorsStates state);
+    public ReturnStruct setSpectatorState(int specId,SpectatorStates state, TimeVector clk);
 
-    public void setSpectatorMoney(int specId, int funds);
+    public ReturnStruct setSpectatorMoney(int specId, int funds, TimeVector clk);
 
-    public void setHorseState(int horseId,HorseJockeyStates state);
+    public ReturnStruct setHorseState(int horseId,HorseJockeyStates state, TimeVector clk);
 
-    public void setHorseAgility(int horseId,int horseAgl);
+    public ReturnStruct setHorseAgility(int horseId,int horseAgl, TimeVector clk);
 }
