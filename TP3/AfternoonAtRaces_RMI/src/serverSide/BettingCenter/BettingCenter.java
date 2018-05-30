@@ -105,7 +105,7 @@ public class BettingCenter implements BettingCenterInterface{
     /**
      * Betting Center initialization.
      */
-    public BettingCenter(GenReposInterface genRepos){
+    public BettingCenter(GenReposInterface genRepos) throws RemoteException{
         this.genRepos = genRepos;
 
         raceBets = new ArrayList<>();
@@ -132,10 +132,10 @@ public class BettingCenter implements BettingCenterInterface{
      *   @param horseChances List of Horses/Jockey pairs winning chances
      */
     @Override
-    public synchronized ReturnStruct setHorsesWinningChances(double[] horseChances, TimeVector clk){
+    public synchronized ReturnStruct setHorsesWinningChances(double[] horseChances, TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         currentHorsesWinningChances = horseChances;
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -144,7 +144,7 @@ public class BettingCenter implements BettingCenterInterface{
      *   @return true if all the bets were accepted or false if not.
      */
     @Override
-    public synchronized ReturnStruct acceptedAllBets(TimeVector clk){
+    public synchronized ReturnStruct acceptedAllBets(TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         if(numberFinishedBets == SimulPar.S){
 
@@ -156,9 +156,9 @@ public class BettingCenter implements BettingCenterInterface{
             Arrays.fill(waitForGains, Boolean.FALSE);
             Arrays.fill(spectatorsGains, 0);
 
-            return new ReturnStruct(clk, true);
+            return new ReturnStruct(this.clk, true);
         }
-        return new ReturnStruct(clk, false);
+        return new ReturnStruct(this.clk, false);
 
     }
 
@@ -187,7 +187,7 @@ public class BettingCenter implements BettingCenterInterface{
             notifyAll();
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -239,7 +239,7 @@ public class BettingCenter implements BettingCenterInterface{
             notifyAll();
         }
 
-        return new ReturnStruct(clk, betSize);
+        return new ReturnStruct(this.clk, betSize);
     }
 
     /**
@@ -272,9 +272,9 @@ public class BettingCenter implements BettingCenterInterface{
             numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
-            return new ReturnStruct(clk, false);
+            return new ReturnStruct(this.clk, false);
         }
-        return new ReturnStruct(clk, true);
+        return new ReturnStruct(this.clk, true);
     }
 
     /**
@@ -293,10 +293,10 @@ public class BettingCenter implements BettingCenterInterface{
             numberFinishedWinners = 0;
             Arrays.fill(acceptedSpectatorsBets, Boolean.FALSE);
 
-            return new ReturnStruct(clk, true);
+            return new ReturnStruct(this.clk, true);
 
         }
-        return new ReturnStruct(clk, false);
+        return new ReturnStruct(this.clk, false);
 
     }
 
@@ -334,7 +334,7 @@ public class BettingCenter implements BettingCenterInterface{
 
             notifyAll();
         }
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -375,7 +375,7 @@ public class BettingCenter implements BettingCenterInterface{
             notifyAll();
         }
 
-        return new ReturnStruct(clk, earnings);
+        return new ReturnStruct(this.clk, earnings);
     }
 
     /**

@@ -171,4 +171,5 @@ public interface GenReposInterface extends Remote{
      *   @throws RemoteException may throw during a execution of a remote method call
      */
     public ReturnStruct setHorseAgility(int horseId,int horseAgl, TimeVector clk) throws RemoteException;
+
 }

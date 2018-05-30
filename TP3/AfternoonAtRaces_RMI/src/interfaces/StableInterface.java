@@ -33,7 +33,7 @@ public interface StableInterface extends Remote{
      *   @return Clock and a list of the winning chances of the horses in the current race
      *   @throws RemoteException may throw during a execution of a remote method call
      */
-    public ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk) throws RemoteException;
+    public ReturnStruct summonHorsesToPaddock(int raceNumber, TimeVector clk) throws RemoteException;
 
     /**
      * Broker is closing the event and is waking up horses from stable.

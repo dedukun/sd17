@@ -7,6 +7,7 @@ import auxiliary.SimulPar;
 import auxiliary.SpectatorStates;
 import auxiliary.TimeVector;
 import interfaces.ControlCenterInterface;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 
 /**
@@ -63,9 +64,10 @@ public class ControlCenter implements ControlCenterInterface{
     /**
      * ControlCenter intilization.
      */
-    public ControlCenter(GenReposInterface genRepos){
+    public ControlCenter(GenReposInterface genRepos) throws RemoteException{
         this.genRepos= genRepos;
-
+        clk = new TimeVector();
+        
         spectatosLeavingStands = 0;
 
         // sync conditions
@@ -83,7 +85,7 @@ public class ControlCenter implements ControlCenterInterface{
      *   @return There's at least a race left
      */
     @Override
-    public synchronized ReturnStruct waitForNextRace(int specId, TimeVector clk){
+    public synchronized ReturnStruct waitForNextRace(int specId, TimeVector clk) throws RemoteException {
         this.clk.updateTime(clk.getTime());
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.WRS);
         genRepos.setSpectatorState(specId, SpectatorStates.WRS, clk);
@@ -94,14 +96,14 @@ public class ControlCenter implements ControlCenterInterface{
             }catch(InterruptedException e){}
         }
 
-        return new ReturnStruct(clk,theresANewRace);
+        return new ReturnStruct(this.clk,theresANewRace);
     }
 
     /**
      * Broker is waiting for the spectators finishing seeing the horses.
      */
     @Override
-    public synchronized ReturnStruct summonHorsesToPaddock(TimeVector clk){
+    public synchronized ReturnStruct summonHorsesToPaddock(TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         while(waitForEvaluation){
             try{
@@ -111,14 +113,14 @@ public class ControlCenter implements ControlCenterInterface{
 
         // Reset var for next race
         waitForEvaluation = true;
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
      * Last Spectator that finished watching the horses wakes up Broker.
      */
     @Override
-    public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk){
+    public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         // reset var for next race
         waitForNextRace = true;
@@ -128,7 +130,7 @@ public class ControlCenter implements ControlCenterInterface{
 
         notifyAll();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
 
@@ -136,12 +138,12 @@ public class ControlCenter implements ControlCenterInterface{
      * The last Horse/Jockey pair to arrive at the Paddock wakes up Spectators to go see the parade.
      */
     @Override
-    public synchronized ReturnStruct unblockProceedToPaddock(TimeVector clk){
+    public synchronized ReturnStruct unblockProceedToPaddock(TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         waitForNextRace = false;
 
         notifyAll(); // Wake up Spectators
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
 
@@ -149,7 +151,7 @@ public class ControlCenter implements ControlCenterInterface{
      * Broker is starting the race.
      */
     @Override
-    public synchronized ReturnStruct startTheRace(TimeVector clk){
+    public synchronized ReturnStruct startTheRace(TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         while(waitForEndRaceBroker){
             try{
@@ -159,19 +161,19 @@ public class ControlCenter implements ControlCenterInterface{
 
         // Reset for next race
         waitForEndRaceBroker = true;
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
      * Last Horse/Jockey pair to make a move wakes up the Broker.
      */
     @Override
-    public synchronized ReturnStruct unblockMakeAMove(TimeVector clk){
+    public synchronized ReturnStruct unblockMakeAMove(TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         waitForEndRaceBroker = false;
 
         notifyAll();
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -180,7 +182,7 @@ public class ControlCenter implements ControlCenterInterface{
      *   @param specId
      */
     @Override
-    public synchronized ReturnStruct goWatchTheRace(int specId, TimeVector clk){
+    public synchronized ReturnStruct goWatchTheRace(int specId, TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.WAR);
         genRepos.setSpectatorState(specId , SpectatorStates.WAR, clk);
@@ -198,7 +200,7 @@ public class ControlCenter implements ControlCenterInterface{
             waitForEndOfRace = true;
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
 
     }
 
@@ -208,14 +210,14 @@ public class ControlCenter implements ControlCenterInterface{
      *   @param winners Array with the identifier of the winning Horse/Jockey pair(s)
      */
     @Override
-    public synchronized ReturnStruct reportResults(int[] winners, TimeVector clk){
+    public synchronized ReturnStruct reportResults(int[] winners, TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         raceWinners = winners;
         waitForEndOfRace = false;
 
         notifyAll();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -225,14 +227,14 @@ public class ControlCenter implements ControlCenterInterface{
      *   @return true if the pair has won, false if not.
      */
     @Override
-    public synchronized ReturnStruct haveIWon(int hjid, TimeVector clk){
+    public synchronized ReturnStruct haveIWon(int hjid, TimeVector clk) throws RemoteException{
         this.clk.updateTime(clk.getTime());
         for(int winner : raceWinners){
             if(winner == hjid){
-                return new ReturnStruct(clk, true);
+                return new ReturnStruct(this.clk, true);
             }
         }
-        return new ReturnStruct(clk, false);
+        return new ReturnStruct(this.clk, false);
     }
 
     /**
@@ -246,7 +248,7 @@ public class ControlCenter implements ControlCenterInterface{
 
         notifyAll();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
 
     }
 
@@ -256,13 +258,13 @@ public class ControlCenter implements ControlCenterInterface{
     *   @param specId
     */
     @Override
-    public synchronized ReturnStruct relaxABit(int specId, TimeVector clk){
+    public synchronized ReturnStruct relaxABit(int specId, TimeVector clk) throws RemoteException{
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.CB);
         this.clk.updateTime(clk.getTime());
 
         genRepos.setSpectatorState(specId, SpectatorStates.CB, clk);
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
 

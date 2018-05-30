@@ -23,7 +23,7 @@ public class BettingCenterServer{
    *  Main task.
    */
 
-   public static void main(String[] args)
+   public static void main(String[] args) throws RemoteException
    {
     /* get location of the registry service */
      GenReposInterface genReposInterface = null;

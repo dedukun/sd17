@@ -18,6 +18,16 @@ public class ReturnStruct implements Serializable{
     private int ret_int;
     private double ret_dou;
     private boolean ret_bool;
+    private int[] ret_int_arr;
+    private double[] ret_dou_arr;
+
+    public int[] getRet_int_arr() {
+        return ret_int_arr;
+    }
+
+    public double[] getRet_dou_arr() {
+        return ret_dou_arr;
+    }
     
     public ReturnStruct(TimeVector clk){
         this.clk=clk; 
@@ -36,6 +46,16 @@ public class ReturnStruct implements Serializable{
     public ReturnStruct(TimeVector clk, boolean ret_bool){
         this.clk=clk; 
         this.ret_bool=ret_bool;
+    }
+    
+    public ReturnStruct(TimeVector clk, int[] ret_int_arr){
+        this.clk=clk; 
+        this.ret_int_arr=ret_int_arr;
+    }
+    
+    public ReturnStruct(TimeVector clk, double[] ret_dou_arr){
+        this.clk=clk; 
+        this.ret_dou_arr=ret_dou_arr;
     }
 
     public TimeVector getClk() {

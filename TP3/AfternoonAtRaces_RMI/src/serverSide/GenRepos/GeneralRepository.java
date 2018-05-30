@@ -6,7 +6,9 @@ import genclass.TextFile;
 import genclass.GenericIO;
 import auxiliary.BrokerStates;
 import auxiliary.HorseJockeyStates;
+import auxiliary.ReturnStruct;
 import auxiliary.SpectatorStates;
+import auxiliary.TimeVector;
 import interfaces.GenReposInterface;
 
 /**
@@ -106,16 +108,20 @@ public class GeneralRepository  implements GenReposInterface{
     private String line2="";
 
     /**
+    * Second line to print.
+    */
+    private TimeVector clk;
+    /**
     * General Repository initialization.
     */
     public GeneralRepository(){
         this.filename="Log.txt";
-
+        clk = new TimeVector();
         // Set some initial values
         Arrays.fill(betS, -1);
         Arrays.fill(horseEnd, -1);
 
-        this.initLog();
+        this.initLog(this.clk);
     }
 
     /**
@@ -123,6 +129,7 @@ public class GeneralRepository  implements GenReposInterface{
     */
     @Override
     public synchronized ReturnStruct initLog(TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         if (!log.openForWriting(".", filename)) {
             GenericIO.writelnString("Operation " + filename + " failed!");
             System.exit(1);
@@ -144,7 +151,7 @@ public class GeneralRepository  implements GenReposInterface{
             System.exit(1);
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -152,7 +159,7 @@ public class GeneralRepository  implements GenReposInterface{
     */
     @Override
     public synchronized ReturnStruct updateLog(TimeVector clk){
-
+        this.clk.updateTime(clk.getTime());
         if (!log.openForAppending(".", filename)) {
             GenericIO.writelnString("Operation " + filename + " failed!");
             System.exit(1);
@@ -261,7 +268,7 @@ public class GeneralRepository  implements GenReposInterface{
             System.exit(1);
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -272,10 +279,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setBetS(int specId, int horseId, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.betS[specId]=horseId;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -286,10 +294,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setBetA(int specId, int betamount, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.betA[specId] = betamount;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -300,10 +309,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setOdds(int horseId, double odd, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.odds[horseId] = odd;
-        updateLog();
+        updateLog(this.clk);
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -313,10 +323,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setHorseIteration(int horseId, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.horseIteration[horseId]++;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -327,10 +338,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setHorsePosition(int horseId, int pos, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         horsePosition[horseId] = pos;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -341,10 +353,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setHorseEnd(int horseId, int place, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.horseEnd[horseId]=place;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -354,10 +367,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setTrackSize(int size, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.trackSize=size;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -367,7 +381,7 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setRaceNumber(int num, TimeVector clk){
-
+        this.clk.updateTime(clk.getTime());
         // Reset variables for the new race.
         if (num != 0)
             horseState = new HorseJockeyStates[SimulPar.C];
@@ -383,7 +397,7 @@ public class GeneralRepository  implements GenReposInterface{
         this.raceNumber = num;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -393,11 +407,12 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setBrokerState(BrokerStates state, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.brkState=state;
 
-        updateLog();
+        updateLog(this.clk);
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -408,12 +423,13 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setSpectatorState(int specId, SpectatorStates state, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.specState[specId]=state;
 
         if(brkState != null)
-            updateLog();
+            updateLog(this.clk);
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -424,10 +440,11 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setSpectatorMoney(int specId, int funds, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.specMoney[specId]=funds;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -438,14 +455,15 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setHorseState(int horseId,HorseJockeyStates state, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.horseState[horseId]=state;
 
         horsesInRepo++;
         if(horsesInRepo > SimulPar.C){
-            updateLog();
+            updateLog(this.clk);
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -456,9 +474,12 @@ public class GeneralRepository  implements GenReposInterface{
      */
     @Override
     public synchronized ReturnStruct setHorseAgility(int horseId,int horseAgl, TimeVector clk){
+        this.clk.updateTime(clk.getTime());
         this.horseAgility[horseId]=horseAgl;
         //updateLog();
         //
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
+
+
 }

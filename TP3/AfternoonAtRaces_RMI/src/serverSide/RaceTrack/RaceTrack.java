@@ -4,11 +4,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import Stubs.GenReposStub;
+import auxiliary.ReturnStruct;
 import auxiliary.SimulPar;
 import auxiliary.BrokerStates;
 import auxiliary.HorseJockeyStates;
+import auxiliary.TimeVector;
+import interfaces.GenReposInterface;
 import interfaces.RaceTrackInterface;
+import java.rmi.RemoteException;
 
 /**
  * Race track.<br>
@@ -54,14 +57,19 @@ public class RaceTrack implements RaceTrackInterface{
     /**
      * Reference to General Repository
      */
-    private GenReposStub genRepos;
+    private GenReposInterface genRepos;
+    
+    /**
+     * Reference to Time Vector.
+     */
+    private TimeVector clk;
 
     /**
      * Race Track initialization
      */
-    public RaceTrack(){
-        this.genRepos = new GenReposStub();
-
+    public RaceTrack(GenReposInterface genRepos) throws RemoteException{
+        this.genRepos = genRepos;
+        clk = new TimeVector();
         horsesTravelledDistance = new int[SimulPar.C];
         horseMoving = 0;
         winningHorses = new ArrayList<>();
@@ -77,12 +85,13 @@ public class RaceTrack implements RaceTrackInterface{
      * Broker wakes up one horse.
      */
     @Override
-    public synchronized ReturnStruct startTheRace(TimeVector clk){
+    public synchronized ReturnStruct startTheRace(TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         //((Broker) Thread.currentThread()).setState(BrokerStates.STR);
-        genRepos.setBrokerState(BrokerStates.STR);
+        genRepos.setBrokerState(BrokerStates.STR, this.clk);
 
         trackSize = ThreadLocalRandom.current().nextInt(20, 50);
-        genRepos.setTrackSize(trackSize);
+        genRepos.setTrackSize(trackSize, this.clk);
 
         // Prepare variables for new race
         Arrays.fill(horsesTravelledDistance, 0);
@@ -95,18 +104,18 @@ public class RaceTrack implements RaceTrackInterface{
 
         notifyAll();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
      * Horse/Jockey pair is waiting at the start line of the race track.
      */
     @Override
-    public synchronized ReturnStruct proceedToStartLine(int hId, TimeVector clk){
+    public synchronized ReturnStruct proceedToStartLine(int hId, TimeVector clk) throws RemoteException{
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ASL);
 
         int horseID = hId;
-        genRepos.setHorseState(horseID, HorseJockeyStates.ASL);
+        genRepos.setHorseState(horseID, HorseJockeyStates.ASL, this.clk);
 
         while(waitToMove || horseID != horseMoving){
             try{
@@ -117,7 +126,7 @@ public class RaceTrack implements RaceTrackInterface{
         waitToMove = true;
 
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -128,8 +137,8 @@ public class RaceTrack implements RaceTrackInterface{
      *   @return Boolean representing if the race has ended
      */
     @Override
-    public synchronized ReturnStruct makeAMove(int hId, int hAgl, TimeVector clk){
-
+    public synchronized ReturnStruct makeAMove(int hId, int hAgl, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         int horseID = hId;
 
         // Check if horse already finished the race
@@ -141,9 +150,9 @@ public class RaceTrack implements RaceTrackInterface{
 
             horsesTravelledDistance[horseID] += move;
 
-            genRepos.setHorsePosition(horseID, horsesTravelledDistance[horseID]);
-            genRepos.setHorseIteration(horseID);
-            genRepos.setHorseState(horseID, HorseJockeyStates.RU);
+            genRepos.setHorsePosition(horseID, horsesTravelledDistance[horseID], this.clk);
+            genRepos.setHorseIteration(horseID, this.clk);
+            genRepos.setHorseState(horseID, HorseJockeyStates.RU, this.clk);
 
             if(horsesTravelledDistance[horseID] >= trackSize){
 
@@ -155,14 +164,14 @@ public class RaceTrack implements RaceTrackInterface{
                     if(!winningHorses.isEmpty()){
                         if(horsesTravelledDistance[horseID] > horsesTravelledDistance[winningHorses.get(0)]){
                             for(int secPlaceId : winningHorses){
-                                genRepos.setHorseEnd(secPlaceId, 2);
+                                genRepos.setHorseEnd(secPlaceId, 2, this.clk);
                             }
 
                             winningHorses.clear();
                             winningHorses.add(horseID);
                         }
                         else if(horsesTravelledDistance[horseID] == horsesTravelledDistance[winningHorses.get(0)]){
-                            genRepos.setHorseEnd(horseID, 1);
+                            genRepos.setHorseEnd(horseID, 1, this.clk);
 
                             winningHorses.add(horseID);
                         }
@@ -170,14 +179,14 @@ public class RaceTrack implements RaceTrackInterface{
                     else{
                         winningHorses.add(horseID);
 
-                        genRepos.setHorseEnd(horseID, 1);
+                        genRepos.setHorseEnd(horseID, 1, this.clk);
                     }
                 }
                 else{
-                    genRepos.setHorseEnd(horseID, finishedHorses);
+                    genRepos.setHorseEnd(horseID, finishedHorses,this.clk);
                 }
 
-                genRepos.setHorseState(horseID, HorseJockeyStates.AFL);
+                genRepos.setHorseState(horseID, HorseJockeyStates.AFL, this.clk);
             }
         }
 
@@ -196,7 +205,7 @@ public class RaceTrack implements RaceTrackInterface{
 
         notifyAll();
 
-        return ReturnStruct(clk, finishedHorses == SimulPar.C);
+        return new ReturnStruct(clk, finishedHorses == SimulPar.C);
     }
 
     /**
@@ -207,7 +216,7 @@ public class RaceTrack implements RaceTrackInterface{
      */
     @Override
     public synchronized ReturnStruct hasRaceFinished(int hId, TimeVector clk){
-
+        this.clk.updateTime(clk.getTime());
         int horseID = hId;
 
         while( (finishedHorses != SimulPar.C) && (waitToMove || horseID != horseMoving)){
@@ -218,7 +227,7 @@ public class RaceTrack implements RaceTrackInterface{
 
         waitToMove = true;
 
-        return ReturnStruct(clk, finishedHorses == SimulPar.C);
+        return new ReturnStruct(clk, finishedHorses == SimulPar.C);
     }
 
     /**
@@ -228,15 +237,16 @@ public class RaceTrack implements RaceTrackInterface{
      */
     @Override
     public synchronized ReturnStruct getResults(TimeVector clk){
-        return ReturnStruct(clk, winningHorses.stream().mapToInt(i->i).toArray());
+        this.clk.updateTime(clk.getTime());
+        return new ReturnStruct(clk, winningHorses.stream().mapToInt(i->i).toArray());
     }
 
     /**
      * Send a message to the General Reposutory telling that this server is shutting down
      */
-    public synchronized ReturnStruct shutdownGenRepo(TimeVector clk){
-        genRepos.endServer();
+    public synchronized void shutdownGenRepo(TimeVector clk){
+        //genRepos.endServer();
 
-        return new ReturnStruct(clk);
+        //return new ReturnStruct(this.clk);
     }
 }

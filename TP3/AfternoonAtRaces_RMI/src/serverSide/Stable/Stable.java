@@ -3,8 +3,11 @@ package serverSide.Stable;
 import auxiliary.SimulPar;
 import auxiliary.BrokerStates;
 import auxiliary.HorseJockeyStates;
-import Stubs.GenReposStub;
+import auxiliary.ReturnStruct;
+import auxiliary.TimeVector;
+import interfaces.GenReposInterface;
 import interfaces.StableInterface;
+import java.rmi.RemoteException;
 
 /**
  * Stable.<br>
@@ -30,7 +33,12 @@ public class Stable implements StableInterface{
     /**
      * Reference to General Repository
      */
-    private GenReposStub genRepos;
+    private GenReposInterface genRepos;
+    
+    /**
+     * Reference to Time Vector.
+     */
+    private TimeVector clk;
 
     /**
      * Number of horses that left the stable.
@@ -45,9 +53,9 @@ public class Stable implements StableInterface{
     /**
      * Stable initialization.
      */
-    public Stable(){
-        this.genRepos = new GenReposStub();
-
+    public Stable(GenReposInterface genRepos) throws RemoteException{
+        this.genRepos = genRepos;
+        clk = new TimeVector();
         currentRace = -1;
         int totalHorses = SimulPar.C * SimulPar.K;
         horsesAgilities = new int[totalHorses];
@@ -66,8 +74,8 @@ public class Stable implements StableInterface{
      *   @param horseAgl
      */
     @Override
-    public synchronized ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk){
-
+    public synchronized ReturnStruct proceedToStable(int hId, int hRaceNumber, int horseAgl, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATS);
         int horseRaceNumber = hRaceNumber;
         int horseId = hId;
@@ -77,7 +85,7 @@ public class Stable implements StableInterface{
         horsesAgilities[index] = horseAgility;
 
         if(hRaceNumber == currentRace || (currentRace == -1 && hRaceNumber == 0)){
-            genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
+            genRepos.setHorseState(horseId, HorseJockeyStates.ATS, this.clk);
         }
 
         while( !endEvent && horseRaceNumber != currentRace){
@@ -87,7 +95,7 @@ public class Stable implements StableInterface{
         }
 
         if(endEvent){
-            genRepos.setHorseState(horseId, HorseJockeyStates.ATS);
+            genRepos.setHorseState(horseId, HorseJockeyStates.ATS, this.clk);
         }
 
         horsesThatLeftStable++;
@@ -97,7 +105,7 @@ public class Stable implements StableInterface{
             currentRace = -1;
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -107,12 +115,13 @@ public class Stable implements StableInterface{
      *   @return List of the winning chances of the horses in the current race
      */
     @Override
-    public synchronized ReturnStruct[] summonHorsesToPaddock(int raceNumber, TimeVector clk){
+    public synchronized ReturnStruct summonHorsesToPaddock(int raceNumber, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         //((Broker) Thread.currentThread()).setState(BrokerStates.ANR);
 
-        genRepos.setBrokerState(BrokerStates.OTE);
-        genRepos.setRaceNumber(raceNumber);
-        genRepos.setBrokerState(BrokerStates.ANR);
+        genRepos.setBrokerState(BrokerStates.OTE, this.clk);
+        genRepos.setRaceNumber(raceNumber,this.clk);
+        genRepos.setBrokerState(BrokerStates.ANR,this.clk);
 
         // Wake up horses
         currentRace = raceNumber;
@@ -132,34 +141,35 @@ public class Stable implements StableInterface{
             double horseAgility = horsesAgilities[ idx ];
             horsesChances[i] =  horseAgility / sumAgilities;
 
-            genRepos.setHorseAgility(i, (int)horseAgility);
-            genRepos.setOdds(i, horsesChances[i]*100);
+            genRepos.setHorseAgility(i, (int)horseAgility,this.clk);
+            genRepos.setOdds(i, horsesChances[i]*100,this.clk);
         }
 
-        return new ReturnStruct(clk, horsesChances);
+        return new ReturnStruct(this.clk, horsesChances);
     }
 
     /**
      * Broker is closing the event and is waking up horses from stable.
      */
     @Override
-    public synchronized ReturnStruct entertainTheGuests(, TimeVector clk){
+    public synchronized ReturnStruct entertainTheGuests(TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         //((Broker) Thread.currentThread()).setState(BrokerStates.PHAB);
-        genRepos.setBrokerState(BrokerStates.PHAB);
+        genRepos.setBrokerState(BrokerStates.PHAB,this.clk);
 
         endEvent = true;
 
         notifyAll();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
      * Send a message to the General Reposutory telling that this server is shutting down
      */
-    public synchronized ReturnStruct shutdownGenRepo(, TimeVector clk){
-        genRepos.endServer();
+    public synchronized void shutdownGenRepo(TimeVector clk){
+        /*genRepos.endServer();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);*/
     }
 }

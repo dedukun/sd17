@@ -1,11 +1,14 @@
 package serverSide.Paddock;
 
 import java.util.concurrent.ThreadLocalRandom;
-import Stubs.GenReposStub;
 import auxiliary.HorseJockeyStates;
+import auxiliary.ReturnStruct;
 import auxiliary.SpectatorStates;
 import auxiliary.SimulPar;
+import auxiliary.TimeVector;
+import interfaces.GenReposInterface;
 import interfaces.PaddockInterface;
+import java.rmi.RemoteException;
 
 /**
  * Paddock.<br>
@@ -46,15 +49,20 @@ public class Paddock  implements PaddockInterface{
     /**
      * Reference to General Repository
      */
-    private GenReposStub genRepos;
+    private GenReposInterface genRepos;
+    
+    /**
+     * Reference to Time Vector.
+     */
+    private TimeVector clk;
 
 
     /**
      * Paddock initialization.
      */
-    public Paddock(){
-        this.genRepos = new GenReposStub();
-
+    public Paddock(GenReposInterface genRepos) throws RemoteException{
+        this.genRepos = genRepos;
+        clk = new TimeVector();
         horsesAtPaddock = 0;
         horsesLeftPaddock = 0;
         spectatorsAtParade = 0;
@@ -72,8 +80,8 @@ public class Paddock  implements PaddockInterface{
      *   @param hAgl
      */
     @Override
-    public synchronized ReturnStruct proceedToPaddock(int hId, int hAgl, TimeVector clk, TimeVector clk){
-
+    public synchronized ReturnStruct proceedToPaddock(int hId, int hAgl, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         int horseId = hId;
         int horseAgility = hAgl;
 
@@ -100,7 +108,7 @@ public class Paddock  implements PaddockInterface{
             notifyAll();
         }
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -110,12 +118,12 @@ public class Paddock  implements PaddockInterface{
      *   @return true if the pair is the last one to arrive, false if not.
      */
     @Override
-    public synchronized ReturnStruct lastArrivedToPaddock(int hId, TimeVector clk) {
-
+    public synchronized ReturnStruct lastArrivedToPaddock(int hId, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         //((HorseJockey) Thread.currentThread()).setState(HorseJockeyStates.ATP);
 
         int horseId = hId;
-        genRepos.setHorseState(horseId, HorseJockeyStates.ATP);
+        genRepos.setHorseState(horseId, HorseJockeyStates.ATP, clk);
 
         horsesAtPaddock++;
 
@@ -127,7 +135,7 @@ public class Paddock  implements PaddockInterface{
 
             return new ReturnStruct(clk, true);
         }
-        return new ReturnStruct(clk, false);
+        return new ReturnStruct(this.clk, false);
     }
 
     /**
@@ -137,8 +145,8 @@ public class Paddock  implements PaddockInterface{
      *   @return The identifier of the Horse/Jockey pair to bet on
      */
     @Override
-    public synchronized ReturnStruct goCheckHorses(int specId, TimeVector clk){
-
+    public synchronized ReturnStruct goCheckHorses(int specId, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.ATH);
 
         int spectatorId = specId;
@@ -151,7 +159,7 @@ public class Paddock  implements PaddockInterface{
 
         int horseToBet = chooseHorse(spectatorId);
 
-        return new ReturnStruct(clk, horseToBet);
+        return new ReturnStruct(this.clk, horseToBet);
     }
 
     /**
@@ -161,30 +169,30 @@ public class Paddock  implements PaddockInterface{
      *   @return true if it is the last horse to be checked, false if not.
      */
     @Override
-    public synchronized ReturnStruct lastCheckHorses(int specId, TimeVector clk){
-
+    public synchronized ReturnStruct lastCheckHorses(int specId, TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         spectatorsAtParade++;
 
         //((Spectators) Thread.currentThread()).setState(SpectatorStates.ATH);
 
         int spectatorId = specId;
 
-        genRepos.setSpectatorState(spectatorId, SpectatorStates.ATH);
+        genRepos.setSpectatorState(spectatorId, SpectatorStates.ATH, clk);
 
-        return new ReturnStruct(clk, spectatorsAtParade == SimulPar.S);
+        return new ReturnStruct(this.clk, spectatorsAtParade == SimulPar.S);
     }
 
     /**
      * Last Spectator to check the horses wakes them up.
      */
     @Override
-    public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk){
-
+    public synchronized ReturnStruct unblockGoCheckHorses(TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
         paradingHorses = false;
 
         notifyAll();
 
-        return new ReturnStruct(clk);
+        return new ReturnStruct(this.clk);
     }
 
     /**
@@ -193,7 +201,7 @@ public class Paddock  implements PaddockInterface{
      *   @param spectatorId Identifier of the Spectator
      *   @return Identifier of the chosen Horse/Jockey pair
      */
-    private int chooseHorse(int spectatorId){
+    private int chooseHorse(int spectatorId) throws RemoteException{
 
         int horse = 0;
         switch(spectatorId){
@@ -221,15 +229,15 @@ public class Paddock  implements PaddockInterface{
             default:
                 horse = ThreadLocalRandom.current().nextInt(1,SimulPar.C);
         }
-        return new ReturnStruct(clk, horse);
+        return horse;
     }
 
     /**
      * Send a message to the General Reposutory telling that this server is shutting down
      */
-    public synchronized ReturnStruct shutdownGenRepo(TimeVector clk){
-        genRepos.endServer();
+    public synchronized void shutdownGenRepo(TimeVector clk){
+        //genRepos.endServer();
 
-        return new ReturnStruct(clk);
+        //return new ReturnStruct(this.clk);
     }
 }
