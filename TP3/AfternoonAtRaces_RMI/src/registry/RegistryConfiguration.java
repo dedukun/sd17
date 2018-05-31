@@ -75,6 +75,6 @@ public class RegistryConfiguration {
      * Gen Repos registry port
      */
     //Modificar aqui para a porta que quero
-    public static final int REGISTRY_PADDOCK = 0 ;
+    public static final int REGISTRY_PADDOCK_PORT = 0 ;
     
 }

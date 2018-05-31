@@ -1,13 +1,17 @@
 package clientSide.HorseJockey;
 
 import auxiliary.HorseJockeyStates;
-
-import serverSide.ControlCenter.ControlCenter;
-import serverSide.RaceTrack.RaceTrack;
-import serverSide.Stable.Stable;
-import serverSide.Paddock.Paddock;
+import auxiliary.TimeVector;
+import clientSide.Broker.Broker;
+import interfaces.PaddockInterface;
+import interfaces.ControlCenterInterface;
+import interfaces.RaceTrackInterface;
+import interfaces.StableInterface;
+import java.rmi.RemoteException;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Horse/Jockey Entity.<br>
@@ -43,22 +47,27 @@ public class HorseJockey extends Thread{
     /**
      * Reference to Control Center.
      */
-    private ControlCenter controlCenter;
+    private ControlCenterInterface controlCenter;
 
     /**
      * Reference to Paddock.
      */
-    private Paddock paddock;
+    private PaddockInterface paddock;
 
     /**
      * Reference to Race Track;
      */
-    private RaceTrack raceTrack;
+    private RaceTrackInterface raceTrack;
 
     /**
      * Reference to Stable
      */
-    private Stable stable;
+    private StableInterface stable;
+
+    /**
+     * Reference to Time Vector.
+     */
+    private TimeVector clk;
 
     /**
      * Horse/Jockey initialization.
@@ -66,8 +75,12 @@ public class HorseJockey extends Thread{
      *   @param name Horse/Jockey's name
      *   @param raceNumber Number of the race
      *   @param hjid Horse/Jockey pair ID
+     *   @param pd Paddock reference
+     *   @param cc Control Center reference
+     *   @param rt Race Track reference
+     *   @param st Stable reference
      */
-    public HorseJockey(String name, int raceNumber, int hjid) {
+    public HorseJockey(String name, int raceNumber, int hjid, PaddockInterface pd, ControlCenterInterface cc, RaceTrackInterface rt, StableInterface st) {
         super (name);
         this.name = name;
         this.raceNumber = raceNumber;
@@ -76,10 +89,12 @@ public class HorseJockey extends Thread{
         this.hjstate = null;
         this.agility = new Random().nextInt(6) + 2;
 
-        this.controlCenter = new ControlCenter();
-        this.paddock = new Paddock();
-        this.raceTrack = new RaceTrack();
-        this.stable = new Stable();
+        this.controlCenter = cc;
+        this.paddock = pd;
+        this.raceTrack = rt;
+        this.stable = st;
+
+        clk = new TimeVector();
     }
 
     /**
@@ -132,21 +147,25 @@ public class HorseJockey extends Thread{
      */
     @Override
     public void run(){
-        stable.proceedToStable(hjid, raceNumber, agility); //Blocked
-        //unblocked by sumHorsesToPaddock()
-        if(paddock.lastArrivedToPaddock(hjid)) //Blocked
-            controlCenter.unblockProceedToPaddock();
-        //unblocked by lastCheckHorses()
-        paddock.proceedToPaddock(hjid, agility); //Blocked
-        raceTrack.proceedToStartLine(hjid); //Blocked
-        do{
-            boolean last = raceTrack.makeAMove(hjid, agility);
-            if(last){
-                controlCenter.unblockMakeAMove();
-            }
-        }while(!raceTrack.hasRaceFinished(hjid)); // Blocked
-        //unblocked by startTheRace() or makeAMove()
-        stable.proceedToStable(hjid, raceNumber, agility);
+        try {
+            stable.proceedToStable(hjid, raceNumber, agility, clk); //Blocked
+            //unblocked by sumHorsesToPaddock()
+            if(paddock.lastArrivedToPaddock(hjid, clk).isRet_bool()) //Blocked
+                controlCenter.unblockProceedToPaddock(clk);
+            //unblocked by lastCheckHorses()
+            paddock.proceedToPaddock(hjid, agility, clk); //Blocked
+            raceTrack.proceedToStartLine(hjid, clk); //Blocked
+            do{
+                boolean last = raceTrack.makeAMove(hjid, agility, clk).isRet_bool();
+                if(last){
+                    controlCenter.unblockMakeAMove(clk);
+                }
+            }while(!raceTrack.hasRaceFinished(hjid, clk).isRet_bool()); // Blocked
+            //unblocked by startTheRace() or makeAMove()
+            stable.proceedToStable(hjid, raceNumber, agility, clk);
+        } catch (RemoteException ex) {
+             Logger.getLogger(HorseJockey.class.getName()).log(Level.SEVERE, null, ex);
+         }
 
         //send shutdown
         /*controlCenter.endServer();

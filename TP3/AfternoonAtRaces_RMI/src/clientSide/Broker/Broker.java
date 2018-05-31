@@ -2,26 +2,16 @@ package clientSide.Broker;
 
 import auxiliary.BrokerStates;
 
-import serverSide.*;
 import auxiliary.SimulPar;
 import auxiliary.TimeVector;
-import genclass.GenericIO;
 import interfaces.BettingCenterInterface;
 import interfaces.ControlCenterInterface;
-import interfaces.GenReposInterface;
 import interfaces.RaceTrackInterface;
 import interfaces.StableInterface;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import registry.RegistryConfiguration;
-import serverSide.BettingCenter.BettingCenter;
-import serverSide.ControlCenter.ControlCenter;
-import serverSide.RaceTrack.RaceTrack;
-import serverSide.Stable.Stable;
+
 
 /**
  * Broker Entity.<br>
@@ -58,7 +48,7 @@ public class Broker extends Thread{
      * Reference to Stable
      */
     private StableInterface stable;
-    
+
     /**
      * Reference to Time Vector.
      */
@@ -68,6 +58,10 @@ public class Broker extends Thread{
      * Broker initialization.
      *
      *   @param name Broker's name
+     *   @param bc Betting Center reference
+     *   @param cc Control Center reference
+     *   @param rt Race Track reference
+     *   @param st Stable reference
      */
     public Broker(String name, BettingCenterInterface bc, ControlCenterInterface cc, RaceTrackInterface rt, StableInterface st) {
         super(name);
@@ -78,7 +72,7 @@ public class Broker extends Thread{
         this.controlCenter = cc;
         this.raceTrack = rt;
         this.stable = st;
-        
+
         clk = new TimeVector();
     }
 
@@ -105,68 +99,7 @@ public class Broker extends Thread{
      */
     @Override
     public void run() {
-        //Modificar isto para ir buscar parametetros ao ficheiro de confguração
-     GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
-     String rmiRegHostName = GenericIO.readlnString ();
-     GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
-     int rmiRegPortNumb = GenericIO.readlnInt ();
 
-     //Vai buscar interface do Betting Center
-     try {
-            Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            bettingCenter = (BettingCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_BETTING_CENTER);
-        } catch (RemoteException e) {
-            System.out.println("Exception finding logger: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (NotBoundException e) {
-            System.out.println("Logger is not registed: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-    }
-     
-     //Vai buscar interface do Betting Center
-     try {
-            Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            controlCenter = (ControlCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_CONTROL_CENTER);
-        } catch (RemoteException e) {
-            System.out.println("Exception finding logger: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (NotBoundException e) {
-            System.out.println("Logger is not registed: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-    }
-     
-    //Vai buscar interface do Betting Center
-     try {
-            Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            stable = (StableInterface) registry.lookup(RegistryConfiguration.REGISTRY_STABLE);
-        } catch (RemoteException e) {
-            System.out.println("Exception finding logger: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (NotBoundException e) {
-            System.out.println("Logger is not registed: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-    }
-     
-     //Vai buscar interface do Betting Center
-     try {
-            Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            raceTrack = (RaceTrackInterface) registry.lookup(RegistryConfiguration.REGISTRY_RACE_TRACK);
-        } catch (RemoteException e) {
-            System.out.println("Exception finding logger: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (NotBoundException e) {
-            System.out.println("Logger is not registed: " + e.getMessage() + "!");
-            e.printStackTrace();
-            System.exit(1);
-    } 
-        
         for(int k=0; k < SimulPar.K; k++){
          try {
              double [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k, clk).getRet_dou_arr();

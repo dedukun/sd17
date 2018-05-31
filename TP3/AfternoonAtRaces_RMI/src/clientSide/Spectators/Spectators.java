@@ -1,12 +1,16 @@
 package clientSide.Spectators;
 
 import java.util.Random;
-import serverSide.BettingCenter.BettingCenter;
-import serverSide.ControlCenter.ControlCenter;
-import serverSide.RaceTrack.RaceTrack;
-import serverSide.Stable.Stable;
-import serverSide.Paddock.Paddock;
+import interfaces.PaddockInterface;
+import interfaces.ControlCenterInterface;
+import interfaces.BettingCenterInterface;
 import auxiliary.SpectatorStates;
+import auxiliary.TimeVector;
+import clientSide.Broker.Broker;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * Spectators Thread.<br>
@@ -37,34 +41,44 @@ public class Spectators extends Thread{
     /**
      * Reference to Betting Center.
      */
-    private BettingCenter bettingCenter;
+    private BettingCenterInterface bettingCenter;
 
     /**
      * Reference to Control Center.
      */
-    private ControlCenter controlCenter;
+    private ControlCenterInterface controlCenter;
 
     /**
      * Reference to Paddock.
      */
-    private Paddock paddock;
+    private PaddockInterface paddock;
+
+    /**
+     * Reference to Time Vector.
+     */
+    private TimeVector clk;
 
     /**
      * Spectators Initialization.
      *
      *   @param name Spectator's Name
      *   @param sid Spectator's Identifier
+     *   @param bc Betting Center reference
+     *   @param cc Control Center reference
+     *   @param pd Paddock reference
      */
-    public Spectators(String name, int sid) {
+    public Spectators(String name, int sid, BettingCenterInterface bc, ControlCenterInterface cc, PaddockInterface pd) {
         super(name);
         this.sname = name;
         this.sid = sid;
 
         this.wallet = (double) new Random().nextInt(101) + 27;
 
-        this.bettingCenter = new BettingCenter();
-        this.controlCenter = new ControlCenter();
-        this.paddock = new Paddock();
+        this.bettingCenter = bc;
+        this.controlCenter = cc;
+        this.paddock = pd;
+
+        clk = new TimeVector();
     }
 
     /**
@@ -127,24 +141,28 @@ public class Spectators extends Thread{
      */
     @Override
     public void run(){
-        //Blocked
-        while(controlCenter.waitForNextRace(sid)){
-            //Unblocked by proceedToPaddock()
-            if(paddock.lastCheckHorses(sid)){
-                paddock.unblockGoCheckHorses();
-                controlCenter.unblockGoCheckHorses();
+        try{
+            //Blocked
+            while(controlCenter.waitForNextRace(sid, clk).isRet_bool()){
+                //Unblocked by proceedToPaddock()
+                if(paddock.lastCheckHorses(sid, clk).isRet_bool()){
+                    paddock.unblockGoCheckHorses(clk);
+                    controlCenter.unblockGoCheckHorses(clk);
+                }
+                int horseID = paddock.goCheckHorses(sid, clk).getRet_int();
+                //Unblocked by proceedToStartLine()
+                wallet -= bettingCenter.placeABet(horseID, sid, wallet, clk).getRet_dou();//Blocked
+                //Unblocked by acceptTheBet()
+                controlCenter.goWatchTheRace(sid, clk);//Blocked
+                //Unblocked by reportResults()
+                if(controlCenter.haveIWon(horseID, clk).isRet_bool())
+                    wallet += bettingCenter.goCollectTheGains(sid,wallet, clk).getRet_dou();//Blocked
+                    //Unblocked by honourTheBets()
             }
-            int horseID = paddock.goCheckHorses(sid);
-            //Unblocked by proceedToStartLine()
-            wallet -= bettingCenter.placeABet(horseID,sid,wallet);//Blocked
-            //Unblocked by acceptTheBet()
-            controlCenter.goWatchTheRace(sid);//Blocked
-            //Unblocked by reportResults()
-            if(controlCenter.haveIWon(horseID))
-                wallet += bettingCenter.goCollectTheGains(sid,wallet);//Blocked
-                //Unblocked by honourTheBets()
-        }
-        controlCenter.relaxABit(sid);
+            controlCenter.relaxABit(sid, clk);
+        } catch (RemoteException ex) {
+             Logger.getLogger(Spectators.class.getName()).log(Level.SEVERE, null, ex);
+         }
 
         // send shutdown
         /*bettingCenter.endServer();

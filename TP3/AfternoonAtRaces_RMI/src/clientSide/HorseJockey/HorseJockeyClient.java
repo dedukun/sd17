@@ -1,6 +1,16 @@
 package clientSide.HorseJockey;
 
 import auxiliary.SimulPar;
+import genclass.GenericIO;
+import interfaces.PaddockInterface;
+import interfaces.ControlCenterInterface;
+import interfaces.RaceTrackInterface;
+import interfaces.StableInterface;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import registry.RegistryConfiguration;
 
 public class HorseJockeyClient {
 
@@ -9,17 +19,84 @@ public class HorseJockeyClient {
      */
     public static void main(String[] args) {
 
+        PaddockInterface paddock = null;
+        ControlCenterInterface controlCenter = null;
+        RaceTrackInterface raceTrack = null;
+        StableInterface stable = null;
+
+        //Modificar isto para ir buscar parametetros ao ficheiro de confguração
+        GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
+        String rmiRegHostName = GenericIO.readlnString ();
+        GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
+        int rmiRegPortNumb = GenericIO.readlnInt ();
+
+        //Vai buscar interface do Paddock
+        try {
+               Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+               paddock = (PaddockInterface) registry.lookup(RegistryConfiguration.REGISTRY_PADDOCK);
+           } catch (RemoteException e) {
+               System.out.println("Exception finding logger: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+           } catch (NotBoundException e) {
+               System.out.println("Logger is not registed: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+        }
+
+        //Vai buscar interface do Control Center
+        try {
+               Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+               controlCenter = (ControlCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_CONTROL_CENTER);
+           } catch (RemoteException e) {
+               System.out.println("Exception finding logger: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+           } catch (NotBoundException e) {
+               System.out.println("Logger is not registed: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+        }
+
+        //Vai buscar interface do Race Track
+        try {
+               Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+               raceTrack = (RaceTrackInterface) registry.lookup(RegistryConfiguration.REGISTRY_RACE_TRACK);
+           } catch (RemoteException e) {
+               System.out.println("Exception finding logger: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+           } catch (NotBoundException e) {
+               System.out.println("Logger is not registed: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+        }
+
+        //Vai buscar interface do  Stable
+        try {
+               Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+               stable = (StableInterface) registry.lookup(RegistryConfiguration.REGISTRY_STABLE);
+           } catch (RemoteException e) {
+               System.out.println("Exception finding logger: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+           } catch (NotBoundException e) {
+               System.out.println("Logger is not registed: " + e.getMessage() + "!");
+               e.printStackTrace();
+               System.exit(1);
+        }
+
         HorseJockey [] horseJockey = new HorseJockey[SimulPar.C * SimulPar.K];
         for(int race=0;race<SimulPar.K;race++){
             for(int id=0;id<SimulPar.C;id++){
                 String name = "HorseJockey"+Integer.toString(race)+"_"+Integer.toString(id);
                 int idx = id + (SimulPar.C * race);
-                horseJockey[idx]=new HorseJockey(name, race, id);
+                horseJockey[idx]=new HorseJockey(name, race, id, paddock, controlCenter, raceTrack, stable);
 
                 horseJockey[idx].start();
             }
         }
-        
+
         for(int race=0;race<SimulPar.K;race++){
             for(int id=0;id<SimulPar.C;id++){
                 int idx = id + (SimulPar.C * race);
