@@ -12,7 +12,6 @@ import interfaces.GenReposInterface;
 import interfaces.Register;
 import java.rmi.Remote;
 import registry.RegistryConfiguration;
-import serverSide.GenRepos.GeneralRepository;
 
 /**
  *  This data type instantiates and registers a remote object that will run mobile code.
@@ -26,6 +25,12 @@ public class BettingCenterServer{
 
    public static void main(String[] args) throws RemoteException
    {
+    /* create and install the security manager */
+
+     if (System.getSecurityManager () == null)
+        System.setSecurityManager (new SecurityManager ());
+     GenericIO.writelnString ("Security manager was installed!");
+     
     /* get location of the registry service */
      GenReposInterface genReposInterface = null;
      String rmiRegHostName;
@@ -36,9 +41,9 @@ public class BettingCenterServer{
      rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
      //Vai buscar interface do Genereal Repository
-     /*try {
+     try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
+            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_GEN_REPOS);
         } catch (RemoteException e) {
             System.out.println("Exception finding logger: " + e.getMessage() + "!");
             e.printStackTrace();
@@ -47,81 +52,17 @@ public class BettingCenterServer{
             System.out.println("Logger is not registed: " + e.getMessage() + "!");
             e.printStackTrace();
             System.exit(1);
-        }*/
+        }
      
-    /* create and install the security manager */
-
-     if (System.getSecurityManager () == null)
-        System.setSecurityManager (new SecurityManager ());
-     GenericIO.writelnString ("Security manager was installed!");
-
     /* instantiate a remote object that runs mobile code and generate a stub for it */
-    GeneralRepository gr = new GeneralRepository();
-    GenReposInterface grStub = null;
-    int listeningPort_gr = RegistryConfiguration.REGISTRY_BETTING_CENTER_PORT;
-    
-    try
-     { 
-         //TODO - Implementar interfaces e arranjar bc
-         grStub = (GenReposInterface) UnicastRemoteObject.exportObject ((Remote) gr, listeningPort_gr);
-     }
-     catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine stub generation exception: " + e.getMessage ());
-       e.printStackTrace ();
-       System.exit (1);
-     }
-     GenericIO.writelnString ("Stub was generated!");
-     
-     String nameEntryBase_gr = RegistryConfiguration.REGISTRY_RMI;
-     String nameEntryObject_gr = RegistryConfiguration.REGISTRY_BETTING_CENTER;
-     Registry registry_gr = null;
-     Register reg_gr = null;
-     
-     try
-     { registry_gr = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
-     }
-     catch (RemoteException e)
-     { GenericIO.writelnString ("RMI registry creation exception: " + e.getMessage ());
-       e.printStackTrace ();
-       System.exit (1);
-     }
-     GenericIO.writelnString ("RMI registry was created!");
 
-     try
-     { reg_gr = (Register) registry_gr.lookup (nameEntryBase_gr);
-     }
-     catch (RemoteException e)
-     { GenericIO.writelnString ("RegisterRemoteObject lookup exception: " + e.getMessage ());
-       e.printStackTrace ();
-       System.exit (1);
-     }
-     catch (NotBoundException e)
-     { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
-       e.printStackTrace ();
-       System.exit (1);
-     }
-
-     try
-     { reg_gr.bind (nameEntryObject_gr, grStub);
-     }
-     
-     catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine registration exception: " + e.getMessage ());
-       e.printStackTrace ();
-       System.exit (1);
-     }
-     catch (AlreadyBoundException e)
-     { GenericIO.writelnString ("ComputeEngine already bound exception: " + e.getMessage ());
-       e.printStackTrace ();
-       System.exit (1);
-     }
-     GenericIO.writelnString ("ComputeEngine object was registered!");
-    
-    //Fazer equivalente para servers
+	//Fazer equivalente para servers
      BettingCenter bc = new BettingCenter(genReposInterface);
      BettingCenterInterface bcStub = null;
-     //Endicar porto de escuta
+	 
+	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_BETTING_CENTER_PORT;      /* it should be set accordingly in each case */
+
 	 
      try
      { 
@@ -134,8 +75,6 @@ public class BettingCenterServer{
        System.exit (1);
      }
      GenericIO.writelnString ("Stub was generated!");
-     
-     
 
     /* register it with the general registry service */
 
