@@ -258,15 +258,15 @@ public class RaceTrack implements RaceTrackInterface{
         
     //Bloquear server atraves de mecanismos de sincroniação
     
-        String nameEntryBase = "RegisterHandler";
+        String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
         String nameEntryObject = RegistryConfiguration.REGISTRY_RACE_TRACK;
         Registry registry = null;
         Register reg = null;
         String rmiRegHostName;
         int rmiRegPortNumb;
        
-        rmiRegHostName = RegistryConfiguration.REGISTRY_RACE_TRACK;
-        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RACE_TRACK_PORT;
+        rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
+        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
      
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);

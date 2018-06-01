@@ -496,15 +496,15 @@ public class GeneralRepository  implements GenReposInterface{
         
     //Bloquear server atraves de mecanismos de sincroniação
     
-        String nameEntryBase = "RegisterHandler";
+        String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
         String nameEntryObject = RegistryConfiguration.REGISTRY_GEN_REPOS;
         Registry registry = null;
         Register reg = null;
         String rmiRegHostName;
         int rmiRegPortNumb;
        
-        rmiRegHostName = RegistryConfiguration.REGISTRY_GEN_REPOS;
-        rmiRegPortNumb = RegistryConfiguration.REGISTRY_GEN_REPOS_PORT;
+        rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
+        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
      
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);

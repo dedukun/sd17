@@ -284,15 +284,15 @@ public class ControlCenter implements ControlCenterInterface{
     public synchronized void shutdown() throws RemoteException{
         //Bloquear server atraves de mecanismos de sincroniação
 
-        String nameEntryBase = "RegisterHandler";
+        String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
         String nameEntryObject = RegistryConfiguration.REGISTRY_CONTROL_CENTER;
         Registry registry = null;
         Register reg = null;
         String rmiRegHostName;
         int rmiRegPortNumb;
        
-        rmiRegHostName = RegistryConfiguration.REGISTRY_CONTROL_CENTER;
-        rmiRegPortNumb = RegistryConfiguration.REGISTRY_CONTROL_CENTER_PORT ;
+        rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
+        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT ;
      
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
