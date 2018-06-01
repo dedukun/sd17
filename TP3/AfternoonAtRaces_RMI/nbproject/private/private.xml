@@ -5,16 +5,20 @@
         <group>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/GenRepos/GenReposServer.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/clientSide/HorseJockey/HorseJockeyClient.java</file>
+            <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/ControlCenter/ControlCenter.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/clientSide/Broker/BrokerClient.java</file>
+            <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/Paddock/Paddock.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/Paddock/PaddockServer.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/RaceTrack/RaceTrack.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/Stable/StableServer.java</file>
+            <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/registry/RegisterRemoteObject.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/BettingCenter/BettingCenterServer.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/clientSide/Broker/Broker.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/registry/RegistryConfiguration.java</file>
-            <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/clientSide/Spectators/Spectators.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/BettingCenter/BettingCenter.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/registry/ServerRegisterRemoteObject.java</file>
+            <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/Stable/Stable.java</file>
+            <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/GenRepos/GeneralRepository.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/ControlCenter/ControlCenterServer.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/serverSide/RaceTrack/RaceTrackServer.java</file>
             <file>file:/C:/Users/Filipe/Desktop/SD/sd17/sd17/TP3/AfternoonAtRaces_RMI/src/clientSide/Spectators/SpectatorClient.java</file>
