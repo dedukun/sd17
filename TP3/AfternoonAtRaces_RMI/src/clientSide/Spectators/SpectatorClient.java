@@ -32,7 +32,7 @@ public class SpectatorClient {
         //Vai buscar interface do Betting Center
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               bettingCenter = (BettingCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_BETTING_CENTER);
+               bettingCenter = (BettingCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();
@@ -46,7 +46,7 @@ public class SpectatorClient {
         //Vai buscar interface do Control Center
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               controlCenter = (ControlCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_CONTROL_CENTER);
+               controlCenter = (ControlCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();
@@ -60,7 +60,7 @@ public class SpectatorClient {
         //Vai buscar interface do Paddock
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               paddock = (PaddockInterface) registry.lookup(RegistryConfiguration.REGISTRY_PADDOCK);
+               paddock = (PaddockInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();

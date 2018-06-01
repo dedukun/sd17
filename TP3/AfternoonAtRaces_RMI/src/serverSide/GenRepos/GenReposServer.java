@@ -62,8 +62,8 @@ public class GenReposServer{
 
     /* register it with the general registry service */
 
-     String nameEntryBase = "RegisterHandler";
-     String nameEntryObject = "GenReposInterface";
+     String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
+     String nameEntryObject = RegistryConfiguration.REGISTRY_GEN_REPOS;
      Registry registry = null;
      Register reg = null;
 

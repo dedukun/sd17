@@ -34,7 +34,7 @@ public class BrokerClient {
         //Vai buscar interface do Betting Center
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               bettingCenter = (BettingCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_BETTING_CENTER);
+               bettingCenter = (BettingCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();
@@ -48,7 +48,7 @@ public class BrokerClient {
         //Vai buscar interface do Control Center
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               controlCenter = (ControlCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_CONTROL_CENTER);
+               controlCenter = (ControlCenterInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();
@@ -62,7 +62,7 @@ public class BrokerClient {
         //Vai buscar interface do  Stable
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               stable = (StableInterface) registry.lookup(RegistryConfiguration.REGISTRY_STABLE);
+               stable = (StableInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();
@@ -76,7 +76,7 @@ public class BrokerClient {
         //Vai buscar interface do Race Track
         try {
                Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-               raceTrack = (RaceTrackInterface) registry.lookup(RegistryConfiguration.REGISTRY_RACE_TRACK);
+               raceTrack = (RaceTrackInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
            } catch (RemoteException e) {
                System.out.println("Exception finding logger: " + e.getMessage() + "!");
                e.printStackTrace();

@@ -37,7 +37,7 @@ public class ControlCenterServer{
      //Vai buscar interface do Genereal Repository
      try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_GEN_REPOS);
+            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
         } catch (RemoteException e) {
             System.out.println("Exception finding logger: " + e.getMessage() + "!");
             e.printStackTrace();
@@ -77,8 +77,8 @@ public class ControlCenterServer{
 
     /* register it with the general registry service */
 
-     String nameEntryBase = "RegisterHandler";
-     String nameEntryObject = "ControlCenterInterface";
+     String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
+     String nameEntryObject = RegistryConfiguration.REGISTRY_CONTROL_CENTER;
      Registry registry = null;
      Register reg = null;
 

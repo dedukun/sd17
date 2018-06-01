@@ -37,7 +37,7 @@ public class RaceTrackServer {
      //Vai buscar interface do Genereal Repository
      try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_GEN_REPOS);
+            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
         } catch (RemoteException e) {
             System.out.println("Exception finding logger: " + e.getMessage() + "!");
             e.printStackTrace();
@@ -75,8 +75,8 @@ public class RaceTrackServer {
 
     /* register it with the general registry service */
 
-     String nameEntryBase = "RegisterHandler";
-     String nameEntryObject = "RaceTrackInterface";
+     String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
+     String nameEntryObject = RegistryConfiguration.REGISTRY_RACE_TRACK;
      Registry registry = null;
      Register reg = null;
 
