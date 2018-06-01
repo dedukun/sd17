@@ -54,7 +54,7 @@ public class ServerRegisterRemoteObject
 
     /* register it with the local registry service */
 
-     String nameEntry = "RegisterHandler";
+     String nameEntry = RegistryConfiguration.REGISTRY_RMI;
      Registry registry = null;
 
      try
