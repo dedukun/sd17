@@ -1,4 +1,4 @@
-package auxiliary;
+package Auxiliar;
 
 /**
  * Configurations with the ports used and the host name.
