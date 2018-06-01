@@ -105,12 +105,12 @@ public class RegistryConfiguration {
     /**
      * RMI registry port
      */
-    public static final int REGISTRY_RMI_PORT = 22210 ;
+    public static final int REGISTRY_RMI_PORT = 22209 ;
     
     /**
      * RMI registry port
      */
-    public static final int REGISTER_RMI_PORT = 22209 ;
+    public static final int REGISTER_RMI_PORT = 22210 ;
      
     /**
      * Gen Repos Node
