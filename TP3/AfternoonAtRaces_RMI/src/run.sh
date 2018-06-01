@@ -18,11 +18,18 @@ printf "\nRun Registry...\n"
 
 printf "  "$registry"... "
 
-# Kill if running
-sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'java
-registry.ServerRegisterRemoteObject' | awk '{print \$2}' | head -n 1)"
+# Kill rmi registry
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'rmiregistry' | awk '{print \$2}' | head -n 1)"
 
-# run in remote machine
+# Kill registry
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}' | head -n 1)"
+
+# set registry
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "cd dir_$registry; ./set_rmiregistry.sh > setreg.out 2> setreg.err < /dev/null &"
+
+sleep 1
+
+# run registry
 sshpass -p $PASSWORD ssh sd0202@$registryMachine "cd dir_$registry; ./registry_com.sh > reg.out 2> reg.err < /dev/null &"
 
 echo "done"
@@ -37,8 +44,7 @@ do
     sleep 1
 
     # Kill if running
-    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java
-    serverSide.*' | awk '{print \$2}' | head -n 1)"
+    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}' | head -n 1)"
 
     # run in remote machine
     sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "cd dir_${servers[$i]}; ./server${servers[$i]}_com.sh > server.out 2> server.err < /dev/null &"
@@ -54,8 +60,7 @@ do
     sleep 2
 
     # Kill if running
-    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java
-    clientSide.*' | awk '{print \$2}' | head -n 1)"
+    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}' | head -n 1)"
 
     # run in remote machine
     sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "cd dir_${clients[$i]}; ./client${clients[$i]}_com.sh > client.out 2> client.err < /dev/null &"
