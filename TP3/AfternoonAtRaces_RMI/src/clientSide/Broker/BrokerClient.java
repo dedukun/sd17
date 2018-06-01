@@ -28,7 +28,7 @@ public class BrokerClient {
         StableInterface stable = null;
 
         //Modificar isto para ir buscar parametetros ao ficheiro de confguração
-        String rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_NODE;
+        String rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
         int rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
         //Vai buscar interface do Betting Center

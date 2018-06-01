@@ -110,51 +110,51 @@ public class RegistryConfiguration {
     /**
      * Gen Repos Node
      */
-    public static final String REGISTRY_GEN_REPOS_NODE = "l040101-ws01.ua.pt" ;
+    public static final String REGISTRY_GEN_REPOS_HOST = "l040101-ws01.ua.pt" ;
     
     /**
      * Betting Center Node
      */
-    public static final String REGISTRY_BETTING_CENTER_NODE = "l040101-ws02.ua.pt" ;
+    public static final String REGISTRY_BETTING_CENTER_HOST = "l040101-ws02.ua.pt" ;
     
     /**
      * Control Center Node
      */
-    public static final String REGISTRY_CONTROL_CENTER_NODE = "l040101-ws03.ua.pt" ;
+    public static final String REGISTRY_CONTROL_CENTER_HOST = "l040101-ws03.ua.pt" ;
     
     /**
      * Race Track registry Node
      */
-    public static final String REGISTRY_RACE_TRACK_NODE = "l040101-ws04.ua.pt" ;
+    public static final String REGISTRY_RACE_TRACK_HOST = "l040101-ws04.ua.pt" ;
     
     /**
      * Stable registry Node
      */
-    public static final String REGISTRY_STABLE_NODE = "l040101-ws05.ua.pt" ;
+    public static final String REGISTRY_STABLE_HOST = "l040101-ws05.ua.pt" ;
     
     /**
      * Paddock registry Node
      */
-    public static final String REGISTRY_PADDOCK_NODE = "l040101-ws06.ua.pt" ;
+    public static final String REGISTRY_PADDOCK_HOST = "l040101-ws06.ua.pt" ;
     
     /**
      * Broker registry Node
      */
-    public static final String REGISTRY_BROKER_NODE = "l040101-ws07.ua.pt" ;
+    public static final String REGISTRY_BROKER_HOST = "l040101-ws10.ua.pt" ;
     
     /**
      * Spectators registry Node
      */
-    public static final String REGISTRY_SPECTATORS_NODE = "l040101-ws08.ua.pt" ;
+    public static final String REGISTRY_SPECTATORS_HOST = "l040101-ws08.ua.pt" ;
     
     /**
      * Horse/Jockey registry Node
      */
-    public static final String REGISTRY_HORSE_JOCKEY_NODE = "l040101-ws09.ua.pt" ;
+    public static final String REGISTRY_HORSE_JOCKEY_HOST = "l040101-ws09.ua.pt" ;
     
     /**
      * RMI registry Node
      */
-    public static final String REGISTRY_RMI_NODE = "l040101-ws10.ua.pt" ;
+    public static final String REGISTRY_RMI_HOST = "l040101-ws10.ua.pt" ;
     
 }

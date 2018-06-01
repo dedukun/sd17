@@ -29,7 +29,7 @@ public class GenReposServer{
      String rmiRegHostName;
      int rmiRegPortNumb;
 
-     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_NODE;
+     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
      rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
     /* create and install the security manager */

@@ -31,7 +31,7 @@ public class RaceTrackServer {
      int rmiRegPortNumb;
 
      //Modificar isto para ir buscar parametetros ao ficheiro de confguração
-     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_NODE;
+     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
      rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
      //Vai buscar interface do Genereal Repository
