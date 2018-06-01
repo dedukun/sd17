@@ -39,17 +39,17 @@ public class Spectators extends Thread{
     private double wallet;
 
     /**
-     * Reference to Betting Center.
+     * Reference to Betting Center Interface.
      */
     private BettingCenterInterface bettingCenter;
 
     /**
-     * Reference to Control Center.
+     * Reference to Control Center Interface.
      */
     private ControlCenterInterface controlCenter;
 
     /**
-     * Reference to Paddock.
+     * Reference to Paddock Interface.
      */
     private PaddockInterface paddock;
 

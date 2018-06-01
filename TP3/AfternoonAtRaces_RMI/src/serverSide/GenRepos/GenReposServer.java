@@ -10,6 +10,7 @@ import genclass.GenericIO;
 import interfaces.GenReposInterface;
 import interfaces.Register;
 import java.rmi.Remote;
+import registry.RegistryConfiguration;
 
 /**
  *  This data type instantiates and registers a remote object that will run mobile code.
@@ -28,10 +29,8 @@ public class GenReposServer{
      String rmiRegHostName;
      int rmiRegPortNumb;
 
-     GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
-     rmiRegHostName = GenericIO.readlnString ();
-     GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
-     rmiRegPortNumb = GenericIO.readlnInt ();
+     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_NODE;
+     rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
     /* create and install the security manager */
 
@@ -46,7 +45,7 @@ public class GenReposServer{
      GenReposInterface grStub = null;
 	 
 	 //Endicar porto de escuta
-     int listeningPort = 22001;                            /* it should be set accordingly in each case */
+     int listeningPort = RegistryConfiguration.REGISTRY_GEN_REPOS_PORT;                /* it should be set accordingly in each case */
 
 	 
      try

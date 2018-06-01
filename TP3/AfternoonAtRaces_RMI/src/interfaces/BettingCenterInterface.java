@@ -3,6 +3,8 @@ package interfaces;
 import auxiliary.ReturnStruct;
 import auxiliary.SimulPar;
 import auxiliary.TimeVector;
+import genclass.GenericIO;
+import java.rmi.NotBoundException;
 import serverSide.BettingCenter.BettingCenter;
 
 import java.rmi.Remote;
@@ -92,7 +94,7 @@ public interface BettingCenterInterface extends Remote{
      */
    public ReturnStruct goCollectTheGains(int specId, double funds, TimeVector clk) throws RemoteException;
 
-   //Not implemented by now
-   //public void shutdown() throws RemoteException;
+   //Not tested yet
+    public void shutdown() throws RemoteException;
 
 }

@@ -1,7 +1,10 @@
 /**
  * Package with all the auxiliar files used.<br>
- *  - All entities states<br>
- *  - Configurations of the network<br>
- *  - Simulation Parameters
+ *  <br>- All entities states
+ *  <br>- Configurations of the network
+ *  <br>- Simulation Parameters
+ *  <br>- Return Structure
+ *  <br>- Time Vector
+ * 
  */
-package Auxiliar;
+package auxiliary;

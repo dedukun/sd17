@@ -28,10 +28,8 @@ public class ServerRegisterRemoteObject
      String rmiRegHostName;
      int rmiRegPortNumb;
 
-     GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
-     rmiRegHostName = GenericIO.readlnString ();
-     GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
-     rmiRegPortNumb = GenericIO.readlnInt ();
+     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI;
+     rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
     /* create and install the security manager */
 

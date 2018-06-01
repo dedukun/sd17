@@ -45,22 +45,22 @@ public class HorseJockey extends Thread{
     private int agility;
 
     /**
-     * Reference to Control Center.
+     * Reference to Control Center Interface.
      */
     private ControlCenterInterface controlCenter;
 
     /**
-     * Reference to Paddock.
+     * Reference to Paddock Interface.
      */
     private PaddockInterface paddock;
 
     /**
-     * Reference to Race Track;
+     * Reference to Race Track Interface.
      */
     private RaceTrackInterface raceTrack;
 
     /**
-     * Reference to Stable
+     * Reference to Stable Interface.
      */
     private StableInterface stable;
 

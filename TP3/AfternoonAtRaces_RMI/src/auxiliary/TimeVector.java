@@ -17,18 +17,32 @@ public class TimeVector implements Serializable {
         
     private int time;
     
+    /**
+    *Constructor of time vector.
+    */
     public TimeVector(){
         this.time=0;
     }
     
+    /**
+    *Time updater.
+    *
+    * @param time new time.
+    */
     public void updateTime(int time){
         this.time=time;
     }
     
+    /**
+    *Get time.
+    */
     public int getTime(){
         return time;
     }
     
+    /**
+    *Increment the time.
+    */
     public void incTime(){
         time++;
     }

@@ -63,6 +63,7 @@ public interface PaddockInterface extends Remote{
      */
     public ReturnStruct unblockGoCheckHorses(TimeVector clk) throws RemoteException;
     
-    
+    //Not tested yet
+    public void shutdown() throws RemoteException;
     
 }

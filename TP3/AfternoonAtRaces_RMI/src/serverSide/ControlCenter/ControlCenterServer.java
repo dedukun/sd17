@@ -31,10 +31,8 @@ public class ControlCenterServer{
      int rmiRegPortNumb;
 
      //Modificar isto para ir buscar parametetros ao ficheiro de confguração
-     GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
-     rmiRegHostName = GenericIO.readlnString ();
-     GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
-     rmiRegPortNumb = GenericIO.readlnInt ();
+     rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_NODE;
+     rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
      //Vai buscar interface do Genereal Repository
      try {
@@ -62,7 +60,7 @@ public class ControlCenterServer{
      ControlCenterInterface ccStub = null;
 	 
 	 //Endicar porto de escuta
-     int listeningPort = 22001;                            /* it should be set accordingly in each case */
+     int listeningPort = RegistryConfiguration.REGISTRY_CONTROL_CENTER_PORT;          /* it should be set accordingly in each case */
 
 	 
      try
@@ -123,7 +121,7 @@ public class ControlCenterServer{
        System.exit (1);
      }
      GenericIO.writelnString ("ComputeEngine object was registered!");
-	 
+	
 	 //Bloquear server atraves de mecanismos de sincroniação
 	 //reg.unbind , retirar referenceia do registo
 	 //matar thread base, unexportObject

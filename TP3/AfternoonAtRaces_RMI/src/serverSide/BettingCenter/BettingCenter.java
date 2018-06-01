@@ -5,11 +5,20 @@ import auxiliary.BrokerStates;
 import auxiliary.ReturnStruct;
 import auxiliary.SpectatorStates;
 import auxiliary.TimeVector;
+import genclass.GenericIO;
 import interfaces.BettingCenterInterface;
 import interfaces.GenReposInterface;
+import interfaces.Register;
+import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import registry.RegistryConfiguration;
 
 /**
  * Betting Center.<br>
@@ -381,9 +390,55 @@ public class BettingCenter implements BettingCenterInterface{
     /**
      * Send a message to the General Reposutory telling that this server is shutting down
      */
-    public synchronized void shutdownGenRepo(){
-        //Não modificado por agora
-        //genRepos.endServer();
+    @Override
+    public synchronized void shutdown() throws RemoteException{
+        //Bloquear server atraves de mecanismos de sincroniação(?)
+
+        String nameEntryBase = "RegisterHandler";
+        String nameEntryObject = RegistryConfiguration.REGISTRY_BETTING_CENTER;
+        Registry registry = null;
+        Register reg = null;
+        String rmiRegHostName;
+        int rmiRegPortNumb;
+       
+        rmiRegHostName = RegistryConfiguration.REGISTRY_BETTING_CENTER;
+        rmiRegPortNumb = RegistryConfiguration.REGISTRY_BETTING_CENTER_PORT ;
+     
+        try {
+            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+        } catch (RemoteException ex) {
+            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
+            reg = (Register) registry.lookup(nameEntryBase);
+        } catch (RemoteException e) {
+            System.out.println("RegisterRemoteObject lookup exception: " + e.getMessage());
+            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
+        } catch (NotBoundException e) {
+            System.out.println("RegisterRemoteObject not bound exception: " + e.getMessage());
+            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        //reg.unbind , retirar referenceia do registo
+        try {
+            reg.unbind(nameEntryObject);
+        } catch (RemoteException e) {
+            System.out.println("BettingCenter registration exception: " + e.getMessage());
+            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
+        } catch (NotBoundException e) {
+            System.out.println("BettingCenter not bound exception: " + e.getMessage());
+            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        //matar thread base, unexportObject
+        try {
+            UnicastRemoteObject.unexportObject(this, true);
+        } catch (NoSuchObjectException ex) {
+            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("BettingCenter shutdown.");
     }
 
 

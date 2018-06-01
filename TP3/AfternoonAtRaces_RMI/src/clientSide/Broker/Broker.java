@@ -30,22 +30,22 @@ public class Broker extends Thread{
     private BrokerStates bstate;
 
     /**
-     * Reference to Betting Center.
+     * Reference to Betting Center Interface.
      */
     private BettingCenterInterface bettingCenter;
 
     /**
-     * Reference to Control Center.
+     * Reference to Control Center Interface.
      */
     private ControlCenterInterface controlCenter;
 
     /**
-     * Reference to Race Track;
+     * Reference to Race Track Interface.
      */
     private RaceTrackInterface raceTrack;
 
     /**
-     * Reference to Stable
+     * Reference to Stable Interface.
      */
     private StableInterface stable;
 

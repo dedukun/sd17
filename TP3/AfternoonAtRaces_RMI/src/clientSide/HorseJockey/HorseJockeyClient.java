@@ -15,6 +15,8 @@ import registry.RegistryConfiguration;
 public class HorseJockeyClient {
 
     /**
+     * Main from Horse/Jockey Client
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -25,10 +27,8 @@ public class HorseJockeyClient {
         StableInterface stable = null;
 
         //Modificar isto para ir buscar parametetros ao ficheiro de confguração
-        GenericIO.writeString ("Nome do nó de processamento onde está localizado o serviço de registo? ");
-        String rmiRegHostName = GenericIO.readlnString ();
-        GenericIO.writeString ("Número do port de escuta do serviço de registo? ");
-        int rmiRegPortNumb = GenericIO.readlnInt ();
+        String rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_NODE;
+        int rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT;
 
         //Vai buscar interface do Paddock
         try {

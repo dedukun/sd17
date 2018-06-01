@@ -43,4 +43,7 @@ public interface StableInterface extends Remote{
      *   @throws RemoteException may throw during a execution of a remote method call
      */
     public ReturnStruct entertainTheGuests(TimeVector clk) throws RemoteException;
+    
+    //Not tested yet
+    public void shutdown() throws RemoteException;
 }

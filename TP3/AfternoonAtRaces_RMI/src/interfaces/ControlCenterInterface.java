@@ -117,5 +117,8 @@ public interface ControlCenterInterface extends Remote{
     *   @throws RemoteException may throw during a execution of a remote method call
     */
     public ReturnStruct relaxABit(int specId, TimeVector clk) throws RemoteException;
+    
+    //Not tested yet
+    public void shutdown() throws RemoteException;
 
 }
