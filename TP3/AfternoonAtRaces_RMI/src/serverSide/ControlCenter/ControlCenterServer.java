@@ -37,7 +37,7 @@ public class ControlCenterServer{
      //Vai buscar interface do Genereal Repository
      try {
             Registry registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_RMI);
+            genReposInterface = (GenReposInterface) registry.lookup(RegistryConfiguration.REGISTRY_GEN_REPOS);
         } catch (RemoteException e) {
             System.out.println("Exception finding logger: " + e.getMessage() + "!");
             e.printStackTrace();
