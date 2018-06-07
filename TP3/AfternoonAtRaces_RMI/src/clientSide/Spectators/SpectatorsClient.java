@@ -12,7 +12,7 @@ import java.rmi.registry.Registry;
 import registry.RegistryConfiguration;
 
 
-public class SpectatorClient {
+public class SpectatorsClient {
 
     /**
      * Main from Horse/Jockey Client
