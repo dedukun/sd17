@@ -43,13 +43,13 @@ public class GenReposServer{
 	//Fazer equivalente para servers
      GeneralRepository gr = new GeneralRepository ();
      GenReposInterface grStub = null;
-	 
+
 	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_GEN_REPOS_PORT;                /* it should be set accordingly in each case */
 
-	 
+
      try
-     { 
+     {
          //TODO - Implementar interfaces e arranjar bc
          grStub = (GenReposInterface) UnicastRemoteObject.exportObject ((Remote) gr, listeningPort);
      }
@@ -94,7 +94,7 @@ public class GenReposServer{
      try
      { reg.bind (nameEntryObject, grStub);
      }
-     
+
      catch (RemoteException e)
      { GenericIO.writelnString ("ComputeEngine registration exception: " + e.getMessage ());
        e.printStackTrace ();
@@ -106,7 +106,7 @@ public class GenReposServer{
        System.exit (1);
      }
      GenericIO.writelnString ("ComputeEngine object was registered!");
-	 
+
 	 //Bloquear server atraves de mecanismos de sincroniação
 	 //reg.unbind , retirar referenceia do registo
 	 //matar thread base, unexportObject

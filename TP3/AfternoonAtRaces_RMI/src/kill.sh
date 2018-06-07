@@ -18,42 +18,35 @@ servers=( "GenRepos" "BettingCenter" "ControlCenter" "Paddock" "RaceTrack" "Stab
 clients=( "HorseJockey" "Spectators" "Broker" )
 
 
-printf "\nRun Registry... "
+printf "\nKill Registry... "
 
-# set registry
-sshpass -p $PASSWORD ssh sd0202@$registryMachine "./set_rmiregistry.sh > setreg.out 2> setreg.err < /dev/null &"
+# Kill rmi registry
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'rmiregistry' | awk '{print \$2}' | head -n 1)"
 
-sleep 1
-
-# run registry
-sshpass -p $PASSWORD ssh sd0202@$registryMachine "cd dir_$registry; ./registry_com.sh > reg.out 2> reg.err < /dev/null &"
+# Kill registry
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}' | head -n 1)"
 
 echo "done"
 
-sleep 2
 
-printf "\nRun Servers...\n"
+printf "\nKill Servers...\n"
 for i in $(seq 0 $((${#servers[@]}-1)))
 do
     printf "  "${servers[$i]}"... "
 
-    sleep 1
-
-    # run in remote machine
-    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "cd dir_${servers[$i]}; ./server${servers[$i]}_com.sh > server.out 2> server.err < /dev/null &"
+    # Kill if running
+    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}' | head -n 1)"
 
     echo "done"
 done
 
-printf "\nRun Clients...\n"
+printf "\nKill Clients...\n"
 for i in $(seq 0 $((${#clients[@]}-1)))
 do
     printf "  "${clients[$i]}"... "
 
-    sleep 2
-
-    # run in remote machine
-    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "cd dir_${clients[$i]}; ./client${clients[$i]}_com.sh > client.out 2> client.err < /dev/null &"
+    # Kill if running
+    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}' | head -n 1)"
 
     echo "done"
 done

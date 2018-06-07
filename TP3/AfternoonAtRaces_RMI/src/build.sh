@@ -9,7 +9,7 @@ javac ./auxiliary/*.java ./clientSide/*/*.java ./interfaces/*.java ./registry/*.
 echo "done"
 
 echo "  Build..."
-# Copy files to folder
+
 printf "    Registry... "
 cd deploy/dir_registry
 
@@ -24,6 +24,25 @@ zip -qr registry.zip dir_registry/
 
 cd ..
 echo "done"
+
+printf "    Public... "
+cd deploy/classes
+
+mkdir auxiliary interfaces clientSide clientSide/Broker clientSide/HorseJockey clientSide/Spectators
+cp ../../auxiliary/* ./auxiliary/
+cp ../../interfaces/*.class ./interfaces/
+cp ../../clientSide/Broker/*.class ./clientSide/Broker
+cp ../../clientSide/HorseJockey/*.class ./clientSide/HorseJockey
+cp ../../clientSide/Spectators/*.class ./clientSide/Spectators
+
+cd ..
+
+# zip .class
+zip -qr classes.zip classes/
+
+cd ..
+echo "done"
+
 
 servers=( "BettingCenter" "ControlCenter" "GenRepos" "Paddock" "RaceTrack" "Stable" )
 clients=( "Broker" "HorseJockey" "Spectators" )
