@@ -54,7 +54,7 @@ public class GenReposServer{
          grStub = (GenReposInterface) UnicastRemoteObject.exportObject ((Remote) gr, listeningPort);
      }
      catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine stub generation exception: " + e.getMessage ());
+     { GenericIO.writelnString ("GeneRepos stub generation exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
@@ -96,20 +96,46 @@ public class GenReposServer{
      }
 
      catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine registration exception: " + e.getMessage ());
+     { GenericIO.writelnString ("GenRepos registration exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
      catch (AlreadyBoundException e)
-     { GenericIO.writelnString ("ComputeEngine already bound exception: " + e.getMessage ());
+     { GenericIO.writelnString ("GenRepos already bound exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-     GenericIO.writelnString ("ComputeEngine object was registered!");
+     GenericIO.writelnString ("GenRepos object was registered!");
 
-	 //Bloquear server atraves de mecanismos de sincroniação
-	 //reg.unbind , retirar referenceia do registo
-	 //matar thread base, unexportObject
-	 //fazer system call que faz signal no caso de usar monitorImplicitos
+     // Block
+     gr.waitForShutdown();
+     
+     try{
+         reg.unbind(nameEntryObject);
+     } catch (RemoteException e)
+     { GenericIO.writelnString ("RegisterRemoteObject unbind exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+     catch (NotBoundException e)
+     { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+     
+    try
+     {
+         boolean succ = UnicastRemoteObject.unexportObject ((Remote) gr, true);
+         
+         while(succ)
+             succ = UnicastRemoteObject.unexportObject ((Remote) gr, true);
+     }
+     catch (RemoteException e)
+     { GenericIO.writelnString ("GeneRepos stub remove exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+    
+     GenericIO.writelnString ("GenRepos shutdown!");
  }
 }

@@ -72,6 +72,11 @@ public class RaceTrack implements RaceTrackInterface{
      * Reference to Time Vector.
      */
     private TimeVector clk;
+        
+    /**
+     * Shutdown signal
+     */
+    private boolean waitShut; 
 
     /**
      * Race Track initialization
@@ -88,6 +93,8 @@ public class RaceTrack implements RaceTrackInterface{
 
         // Sync conditions
         waitToMove = true;
+        
+        waitShut = true;
     }
 
     /**
@@ -248,6 +255,19 @@ public class RaceTrack implements RaceTrackInterface{
     public synchronized ReturnStruct getResults(TimeVector clk){
         this.clk.updateTime(clk.getTime());
         return new ReturnStruct(clk, winningHorses.stream().mapToInt(i->i).toArray());
+    }
+    
+    /**
+     * Server is waiting for a shutdown signal
+     */
+    public synchronized void waitForShutdown() {
+        try{
+            while(waitShut){
+                this.wait();
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -110,6 +110,16 @@ public class BettingCenter implements BettingCenterInterface{
      * Reference to Time Vector.
      */
     private TimeVector clk;
+          
+    /**
+     * Shutdown signal
+     */
+    private boolean waitShut;
+    
+    /**
+     * Connected clients
+     */
+    private int numClients;
 
     /**
      * Betting Center initialization.
@@ -133,6 +143,9 @@ public class BettingCenter implements BettingCenterInterface{
         waitForWinningSpectator = true;
         waitForGains = new boolean[SimulPar.S];
         clk = new TimeVector();
+        waitShut = true;
+        
+        numClients = 2;
     }
 
     /**
@@ -386,6 +399,20 @@ public class BettingCenter implements BettingCenterInterface{
 
         return new ReturnStruct(this.clk, earnings);
     }
+    
+    /**
+     * Server is waiting for a shutdown signal
+     */
+    public synchronized void waitForShutdown() {
+        try{
+            while(waitShut){
+                this.wait();
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+    
 
     /**
      * Send a message to the General Reposutory telling that this server is shutting down

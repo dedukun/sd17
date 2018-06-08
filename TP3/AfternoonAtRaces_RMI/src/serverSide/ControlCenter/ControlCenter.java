@@ -69,6 +69,11 @@ public class ControlCenter implements ControlCenterInterface{
      * Reference to Time Vector.
      */
     private TimeVector clk;
+    
+    /**
+     * Shutdown signal
+     */
+    private boolean waitShut;
 
     /**
      * ControlCenter intilization.
@@ -76,6 +81,7 @@ public class ControlCenter implements ControlCenterInterface{
     public ControlCenter(GenReposInterface genRepos) throws RemoteException{
         this.genRepos= genRepos;
         clk = new TimeVector();
+        waitShut = true;
         
         spectatosLeavingStands = 0;
 
@@ -274,6 +280,19 @@ public class ControlCenter implements ControlCenterInterface{
         genRepos.setSpectatorState(specId, SpectatorStates.CB, clk);
 
         return new ReturnStruct(this.clk);
+    }
+    
+    /**
+     * Server is waiting for a shutdown signal
+     */
+    public synchronized void waitForShutdown() {
+        try{
+            while(waitShut){
+                this.wait();
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
 

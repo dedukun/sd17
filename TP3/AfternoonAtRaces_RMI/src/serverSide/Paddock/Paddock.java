@@ -64,6 +64,11 @@ public class Paddock  implements PaddockInterface{
      * Reference to Time Vector.
      */
     private TimeVector clk;
+    
+    /**
+     * Shutdown signal
+     */
+    private boolean waitShut; 
 
 
     /**
@@ -80,6 +85,8 @@ public class Paddock  implements PaddockInterface{
         // sync conditions
         paradingHorses = true;
         evaluatingHorses = true;
+        
+        waitShut = true;
     }
 
     /**
@@ -239,6 +246,19 @@ public class Paddock  implements PaddockInterface{
                 horse = ThreadLocalRandom.current().nextInt(1,SimulPar.C);
         }
         return horse;
+    }
+    
+    /**
+     * Server is waiting for a shutdown signal
+     */
+    public synchronized void waitForShutdown() {
+        try{
+            while(waitShut){
+                this.wait();
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     /**

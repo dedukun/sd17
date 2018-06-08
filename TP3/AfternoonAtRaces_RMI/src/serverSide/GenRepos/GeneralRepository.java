@@ -121,12 +121,19 @@ public class GeneralRepository  implements GenReposInterface{
     * Second line to print.
     */
     private TimeVector clk;
+    
+    /**
+     * Shutdown signal
+     */
+    private boolean waitShut; 
+    
     /**
     * General Repository initialization.
     */
     public GeneralRepository(){
         this.filename="Log.txt";
         clk = new TimeVector();
+        waitShut = true;
         // Set some initial values
         Arrays.fill(betS, -1);
         Arrays.fill(horseEnd, -1);
@@ -489,6 +496,19 @@ public class GeneralRepository  implements GenReposInterface{
         //updateLog();
         //
         return new ReturnStruct(this.clk);
+    }
+    
+    /**
+     * Server is waiting for a shutdown signal
+     */
+    public synchronized void waitForShutdown() {
+        try{
+            while(waitShut){
+                this.wait();
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
     
     @Override

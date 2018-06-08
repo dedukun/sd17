@@ -69,7 +69,7 @@ public class PaddockServer{
          pdStub = (PaddockInterface) UnicastRemoteObject.exportObject ((Remote) pd, listeningPort);
      }
      catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine stub generation exception: " + e.getMessage ());
+     { GenericIO.writelnString ("Paddock stub generation exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
@@ -111,20 +111,46 @@ public class PaddockServer{
      }
      
      catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine registration exception: " + e.getMessage ());
+     { GenericIO.writelnString ("Paddock registration exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
      catch (AlreadyBoundException e)
-     { GenericIO.writelnString ("ComputeEngine already bound exception: " + e.getMessage ());
+     { GenericIO.writelnString ("Paddock already bound exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-     GenericIO.writelnString ("ComputeEngine object was registered!");
+     GenericIO.writelnString ("Paddock object was registered!");
 	 
-	 //Bloquear server atraves de mecanismos de sincroniação
-	 //reg.unbind , retirar referenceia do registo
-	 //matar thread base, unexportObject
-	 //fazer system call que faz signal no caso de usar monitorImplicitos
+     // Block
+     pd.waitForShutdown();
+     
+     try{
+         reg.unbind(nameEntryObject);
+     } catch (RemoteException e)
+     { GenericIO.writelnString ("RegisterRemoteObject unbind exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+     catch (NotBoundException e)
+     { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+     
+    try
+     {
+         boolean succ = UnicastRemoteObject.unexportObject ((Remote) pd, true);
+         
+         while(succ)
+             succ = UnicastRemoteObject.unexportObject ((Remote) pd, true);
+     }
+     catch (RemoteException e)
+     { GenericIO.writelnString ("Paddock stub remove exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+    
+     GenericIO.writelnString ("Paddock shutdown!");
  }
 }

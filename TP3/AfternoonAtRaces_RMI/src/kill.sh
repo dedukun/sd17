@@ -23,14 +23,12 @@ printf "\nKill Registry... "
 # Kill rmi registry
 sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'rmiregistry' | awk '{print \$2}')"
 
-sleep 1
 
 # Kill registry
 sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
 
 echo "done"
 
-sleep 1
 
 printf "\nKill Servers...\n"
 for i in $(seq 0 $((${#servers[@]}-1)))
@@ -40,7 +38,6 @@ do
     # Kill if running
     sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
 
-    sleep 1
 
     echo "done"
 done
@@ -50,7 +47,6 @@ for i in $(seq 0 $((${#clients[@]}-1)))
 do
     printf "  "${clients[$i]}"... "
 
-    sleep 1
 
     # Kill if running
     sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"

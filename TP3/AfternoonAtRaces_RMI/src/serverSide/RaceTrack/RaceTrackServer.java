@@ -67,7 +67,7 @@ public class RaceTrackServer {
          rtStub = (RaceTrackInterface) UnicastRemoteObject.exportObject ((Remote) rt, listeningPort);
      }
      catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine stub generation exception: " + e.getMessage ());
+     { GenericIO.writelnString ("RaceTrack stub generation exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
@@ -109,20 +109,46 @@ public class RaceTrackServer {
      }
      
      catch (RemoteException e)
-     { GenericIO.writelnString ("ComputeEngine registration exception: " + e.getMessage ());
+     { GenericIO.writelnString ("RaceTrack registration exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
      catch (AlreadyBoundException e)
-     { GenericIO.writelnString ("ComputeEngine already bound exception: " + e.getMessage ());
+     { GenericIO.writelnString ("RaceTrack already bound exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-     GenericIO.writelnString ("ComputeEngine object was registered!");
+     GenericIO.writelnString ("RaceTrack object was registered!");
 	 
-	 //Bloquear server atraves de mecanismos de sincroniação
-	 //reg.unbind , retirar referenceia do registo
-	 //matar thread base, unexportObject
-	 //fazer system call que faz signal no caso de usar monitorImplicitos
+     // Block
+     rt.waitForShutdown();
+     
+     try{
+         reg.unbind(nameEntryObject);
+     } catch (RemoteException e)
+     { GenericIO.writelnString ("RegisterRemoteObject unbind exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+     catch (NotBoundException e)
+     { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+     
+    try
+     {
+         boolean succ = UnicastRemoteObject.unexportObject ((Remote) rt, true);
+         
+         while(succ)
+             succ = UnicastRemoteObject.unexportObject ((Remote) rt, true);
+     }
+     catch (RemoteException e)
+     { GenericIO.writelnString ("RaceTrack stub remove exception: " + e.getMessage ());
+       e.printStackTrace ();
+       System.exit (1);
+     }
+    
+     GenericIO.writelnString ("RaceTrack shutdown!");
  }
 }

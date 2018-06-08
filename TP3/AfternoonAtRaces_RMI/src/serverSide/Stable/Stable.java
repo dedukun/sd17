@@ -58,6 +58,11 @@ public class Stable implements StableInterface{
      * Horse/Jockey waiting at the stable for the start of the parade - synchronization condition.
      */
     private boolean waitAtStable;
+             
+    /**
+     * Shutdown signal
+     */
+    private boolean waitShut; 
 
     /**
      * Stable initialization.
@@ -73,6 +78,8 @@ public class Stable implements StableInterface{
         // Sync conditions
         waitAtStable = true;
         endEvent = false;
+        
+        waitShut = true;
     }
 
     /**
@@ -173,6 +180,20 @@ public class Stable implements StableInterface{
 
         return new ReturnStruct(this.clk);
     }
+    
+    /**
+     * Server is waiting for a shutdown signal
+     */
+    public synchronized void waitForShutdown() {
+        try{
+            while(waitShut){
+                this.wait();
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Send a message to the General Reposutory telling that this server is shutting down
