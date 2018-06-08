@@ -28,7 +28,6 @@ public class BrokerClient {
         ControlCenterInterface controlCenter = null;
         RaceTrackInterface raceTrack = null;
         StableInterface stable = null;
-        Registry registry = null;
 
         //Modificar isto para ir buscar parametetros ao ficheiro de confguração
         String rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;

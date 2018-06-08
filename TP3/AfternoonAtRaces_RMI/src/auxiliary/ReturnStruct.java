@@ -12,7 +12,8 @@ import java.io.Serializable;
  * @author Filipe
  */
 public class ReturnStruct implements Serializable{
-    private static final long serialVersionUID = 8415L;
+
+    private static final long serialVersionUID = -4495216721200724318L;
     
     private TimeVector clk;
     private int ret_int;

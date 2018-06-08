@@ -128,7 +128,8 @@ public class Stable implements StableInterface{
         this.clk.updateTime(clk.getTime());
         //((Broker) Thread.currentThread()).setState(BrokerStates.ANR);
 
-        genRepos.setBrokerState(BrokerStates.OTE, this.clk);
+        if(raceNumber == 0)
+            genRepos.setBrokerState(BrokerStates.OTE, this.clk);
         genRepos.setRaceNumber(raceNumber,this.clk);
         genRepos.setBrokerState(BrokerStates.ANR,this.clk);
 

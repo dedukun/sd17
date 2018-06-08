@@ -99,30 +99,30 @@ public class Broker extends Thread{
      */
     @Override
     public void run() {
-
-        for(int k=0; k < SimulPar.K; k++){
-         try {
-             double [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k, clk).getRet_dou_arr();
-             bettingCenter.setHorsesWinningChances(horsesWinningProbabilities,clk);
-             controlCenter.summonHorsesToPaddock(clk); //Blocked
-             //unblocked by lastCheckHorses() or placeABet()
-             while(!bettingCenter.acceptedAllBets(clk).isRet_bool()){
-                 bettingCenter.acceptTheBet(clk); //Blocked
-             }
-             //Unblocked by unblockMakeAMove()
-             raceTrack.startTheRace(clk);
-             controlCenter.startTheRace(clk);//Blocked
-             int[] winnerHorses = raceTrack.getResults(clk).getRet_int_arr();
-             controlCenter.reportResults(winnerHorses, clk);
-             if(bettingCenter.areThereAnyWinners(winnerHorses, clk).isRet_bool()){
-                 while(!bettingCenter.honouredAllTheBets(clk).isRet_bool())
-                     bettingCenter.honourTheBet(clk);//Blocked
-             }
-             stable.entertainTheGuests(clk); // Unblock Horses
-             controlCenter.entertainTheGuests(clk);
-         } catch (RemoteException ex) {
-             Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        try {
+            for(int k=0; k < SimulPar.K; k++){
+    
+                double [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k, clk).getRet_dou_arr();
+                bettingCenter.setHorsesWinningChances(horsesWinningProbabilities,clk);
+                controlCenter.summonHorsesToPaddock(clk); //Blocked
+                //unblocked by lastCheckHorses() or placeABet()
+                while(!bettingCenter.acceptedAllBets(clk).isRet_bool()){
+                    bettingCenter.acceptTheBet(clk); //Blocked
+                }
+                //Unblocked by unblockMakeAMove()
+                raceTrack.startTheRace(clk);
+                controlCenter.startTheRace(clk);//Blocked
+                int[] winnerHorses = raceTrack.getResults(clk).getRet_int_arr();
+                controlCenter.reportResults(winnerHorses, clk);
+                if(bettingCenter.areThereAnyWinners(winnerHorses, clk).isRet_bool()){
+                    while(!bettingCenter.honouredAllTheBets(clk).isRet_bool())
+                        bettingCenter.honourTheBet(clk);//Blocked
+                }
+            }
+            stable.entertainTheGuests(clk); // Unblock Horses
+            controlCenter.entertainTheGuests(clk);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         // send shutdown
