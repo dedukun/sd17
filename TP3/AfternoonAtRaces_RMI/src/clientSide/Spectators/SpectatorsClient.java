@@ -1,7 +1,6 @@
 package clientSide.Spectators;
 
 import extras.SimulPar;
-import genclass.GenericIO;
 import interfaces.PaddockInterface;
 import interfaces.ControlCenterInterface;
 import interfaces.BettingCenterInterface;

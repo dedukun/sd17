@@ -1,13 +1,10 @@
 package interfaces;
 
-import extras.HorseJockeyStates;
-import extras.SpectatorStates;
-import extras.BrokerStates;
-import auxiliary.*;
+import auxiliary.HorseJockeyStates;
+import auxiliary.SpectatorStates;
+import auxiliary.BrokerStates;
 import auxiliary.ReturnStruct;
-import extras.SimulPar;
 import auxiliary.TimeVector;
-import serverSide.GenRepos.GeneralRepository;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

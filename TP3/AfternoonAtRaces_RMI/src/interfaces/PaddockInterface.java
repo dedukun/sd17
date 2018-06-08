@@ -1,9 +1,7 @@
 package interfaces;
 
 import auxiliary.ReturnStruct;
-import extras.SimulPar;
 import auxiliary.TimeVector;
-import serverSide.Paddock.Paddock;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

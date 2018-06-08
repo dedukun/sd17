@@ -1,8 +1,7 @@
 package clientSide.HorseJockey;
 
-import extras.HorseJockeyStates;
+import auxiliary.HorseJockeyStates;
 import auxiliary.TimeVector;
-import clientSide.Broker.Broker;
 import interfaces.PaddockInterface;
 import interfaces.ControlCenterInterface;
 import interfaces.RaceTrackInterface;

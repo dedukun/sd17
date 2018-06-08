@@ -3,9 +3,7 @@ package registry;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
-import java.rmi.AccessException;
 import java.rmi.server.UnicastRemoteObject;
-import java.rmi.server.*;
 import genclass.GenericIO;
 import interfaces.Register;
 

@@ -1,4 +1,4 @@
-package extras;
+package auxiliary;
 
 /**
  * Enumerate with the Spectator States.

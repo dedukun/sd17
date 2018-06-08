@@ -1,6 +1,6 @@
 package clientSide.Broker;
 
-import extras.BrokerStates;
+import auxiliary.BrokerStates;
 import extras.SimulPar;
 import auxiliary.TimeVector;
 import interfaces.BettingCenterInterface;

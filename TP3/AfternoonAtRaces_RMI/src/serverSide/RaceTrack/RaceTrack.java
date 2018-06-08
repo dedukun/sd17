@@ -6,21 +6,12 @@ import java.util.Arrays;
 
 import auxiliary.ReturnStruct;
 import extras.SimulPar;
-import extras.BrokerStates;
-import extras.HorseJockeyStates;
+import auxiliary.BrokerStates;
+import auxiliary.HorseJockeyStates;
 import auxiliary.TimeVector;
 import interfaces.GenReposInterface;
 import interfaces.RaceTrackInterface;
-import interfaces.Register;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.logging.Level;
-import registry.RegistryConfiguration;
-import serverSide.BettingCenter.BettingCenter;
 
 /**
  * Race track.<br>

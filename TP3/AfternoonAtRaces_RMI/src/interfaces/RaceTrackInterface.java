@@ -1,9 +1,7 @@
 package interfaces;
 
 import auxiliary.ReturnStruct;
-import extras.SimulPar;
 import auxiliary.TimeVector;
-import serverSide.RaceTrack.RaceTrack;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -1,23 +1,14 @@
 package serverSide.Paddock;
 
 import java.util.concurrent.ThreadLocalRandom;
-import extras.HorseJockeyStates;
+import auxiliary.HorseJockeyStates;
 import auxiliary.ReturnStruct;
-import extras.SpectatorStates;
+import auxiliary.SpectatorStates;
 import extras.SimulPar;
 import auxiliary.TimeVector;
 import interfaces.GenReposInterface;
 import interfaces.PaddockInterface;
-import interfaces.Register;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.logging.Level;
-import registry.RegistryConfiguration;
-import serverSide.BettingCenter.BettingCenter;
 
 /**
  * Paddock.<br>

@@ -1,23 +1,12 @@
 package serverSide.ControlCenter;
 
-//import Stubs.GenReposStub;
 import auxiliary.ReturnStruct;
 import interfaces.GenReposInterface;
 import extras.SimulPar;
-import extras.SpectatorStates;
+import auxiliary.SpectatorStates;
 import auxiliary.TimeVector;
 import interfaces.ControlCenterInterface;
-import interfaces.Register;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.Arrays;
-import java.util.logging.Level;
-import registry.RegistryConfiguration;
-import serverSide.BettingCenter.BettingCenter;
 
 /**
  * Control Center.<br>

@@ -1,11 +1,7 @@
 package interfaces;
 
 import auxiliary.ReturnStruct;
-import extras.SimulPar;
 import auxiliary.TimeVector;
-import genclass.GenericIO;
-import java.rmi.NotBoundException;
-import serverSide.BettingCenter.BettingCenter;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

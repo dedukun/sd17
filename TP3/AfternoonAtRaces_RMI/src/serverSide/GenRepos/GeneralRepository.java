@@ -4,22 +4,13 @@ import java.util.Arrays;
 import java.text.DecimalFormat;
 import genclass.TextFile;
 import genclass.GenericIO;
-import extras.BrokerStates;
-import extras.HorseJockeyStates;
+import auxiliary.BrokerStates;
+import auxiliary.HorseJockeyStates;
 import auxiliary.ReturnStruct;
-import extras.SpectatorStates;
+import auxiliary.SpectatorStates;
 import auxiliary.TimeVector;
 import interfaces.GenReposInterface;
-import interfaces.Register;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.logging.Level;
-import registry.RegistryConfiguration;
-import serverSide.BettingCenter.BettingCenter;
 
 /**
  * General repository.<br>

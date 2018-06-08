@@ -6,6 +6,5 @@
  *  - Paddock<br>
  *  - Race Track<br>
  *  - Stable
- *
  */
 package serverSide;

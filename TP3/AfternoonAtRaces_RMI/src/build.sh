@@ -28,10 +28,9 @@ echo "done"
 printf "    Public... "
 cd deploy/classes
 
-mkdir auxiliary interfaces extras
+mkdir auxiliary interfaces
 cp ../../auxiliary/*.class ./auxiliary/
 cp ../../interfaces/*.class ./interfaces/
-cp ../../extras/*.class ./extras/
 
 cd ..
 

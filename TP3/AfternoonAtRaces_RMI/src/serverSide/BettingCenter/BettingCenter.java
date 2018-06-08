@@ -1,24 +1,15 @@
 package serverSide.BettingCenter;
 
 import extras.SimulPar;
-import extras.BrokerStates;
+import auxiliary.BrokerStates;
 import auxiliary.ReturnStruct;
-import extras.SpectatorStates;
+import auxiliary.SpectatorStates;
 import auxiliary.TimeVector;
-import genclass.GenericIO;
 import interfaces.BettingCenterInterface;
 import interfaces.GenReposInterface;
-import interfaces.Register;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import registry.RegistryConfiguration;
 
 /**
  * Betting Center.<br>
