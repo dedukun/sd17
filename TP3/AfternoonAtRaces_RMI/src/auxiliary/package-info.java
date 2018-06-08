@@ -1,8 +1,5 @@
 /**
- * Package with all the auxiliar files used.<br>
- *  <br>- All entities states
- *  <br>- Configurations of the network
- *  <br>- Simulation Parameters
+ * Package with all the auxiliar files used by the RMI.<br>
  *  <br>- Return Structure
  *  <br>- Time Vector
  * 

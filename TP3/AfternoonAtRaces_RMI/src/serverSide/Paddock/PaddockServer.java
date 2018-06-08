@@ -58,13 +58,13 @@ public class PaddockServer{
 	//Fazer equivalente para servers
      Paddock pd = new Paddock (genReposInterface);
      PaddockInterface pdStub = null;
-	 
+
 	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_PADDOCK_PORT;           /* it should be set accordingly in each case */
 
-	 
+
      try
-     { 
+     {
          //TODO - Implementar interfaces e arranjar bc
          pdStub = (PaddockInterface) UnicastRemoteObject.exportObject ((Remote) pd, listeningPort);
      }
@@ -109,7 +109,7 @@ public class PaddockServer{
      try
      { reg.bind (nameEntryObject, pdStub);
      }
-     
+
      catch (RemoteException e)
      { GenericIO.writelnString ("Paddock registration exception: " + e.getMessage ());
        e.printStackTrace ();
@@ -121,10 +121,10 @@ public class PaddockServer{
        System.exit (1);
      }
      GenericIO.writelnString ("Paddock object was registered!");
-	 
+
      // Block
      pd.waitForShutdown();
-     
+
      try{
          reg.unbind(nameEntryObject);
      } catch (RemoteException e)
@@ -137,20 +137,21 @@ public class PaddockServer{
        e.printStackTrace ();
        System.exit (1);
      }
-     
+
     try
      {
-         boolean succ = UnicastRemoteObject.unexportObject ((Remote) pd, true);
-         
-         while(succ)
+         boolean succ = false;
+
+         do{
              succ = UnicastRemoteObject.unexportObject ((Remote) pd, true);
+         }while(!succ);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("Paddock stub remove exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-    
+
      GenericIO.writelnString ("Paddock shutdown!");
  }
 }

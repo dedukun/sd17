@@ -1,6 +1,6 @@
 package clientSide.HorseJockey;
 
-import auxiliary.HorseJockeyStates;
+import extras.HorseJockeyStates;
 import auxiliary.TimeVector;
 import clientSide.Broker.Broker;
 import interfaces.PaddockInterface;
@@ -163,14 +163,15 @@ public class HorseJockey extends Thread{
             }while(!raceTrack.hasRaceFinished(hjid, clk).isRet_bool()); // Blocked
             //unblocked by startTheRace() or makeAMove()
             stable.proceedToStable(hjid, raceNumber, agility, clk);
+
+            //send shutdown
+            controlCenter.disconnect(clk);
+            paddock.disconnect(clk);
+            raceTrack.disconnect(clk);
+            stable.disconnect(clk);
         } catch (RemoteException ex) {
              Logger.getLogger(HorseJockey.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        }
 
-        //send shutdown
-        /*controlCenter.endServer();
-        paddock.endServer();
-        raceTrack.endServer();
-        stable.endServer();*/
     }
 }

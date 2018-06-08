@@ -1,4 +1,4 @@
-package auxiliary;
+package extras;
 
 /**
  * Simulation Parameters.<br>

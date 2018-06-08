@@ -1,8 +1,8 @@
 package serverSide.Stable;
 
-import auxiliary.SimulPar;
-import auxiliary.BrokerStates;
-import auxiliary.HorseJockeyStates;
+import extras.SimulPar;
+import extras.BrokerStates;
+import extras.HorseJockeyStates;
 import auxiliary.ReturnStruct;
 import auxiliary.TimeVector;
 import interfaces.GenReposInterface;
@@ -43,7 +43,7 @@ public class Stable implements StableInterface{
      * Reference to General Repository
      */
     private GenReposInterface genRepos;
-    
+
     /**
      * Reference to Time Vector.
      */
@@ -58,11 +58,16 @@ public class Stable implements StableInterface{
      * Horse/Jockey waiting at the stable for the start of the parade - synchronization condition.
      */
     private boolean waitAtStable;
-             
+
     /**
      * Shutdown signal
      */
-    private boolean waitShut; 
+    private boolean waitShut;
+
+    /**
+     * Connected clients
+     */
+    private int numClients;
 
     /**
      * Stable initialization.
@@ -78,8 +83,9 @@ public class Stable implements StableInterface{
         // Sync conditions
         waitAtStable = true;
         endEvent = false;
-        
+
         waitShut = true;
+        numClients = 2;
     }
 
     /**
@@ -180,7 +186,7 @@ public class Stable implements StableInterface{
 
         return new ReturnStruct(this.clk);
     }
-    
+
     /**
      * Server is waiting for a shutdown signal
      */
@@ -196,57 +202,21 @@ public class Stable implements StableInterface{
 
 
     /**
-     * Send a message to the General Reposutory telling that this server is shutting down
+     * Disconnect client from server.
+     *
+     *   @return Clk
      */
     @Override
-    public synchronized void shutdown() throws RemoteException{
-        
-    //Bloquear server atraves de mecanismos de sincroniação
-    
-        String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
-        String nameEntryObject = RegistryConfiguration.REGISTRY_STABLE;
-        Registry registry = null;
-        Register reg = null;
-        String rmiRegHostName;
-        int rmiRegPortNumb;
-       
-        rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
-        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT ;
-     
-        try {
-            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-        } catch (RemoteException ex) {
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
+    public synchronized ReturnStruct disconnect(TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
+        numClients--;
+
+        if(numClients == 0){
+            genRepos.disconnect(clk);
+            waitShut = false;
+            notifyAll();
         }
-        
-        try {
-            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            reg = (Register) registry.lookup(nameEntryBase);
-        } catch (RemoteException e) {
-            System.out.println("RegisterRemoteObject lookup exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        } catch (NotBoundException e) {
-            System.out.println("RegisterRemoteObject not bound exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        //reg.unbind , retirar referenceia do registo
-        try {
-            reg.unbind(nameEntryObject);
-        } catch (RemoteException e) {
-            System.out.println("Paddock registration exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        } catch (NotBoundException e) {
-            System.out.println("Paddock not bound exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        //matar thread base, unexportObject
-        try {
-            UnicastRemoteObject.unexportObject(this, true);
-        } catch (NoSuchObjectException ex) {
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("ControlCenter shutdown.");
+
+        return new ReturnStruct(this.clk);
     }
 }

@@ -56,13 +56,13 @@ public class RaceTrackServer {
 	//Fazer equivalente para servers
      RaceTrack rt = new RaceTrack (genReposInterface);
      RaceTrackInterface rtStub = null;
-	 
+
 	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_RACE_TRACK_PORT;              /* it should be set accordingly in each case */
 
-	 
+
      try
-     { 
+     {
          //TODO - Implementar interfaces e arranjar bc
          rtStub = (RaceTrackInterface) UnicastRemoteObject.exportObject ((Remote) rt, listeningPort);
      }
@@ -107,7 +107,7 @@ public class RaceTrackServer {
      try
      { reg.bind (nameEntryObject, rtStub);
      }
-     
+
      catch (RemoteException e)
      { GenericIO.writelnString ("RaceTrack registration exception: " + e.getMessage ());
        e.printStackTrace ();
@@ -119,10 +119,10 @@ public class RaceTrackServer {
        System.exit (1);
      }
      GenericIO.writelnString ("RaceTrack object was registered!");
-	 
+
      // Block
      rt.waitForShutdown();
-     
+
      try{
          reg.unbind(nameEntryObject);
      } catch (RemoteException e)
@@ -135,20 +135,21 @@ public class RaceTrackServer {
        e.printStackTrace ();
        System.exit (1);
      }
-     
+
     try
      {
-         boolean succ = UnicastRemoteObject.unexportObject ((Remote) rt, true);
-         
-         while(succ)
+         boolean succ = false;
+
+         do{
              succ = UnicastRemoteObject.unexportObject ((Remote) rt, true);
+         }while(!succ);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("RaceTrack stub remove exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-    
+
      GenericIO.writelnString ("RaceTrack shutdown!");
  }
 }

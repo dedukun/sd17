@@ -58,13 +58,13 @@ public class StableServer {
 	//Fazer equivalente para servers
      Stable st = new Stable (genReposInterface);
      StableInterface stStub = null;
-	 
+
 	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_STABLE_PORT;       /* it should be set accordingly in each case */
 
-	 
+
      try
-     { 
+     {
          //TODO - Implementar interfaces e arranjar bc
          stStub = (StableInterface) UnicastRemoteObject.exportObject ((Remote) st, listeningPort);
      }
@@ -109,7 +109,7 @@ public class StableServer {
      try
      { reg.bind (nameEntryObject, stStub);
      }
-     
+
      catch (RemoteException e)
      { GenericIO.writelnString ("Stable registration exception: " + e.getMessage ());
        e.printStackTrace ();
@@ -121,10 +121,10 @@ public class StableServer {
        System.exit (1);
      }
      GenericIO.writelnString ("Stable object was registered!");
-	 
+
      // Block
      st.waitForShutdown();
-     
+
      try{
          reg.unbind(nameEntryObject);
      } catch (RemoteException e)
@@ -137,20 +137,21 @@ public class StableServer {
        e.printStackTrace ();
        System.exit (1);
      }
-     
+
     try
      {
-         boolean succ = UnicastRemoteObject.unexportObject ((Remote) st, true);
-         
-         while(succ)
+         boolean succ = false;
+
+         do{
              succ = UnicastRemoteObject.unexportObject ((Remote) st, true);
+         }while(!succ);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("Stable stub remove exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-    
+
      GenericIO.writelnString ("Stable shutdown!");
  }
 }

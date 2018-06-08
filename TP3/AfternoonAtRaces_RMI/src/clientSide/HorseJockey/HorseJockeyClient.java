@@ -1,6 +1,6 @@
 package clientSide.HorseJockey;
 
-import auxiliary.SimulPar;
+import extras.SimulPar;
 import genclass.GenericIO;
 import interfaces.PaddockInterface;
 import interfaces.ControlCenterInterface;

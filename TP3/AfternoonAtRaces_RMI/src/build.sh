@@ -4,7 +4,7 @@ echo "Building Project..."
 
 printf "  Compiling source... "
 # Compile source
-javac ./auxiliary/*.java ./clientSide/*/*.java ./interfaces/*.java ./registry/*.java ./serverSide/*/*.java
+javac ./auxiliary/*.java ./clientSide/*/*.java ./interfaces/*.java ./registry/*.java ./serverSide/*/*.java ./extras/*.java
 
 echo "done"
 
@@ -28,12 +28,10 @@ echo "done"
 printf "    Public... "
 cd deploy/classes
 
-mkdir auxiliary interfaces clientSide clientSide/Broker clientSide/HorseJockey clientSide/Spectators
-cp ../../auxiliary/* ./auxiliary/
+mkdir auxiliary interfaces extras
+cp ../../auxiliary/*.class ./auxiliary/
 cp ../../interfaces/*.class ./interfaces/
-cp ../../clientSide/Broker/*.class ./clientSide/Broker
-cp ../../clientSide/HorseJockey/*.class ./clientSide/HorseJockey
-cp ../../clientSide/Spectators/*.class ./clientSide/Spectators
+cp ../../extras/*.class ./extras/
 
 cd ..
 
@@ -56,11 +54,12 @@ do
     cd dir_${servers[$i]}
 
     # Create new folders
-    mkdir interfaces auxiliary serverSide serverSide/${servers[$i]}
+    mkdir interfaces auxiliary extras serverSide serverSide/${servers[$i]}
 
     # Copy to
     cp ../../interfaces/*.class ./interfaces/
     cp ../../auxiliary/*.class   ./auxiliary/
+    cp ../../extras/*.class   ./extras/
     cp ../../serverSide/${servers[$i]}/*.class ./serverSide/${servers[$i]}/
 
     cd ..
@@ -79,11 +78,12 @@ do
     cd dir_${clients[$i]}
 
     # Create new folders
-    mkdir interfaces auxiliary clientSide clientSide/${clients[$i]}
+    mkdir extras interfaces auxiliary clientSide clientSide/${clients[$i]}
 
     # Copy to
     cp ../../interfaces/*.class ./interfaces/
     cp ../../auxiliary/*.class   ./auxiliary/
+    cp ../../extras/*.class   ./extras/
     cp ../../clientSide/${clients[$i]}/*.class ./clientSide/${clients[$i]}/
 
     cd ..

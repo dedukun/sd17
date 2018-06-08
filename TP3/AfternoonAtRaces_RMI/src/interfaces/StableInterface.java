@@ -1,7 +1,7 @@
 package interfaces;
 
 import auxiliary.ReturnStruct;
-import auxiliary.SimulPar;
+import extras.SimulPar;
 import auxiliary.TimeVector;
 import serverSide.Stable.Stable;
 
@@ -43,7 +43,9 @@ public interface StableInterface extends Remote{
      *   @throws RemoteException may throw during a execution of a remote method call
      */
     public ReturnStruct entertainTheGuests(TimeVector clk) throws RemoteException;
-    
-    //Not tested yet
-    public void shutdown() throws RemoteException;
+
+   /**
+    * Disconnects client from server
+    */
+   public ReturnStruct disconnect(TimeVector clk) throws RemoteException;
 }

@@ -4,7 +4,7 @@ import java.util.Random;
 import interfaces.PaddockInterface;
 import interfaces.ControlCenterInterface;
 import interfaces.BettingCenterInterface;
-import auxiliary.SpectatorStates;
+import extras.SpectatorStates;
 import auxiliary.TimeVector;
 import clientSide.Broker.Broker;
 import java.rmi.RemoteException;
@@ -160,13 +160,13 @@ public class Spectators extends Thread{
                     //Unblocked by honourTheBets()
             }
             controlCenter.relaxABit(sid, clk);
+
+            // send shutdown
+            bettingCenter.disconnect(clk);
+            controlCenter.disconnect(clk);
+            paddock.disconnect(clk);
         } catch (RemoteException ex) {
              Logger.getLogger(Spectators.class.getName()).log(Level.SEVERE, null, ex);
          }
-
-        // send shutdown
-        /*bettingCenter.endServer();
-        controlCenter.endServer();
-        paddock.endServer();*/
     }
 }

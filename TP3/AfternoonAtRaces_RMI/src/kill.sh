@@ -21,11 +21,11 @@ clients=( "HorseJockey" "Spectators" "Broker" )
 printf "\nKill Registry... "
 
 # Kill rmi registry
-sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'rmiregistry' | awk '{print \$2}')"
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill -9 \$(ps aux | grep sd0202 | grep 'rmiregistry' | awk '{print \$2}')"
 
 
 # Kill registry
-sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
+sshpass -p $PASSWORD ssh sd0202@$registryMachine "kill -9 \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
 
 echo "done"
 
@@ -36,7 +36,7 @@ do
     printf "  "${servers[$i]}"... "
 
     # Kill if running
-    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
+    sshpass -p $PASSWORD ssh sd0202@${serversMachines[$i]} "kill -9 \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
 
 
     echo "done"
@@ -49,7 +49,7 @@ do
 
 
     # Kill if running
-    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "kill \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
+    sshpass -p $PASSWORD ssh sd0202@${clientsMachines[$i]} "kill -9 \$(ps aux | grep sd0202 | grep 'java *' | awk '{print \$2}')"
 
     echo "done"
 done

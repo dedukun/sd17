@@ -1,8 +1,11 @@
 package interfaces;
 
+import extras.HorseJockeyStates;
+import extras.SpectatorStates;
+import extras.BrokerStates;
 import auxiliary.*;
 import auxiliary.ReturnStruct;
-import auxiliary.SimulPar;
+import extras.SimulPar;
 import auxiliary.TimeVector;
 import serverSide.GenRepos.GeneralRepository;
 
@@ -171,8 +174,9 @@ public interface GenReposInterface extends Remote{
      *   @throws RemoteException may throw during a execution of a remote method call
      */
     public ReturnStruct setHorseAgility(int horseId,int horseAgl, TimeVector clk) throws RemoteException;
-    
-    //Not tested yet
-    public void shutdown() throws RemoteException;
 
+   /**
+    * Disconnects client from server
+    */
+   public ReturnStruct disconnect(TimeVector clk) throws RemoteException;
 }

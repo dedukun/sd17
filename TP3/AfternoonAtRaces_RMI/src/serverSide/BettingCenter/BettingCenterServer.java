@@ -30,7 +30,7 @@ public class BettingCenterServer{
      if (System.getSecurityManager () == null)
         System.setSecurityManager (new SecurityManager ());
      GenericIO.writelnString ("Security manager was installed!");
-     
+
     /* get location of the registry service */
      GenReposInterface genReposInterface = null;
      String rmiRegHostName;
@@ -53,19 +53,19 @@ public class BettingCenterServer{
             e.printStackTrace();
             System.exit(1);
         }
-     
+
     /* instantiate a remote object that runs mobile code and generate a stub for it */
 
 	//Fazer equivalente para servers
      BettingCenter bc = new BettingCenter(genReposInterface);
      BettingCenterInterface bcStub = null;
-	 
+
 	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_BETTING_CENTER_PORT;      /* it should be set accordingly in each case */
 
-	 
+
      try
-     { 
+     {
          //TODO - Implementar interfaces e arranjar bc
          bcStub = (BettingCenterInterface) UnicastRemoteObject.exportObject ((Remote) bc, listeningPort);
      }
@@ -110,7 +110,7 @@ public class BettingCenterServer{
      try
      { reg.bind (nameEntryObject, bcStub);
      }
-     
+
      catch (RemoteException e)
      { GenericIO.writelnString ("BettingCenter registration exception: " + e.getMessage ());
        e.printStackTrace ();
@@ -122,10 +122,10 @@ public class BettingCenterServer{
        System.exit (1);
      }
      GenericIO.writelnString ("BettingCenter object was registered!");
-     
+
      // Block
      bc.waitForShutdown();
-     
+
      try{
          reg.unbind(nameEntryObject);
      } catch (RemoteException e)
@@ -138,20 +138,21 @@ public class BettingCenterServer{
        e.printStackTrace ();
        System.exit (1);
      }
-     
+
     try
      {
-         boolean succ = UnicastRemoteObject.unexportObject ((Remote) bc, true);
-         
-         while(succ)
+         boolean succ = false;
+
+         do{
              succ = UnicastRemoteObject.unexportObject ((Remote) bc, true);
+         }while(!succ);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("BettingCenter stub remove exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-    
+
      GenericIO.writelnString ("BettingCenter shutdown!");
  }
 }

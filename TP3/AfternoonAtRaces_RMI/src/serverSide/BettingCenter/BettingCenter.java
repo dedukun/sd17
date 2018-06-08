@@ -1,9 +1,9 @@
 package serverSide.BettingCenter;
 
-import auxiliary.SimulPar;
-import auxiliary.BrokerStates;
+import extras.SimulPar;
+import extras.BrokerStates;
 import auxiliary.ReturnStruct;
-import auxiliary.SpectatorStates;
+import extras.SpectatorStates;
 import auxiliary.TimeVector;
 import genclass.GenericIO;
 import interfaces.BettingCenterInterface;
@@ -110,12 +110,12 @@ public class BettingCenter implements BettingCenterInterface{
      * Reference to Time Vector.
      */
     private TimeVector clk;
-          
+
     /**
      * Shutdown signal
      */
     private boolean waitShut;
-    
+
     /**
      * Connected clients
      */
@@ -144,7 +144,7 @@ public class BettingCenter implements BettingCenterInterface{
         waitForGains = new boolean[SimulPar.S];
         clk = new TimeVector();
         waitShut = true;
-        
+
         numClients = 2;
     }
 
@@ -399,7 +399,7 @@ public class BettingCenter implements BettingCenterInterface{
 
         return new ReturnStruct(this.clk, earnings);
     }
-    
+
     /**
      * Server is waiting for a shutdown signal
      */
@@ -412,60 +412,24 @@ public class BettingCenter implements BettingCenterInterface{
             e.printStackTrace();
         }
     }
-    
 
     /**
-     * Send a message to the General Reposutory telling that this server is shutting down
+     * Disconnect client from server
+     *
+     *   @return Clk
      */
     @Override
-    public synchronized void shutdown() throws RemoteException{
-        //Bloquear server atraves de mecanismos de sincroniação(?)
+    public synchronized ReturnStruct disconnect(TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
+        numClients--;
 
-        String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
-        String nameEntryObject = RegistryConfiguration.REGISTRY_BETTING_CENTER;
-        Registry registry = null;
-        Register reg = null;
-        String rmiRegHostName;
-        int rmiRegPortNumb;
-       
-        rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
-        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT ;
-     
-        try {
-            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-        } catch (RemoteException ex) {
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
+        if(numClients == 0){
+            genRepos.disconnect(clk);
+            waitShut = false;
+            notifyAll();
         }
-        
-        try {
-            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            reg = (Register) registry.lookup(nameEntryBase);
-        } catch (RemoteException e) {
-            System.out.println("RegisterRemoteObject lookup exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        } catch (NotBoundException e) {
-            System.out.println("RegisterRemoteObject not bound exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        //reg.unbind , retirar referenceia do registo
-        try {
-            reg.unbind(nameEntryObject);
-        } catch (RemoteException e) {
-            System.out.println("BettingCenter registration exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        } catch (NotBoundException e) {
-            System.out.println("BettingCenter not bound exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        //matar thread base, unexportObject
-        try {
-            UnicastRemoteObject.unexportObject(this, true);
-        } catch (NoSuchObjectException ex) {
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("BettingCenter shutdown.");
+
+        return new ReturnStruct(this.clk);
     }
 
 

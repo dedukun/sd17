@@ -58,13 +58,13 @@ public class ControlCenterServer{
 	//Fazer equivalente para servers
      ControlCenter cc = new ControlCenter (genReposInterface);
      ControlCenterInterface ccStub = null;
-	 
+
 	 //Endicar porto de escuta
      int listeningPort = RegistryConfiguration.REGISTRY_CONTROL_CENTER_PORT;          /* it should be set accordingly in each case */
 
-	 
+
      try
-     { 
+     {
          //TODO - Implementar interfaces e arranjar bc
          ccStub = (ControlCenterInterface) UnicastRemoteObject.exportObject ((Remote) cc, listeningPort);
      }
@@ -109,7 +109,7 @@ public class ControlCenterServer{
      try
      { reg.bind (nameEntryObject, ccStub);
      }
-     
+
      catch (RemoteException e)
      { GenericIO.writelnString ("ControlCenter registration exception: " + e.getMessage ());
        e.printStackTrace ();
@@ -121,10 +121,10 @@ public class ControlCenterServer{
        System.exit (1);
      }
      GenericIO.writelnString ("ControlCenter object was registered!");
-     
+
      // Block
      cc.waitForShutdown();
-     
+
      try{
          reg.unbind(nameEntryObject);
      } catch (RemoteException e)
@@ -137,20 +137,21 @@ public class ControlCenterServer{
        e.printStackTrace ();
        System.exit (1);
      }
-     
+
     try
      {
-         boolean succ = UnicastRemoteObject.unexportObject ((Remote) cc, true);
-         
-         while(succ)
+         boolean succ = false;
+
+         do{
              succ = UnicastRemoteObject.unexportObject ((Remote) cc, true);
+         }while(!succ);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("ControlCenter stub remove exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-    
+
      GenericIO.writelnString ("ControlCenter shutdown!");
  }
 }

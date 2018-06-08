@@ -3,8 +3,8 @@ package serverSide.ControlCenter;
 //import Stubs.GenReposStub;
 import auxiliary.ReturnStruct;
 import interfaces.GenReposInterface;
-import auxiliary.SimulPar;
-import auxiliary.SpectatorStates;
+import extras.SimulPar;
+import extras.SpectatorStates;
 import auxiliary.TimeVector;
 import interfaces.ControlCenterInterface;
 import interfaces.Register;
@@ -69,11 +69,16 @@ public class ControlCenter implements ControlCenterInterface{
      * Reference to Time Vector.
      */
     private TimeVector clk;
-    
+
     /**
      * Shutdown signal
      */
     private boolean waitShut;
+
+    /**
+     * Connected clients
+     */
+    private int numClients;
 
     /**
      * ControlCenter intilization.
@@ -82,7 +87,7 @@ public class ControlCenter implements ControlCenterInterface{
         this.genRepos= genRepos;
         clk = new TimeVector();
         waitShut = true;
-        
+
         spectatosLeavingStands = 0;
 
         // sync conditions
@@ -91,6 +96,8 @@ public class ControlCenter implements ControlCenterInterface{
         waitForNextRace = true;
         waitForEndOfRace = true;
         waitForEndRaceBroker = true;
+
+        numClients = 3;
     }
 
     /**
@@ -281,7 +288,7 @@ public class ControlCenter implements ControlCenterInterface{
 
         return new ReturnStruct(this.clk);
     }
-    
+
     /**
      * Server is waiting for a shutdown signal
      */
@@ -297,56 +304,21 @@ public class ControlCenter implements ControlCenterInterface{
 
 
     /**
-     * Send a message to the General Reposutory telling that this server is shutting down
+     * Disconnect client from server
+     *
+     *   @return Clk
      */
     @Override
-    public synchronized void shutdown() throws RemoteException{
-        //Bloquear server atraves de mecanismos de sincroniação
+    public synchronized ReturnStruct disconnect(TimeVector clk) throws RemoteException{
+        this.clk.updateTime(clk.getTime());
+        numClients--;
 
-        String nameEntryBase = RegistryConfiguration.REGISTRY_RMI;
-        String nameEntryObject = RegistryConfiguration.REGISTRY_CONTROL_CENTER;
-        Registry registry = null;
-        Register reg = null;
-        String rmiRegHostName;
-        int rmiRegPortNumb;
-       
-        rmiRegHostName = RegistryConfiguration.REGISTRY_RMI_HOST;
-        rmiRegPortNumb = RegistryConfiguration.REGISTRY_RMI_PORT ;
-     
-        try {
-            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-        } catch (RemoteException ex) {
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
+        if(numClients == 0){
+            genRepos.disconnect(clk);
+            waitShut = false;
+            notifyAll();
         }
-        
-        try {
-            registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
-            reg = (Register) registry.lookup(nameEntryBase);
-        } catch (RemoteException e) {
-            System.out.println("RegisterRemoteObject lookup exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        } catch (NotBoundException e) {
-            System.out.println("RegisterRemoteObject not bound exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        //reg.unbind , retirar referenceia do registo
-        try {
-            reg.unbind(nameEntryObject);
-        } catch (RemoteException e) {
-            System.out.println("ControlCenter registration exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        } catch (NotBoundException e) {
-            System.out.println("ControlCenter not bound exception: " + e.getMessage());
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        //matar thread base, unexportObject
-        try {
-            UnicastRemoteObject.unexportObject(this, true);
-        } catch (NoSuchObjectException ex) {
-            java.util.logging.Logger.getLogger(BettingCenter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("ControlCenter shutdown.");
+
+        return new ReturnStruct(this.clk);
     }
 }

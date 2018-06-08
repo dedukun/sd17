@@ -109,7 +109,7 @@ public class GenReposServer{
 
      // Block
      gr.waitForShutdown();
-     
+
      try{
          reg.unbind(nameEntryObject);
      } catch (RemoteException e)
@@ -122,20 +122,21 @@ public class GenReposServer{
        e.printStackTrace ();
        System.exit (1);
      }
-     
+
     try
      {
-         boolean succ = UnicastRemoteObject.unexportObject ((Remote) gr, true);
-         
-         while(succ)
+         boolean succ = false;
+
+         do{
              succ = UnicastRemoteObject.unexportObject ((Remote) gr, true);
+         }while(!succ);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("GeneRepos stub remove exception: " + e.getMessage ());
        e.printStackTrace ();
        System.exit (1);
      }
-    
+
      GenericIO.writelnString ("GenRepos shutdown!");
  }
 }

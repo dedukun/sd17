@@ -1,8 +1,7 @@
 package clientSide.Broker;
 
-import auxiliary.BrokerStates;
-
-import auxiliary.SimulPar;
+import extras.BrokerStates;
+import extras.SimulPar;
 import auxiliary.TimeVector;
 import interfaces.BettingCenterInterface;
 import interfaces.ControlCenterInterface;
@@ -101,7 +100,7 @@ public class Broker extends Thread{
     public void run() {
         try {
             for(int k=0; k < SimulPar.K; k++){
-    
+
                 double [] horsesWinningProbabilities = stable.summonHorsesToPaddock(k, clk).getRet_dou_arr();
                 bettingCenter.setHorsesWinningChances(horsesWinningProbabilities,clk);
                 controlCenter.summonHorsesToPaddock(clk); //Blocked
@@ -121,14 +120,13 @@ public class Broker extends Thread{
             }
             stable.entertainTheGuests(clk); // Unblock Horses
             controlCenter.entertainTheGuests(clk);
+
+            bettingCenter.disconnect(clk);
+            controlCenter.disconnect(clk);
+            raceTrack.disconnect(clk);
+            stable.disconnect(clk);
         } catch (RemoteException ex) {
             Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        // send shutdown
-        /*bettingCenter.endServer();
-        controlCenter.endServer();
-        raceTrack.endServer();
-        stable.endServer();*/
     }
 }
